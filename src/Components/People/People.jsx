@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
  
 import { BACKEND_URL } from '../../constants';
 
-const PEOPLE_ENDPOINT = `${BACKEND_URL}/people`;
+const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
+const PEOPLE_CREATE_ENDPOINT = `${BACKEND_URL}/people/create`;
 
 function AddPersonForm({
   visible,
@@ -14,16 +15,20 @@ function AddPersonForm({
   setError,
 }) {
   const [name, setName] = useState('');
-  const [roles, setRoles] = useState('');
+  const [email, setEmail] = useState('');
 
   const changeName = (event) => { setName(event.target.value); };
-  const changeRoles = (event) => { setRoles(event.target.value); };
+  const changeEmail = (event) => { setEmail(event.target.value); };
 
   const addPerson = (event) => {
     event.preventDefault();
-    axios.post(PEOPLE_ENDPOINT, { name, roles })
+    const newPerson = {
+      name: name,
+      email: email,
+    }
+    axios.put(PEOPLE_CREATE_ENDPOINT, newPerson)
       .then(fetchPeople)
-      .catch(() => { setError('There was a problem adding the person.'); });
+      .catch((error) => { setError(`There was a problem adding the person. ${error}`); });
   };
 
   if (!visible) return null;
@@ -33,10 +38,10 @@ function AddPersonForm({
         Name
       </label>
       <input required type="text" id="name" value={name} onChange={changeName} />
-      <label htmlFor="roles">
-        Roles
+      <label htmlFor="email">
+        Email
       </label>
-      <input required type="text" id="roles" onChange={changeRoles} />
+      <input required type="text" id="email" onChange={changeEmail} />
       <button type="button" onClick={cancel}>Cancel</button>
       <button type="submit" onClick={addPerson}>Submit</button>
     </form>
@@ -61,13 +66,13 @@ ErrorMessage.propTypes = {
 };
 
 function Person({ person }) {
-  const { name, roles } = person;
+  const { name, email } = person;
   return (
     <Link to={name}>
       <div className="person-container">
         <h2>{name}</h2>
         <p>
-          Roles: {roles}
+          Email: {email}
         </p>
       </div>
     </Link>
@@ -76,12 +81,11 @@ function Person({ person }) {
 Person.propTypes = {
   person: propTypes.shape({
     name: propTypes.string.isRequired,
-    roles: propTypes.string.isRequired,
+    email: propTypes.string.isRequired,
   }).isRequired,
 };
 
 function peopleObjectToArray(Data) {
-  console.log(Data);
   const keys = Object.keys(Data);
   const people = keys.map((key) => Data[key]);
   return people;
@@ -93,12 +97,9 @@ function People() {
   const [addingPerson, setAddingPerson] = useState(false);
 
   const fetchPeople = () => {
-    axios.get(PEOPLE_ENDPOINT)
-      .then(({ data }) => {
-        setPeople(peopleObjectToArray(data));
-        console.log(data);
-      })
-      .catch((error) => setError(`There was a problem retrieving the list of people.\n${error}`));
+    axios.get(PEOPLE_READ_ENDPOINT)
+      .then(({ data }) => { setPeople(peopleObjectToArray(data)) })
+      .catch((error) => setError(`There was a problem retrieving the list of people. ${error}`));
   };
 
   const showAddPersonForm = () => { setAddingPerson(true); };
