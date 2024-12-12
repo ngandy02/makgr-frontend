@@ -40,10 +40,10 @@ rather than on the server.
 React's component structure allows modularity - rather than having to write out a navbar in
 multiple pages, we can write one and import it where needed.
 
-# Creating the list of Games
+# Creating the list of Pepole
 
 Use axios to send a GET request. Render the response in the browser.
 
-# Creating the Add Game button
+# Creating the Add Person button
 
 Use axios to send a POST request.
