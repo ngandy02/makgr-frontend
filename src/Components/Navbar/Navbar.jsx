@@ -4,8 +4,12 @@ import { Link } from 'react-router-dom';
 
 const PAGES = [
   { label: 'Home', destination: '/' },
+  { label: 'Dashboard', destination: '/dashboard' },
+  { label: 'Masterhead', destination: '/masterhead' },
+  { label: 'Submissions', destination: '/submissions' },
+  { label: 'About', destination: '/about' },
+  { label: 'My Account', destination: '/account' },
   { label: 'View All People', destination: '/people' },
-  { label: 'View All Submissions', destination: '/submissions' },
 ];
 
 function NavLink({ page }) {
