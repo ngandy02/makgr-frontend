@@ -30,9 +30,24 @@ NavLink.propTypes = {
 function Navbar() {
   return (
     <nav>
-      <ul className="wrapper">
-        {PAGES.map((page) => <NavLink key={page.destination} page={page} />)}
-      </ul>
+      <div>
+        <ul className='home'>
+          <NavLink 
+            className='home'
+            page = {PAGES[0]}
+          />
+        </ul>
+      </div>
+      <div>
+        <ul className='nav-links'>
+          {PAGES.map((page) => 
+            page.label !== 'Home' &&
+              <NavLink 
+                className='nav-links'
+                key={page.destination} 
+                page={page}/>)}
+        </ul>
+      </div>
     </nav>
   );
 }

@@ -10,10 +10,11 @@ html {
   --lemon-chiffon: hsla(58, 74%, 85%, 1);
   --buff: hsla(27, 64%, 65%, 1);
   --bistre: hsla(10, 31%, 19%, 1);
-  --off-white: hsla(45, 29%, 97%, 1);
+  --off-white: hsla(60, 11%, 93%);
+  --navy: hsla(205, 20%, 28%);
 
   --background-color: var(--off-white);
-  --accent-color: var(--cambridge-blue);
+  --accent-color: var(--navy);
   background-color: var(--background-color);
 }
 
@@ -97,7 +98,10 @@ form button[type=button]:hover {
 nav {
   margin: 0;
   padding-top: 0.5rem;
-  background-color: var(--accent-color);
+  background-color: white;
+  justify-content: space-between;
+  display: flex;
+
 }
 
 nav ul {
@@ -107,13 +111,13 @@ nav ul {
   padding: 0;
 }
 
+
 nav a {
-  color: var(--background-color);
+  color: var(--navy);
   display: block;
   --padding: 1rem;
   padding: var(--padding);
   text-decoration: none;
-  font-weight: bold;
   --border-radius: 15px;
   border-radius: 5px 5px 0 0;
   position: relative;
@@ -147,7 +151,16 @@ nav a:hover,
 nav a:focus {
   background-color: var(--background-color);
   color: var(--accent-color);
+  font-weight: bold;
   outline: none;
+}
+
+.home {
+  margin-left: 30px;
+}
+
+.nav-links {
+  margin-right: 30px;
 }
 
 .person-container {
