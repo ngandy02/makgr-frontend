@@ -16,15 +16,20 @@ function AddPersonForm({
 }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [affiliation, setAffiliation] = useState('');
+  const [role, setRole] = useState('');
 
   const changeName = (event) => { setName(event.target.value); };
+  const changeAffiliation = (event) => {setAffiliation(event.target.value); };
   const changeEmail = (event) => { setEmail(event.target.value); };
-
+  const changeRole = (event) => {setRole(event.target.value); };
   const addPerson = (event) => {
     event.preventDefault();
     const newPerson = {
       name: name,
+      affiliation: affiliation,
       email: email,
+      role: role,
     }
     axios.put(PEOPLE_CREATE_ENDPOINT, newPerson)
       .then(fetchPeople)
@@ -38,10 +43,18 @@ function AddPersonForm({
         Name
       </label>
       <input required type="text" id="name" value={name} onChange={changeName} />
+      <label htmlFor="affiliation">
+        Affiliation
+      </label>
+      <input required type="text" id="affiliation" value={affiliation} onChange={changeAffiliation} />
       <label htmlFor="email">
         Email
       </label>
       <input required type="text" id="email" onChange={changeEmail} />
+      <label htmlFor="role">
+        Role
+      </label>
+      <input required type="text" id="erole" onChange={changeRole} />
       <button type="button" onClick={cancel}>Cancel</button>
       <button type="submit" onClick={addPerson}>Submit</button>
     </form>
