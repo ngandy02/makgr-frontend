@@ -28,8 +28,14 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Routes>
+        {/* Router allows for react to build a SPA without reloading the 
+        full page and jsut have the componenet rendered based on URL path  */}
+        {/* Router used to wrpa <Route> components,
+        it iterates over all Routes and renders the first on that matches
+        current location */}
         {/* For a different home page, do:
          <Route index element={<Login />} /> */}
+         {/* <Route index element={<Login />} /> */}
         <Route path="" element={<Home />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="masterhead" element={<Masterhead />} />
@@ -38,6 +44,8 @@ function App() {
         <Route path="account" element={<Account />} />
         <Route path="people" element={<People />} />
         <Route path="people/:name" element={<PersonPage />} />
+        {/* path contains the current URL path excluding the domain name */}
+        {/* element contains the Component to be rendered */}
       </Routes>
     </BrowserRouter>
   );
