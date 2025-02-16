@@ -71,6 +71,63 @@ AddPersonForm.propTypes = {
   setError: propTypes.func.isRequired,
 };
 
+function UpdatePersonForm({
+  email,
+  visible,
+  cancel,
+  fetchPeople,
+  setError,
+}) {
+  // original states of the peron's fields
+  const [name, setName] = useState('');
+  const [affiliation, setAffiliation] = useState('');
+  const [role, setRole] = useState('');
+
+  // event handler/functions to change the state of the person's fields
+  const changeName = (event) => { setName(event.target.value); };
+  const changeAffiliation = (event) => {setAffiliation(event.target.value); };
+  const changeRole = (event) => {setRole(event.target.value); };
+  // no change email becuase you can't change the email of a person
+
+  // event handler/function to add a person to the database
+  const updatePerson = (event) => {
+    event.preventDefault();
+    const newPerson = {
+      name: name,
+      affiliation: affiliation,
+      email: email,
+      role: role,
+    }
+    axios.put(`${PEOPLE_CREATE_ENDPOINT}/${email}`, newPerson)
+      .then(fetchPeople) // rerenders the list of people (view people)
+      .catch((error) => { setError(`There was a problem adding the person. ${error}`); });
+  };
+
+  
+  if (!visible) return null;
+  return (
+    <form>
+      <label htmlFor="name">
+        Name
+      </label>
+      <input required type="text" id="name" value={name} onChange={changeName} />
+      <label htmlFor="affiliation">
+        Affiliation
+      </label>
+      <input required type="text" id="affiliation" value={affiliation} onChange={changeAffiliation} />
+      <label htmlFor="role">
+        Role
+      </label>
+      <input required type="text" id="role" value={role} onChange={changeRole} />
+      <button type="button" onClick={cancel}>Cancel</button>
+      {/* cancel here calls the hideUpdatingForm which is passed as prop "cancel" */}
+      {/* cancel causes the visible var to become false which then makes the update form disappear
+      which happens in the "Person component" which changes the state of addingPerson causing the whole People component to rerender */}
+      <button type="submit" onClick={updatePerson}>Update</button>
+    </form>
+  );
+}
+
 function ErrorMessage({ message }) {
   return (
     <div className="error-message">
@@ -83,26 +140,15 @@ ErrorMessage.propTypes = {
 };
 
 function Person({ person, fetchPeople }) {
+  const [updatingPerson, setUpdatingPerson] = useEffect(false);
   const { name, affiliation, email, roles} = person;
 
   const deletePerson = () => {
     axios.delete(`${PEOPLE_READ_ENDPOINT}/${email}`)
       .then(fetchPeople)
   }
-
-  const updatePerson = (event) => {
-    axios.put(`${PEOPLE_READ_ENDPOINT}/${email}`)
-      event.preventDefault();
-      const fields = {
-        name: name,
-        affiliation: affiliation,
-        roles: roles
-      }
-      axios.put(`${PEOPLE_READ_ENDPOINT}/${email}`, fields)
-        .then(fetchPeople)
-
-      // .catch((error) => setError(`There was a problem updating the person. ${error}`));
-  }
+  const showUpdatingForm = () => {setUpdatingPerson(true);};
+  const hideUpdatingForm = () => {setUpdatingPerson(false);};
 
   return (
     <div>
@@ -115,7 +161,14 @@ function Person({ person, fetchPeople }) {
         </div>
       </Link>
       <button onClick={deletePerson}>Delete Person</button>
-      <button onClick={updatePerson}>Update Person</button>
+      <button onClick={showUpdatingForm}>Update Person</button>
+      <UpdatePersonForm
+        email={email}
+        visible={updatingPerson}
+        cancel={hideUpdatingForm}
+        fetch={fetchPeople}
+        setError={setError}
+      />
     </div>
   );
 }
