@@ -1,8 +1,28 @@
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event'
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+
+describe('App', () => {
+  it('renders nav and home', async () => {
+    render(<App />);
+
+    await screen.findByRole('heading');
+    await screen.findAllByRole('listitem');
+
+    expect(screen.getByRole('heading'))
+      .toHaveTextContent('Published Manuscripts');
+    
+    expect(screen.getAllByRole('listitem')).toHaveLength(7);
+  });
+
+  it('switches to People view', async () => {
+    render(<App />);
+
+    userEvent.click(screen.getByText('View All People'));
+
+    expect(screen.getByRole('heading'))
+      .toHaveTextContent('View All People')
+  });
 });
