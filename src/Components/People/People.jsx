@@ -36,7 +36,10 @@ function AddPersonForm({
       role: role,
     }
     axios.put(PEOPLE_CREATE_ENDPOINT, newPerson)
-      .then(fetchPeople)
+      .then(()=> {
+        fetchPeople();
+        cancel();
+      })
       .catch((error) => { setError(`There was a problem adding the person. ${error}`); });
   };
 
@@ -98,9 +101,12 @@ function UpdatePersonForm({
       email: email,
       role: role,
     }
-    axios.put(`${PEOPLE_CREATE_ENDPOINT}/${email}`, newPerson)
-      .then(fetchPeople) // rerenders the list of people (view people)
-      .catch((error) => { setError(`There was a problem adding the person. ${error}`); });
+    axios.put(`${PEOPLE_READ_ENDPOINT}/${email}`, newPerson)
+    .then(()=> {
+      fetchPeople();
+      cancel();
+    })
+      .catch((error) => { setError(`There was a problem updating the person. ${error}`); });
   };
 
   
@@ -128,6 +134,14 @@ function UpdatePersonForm({
   );
 }
 
+UpdatePersonForm.propTypes = {
+  email: propTypes.string.isRequired,
+  visible: propTypes.bool.isRequired,
+  cancel: propTypes.func.isRequired,
+  fetchPeople: propTypes.func.isRequired,
+  setError: propTypes.func.isRequired,
+};
+
 function ErrorMessage({ message }) {
   return (
     <div className="error-message">
@@ -139,13 +153,14 @@ ErrorMessage.propTypes = {
   message: propTypes.string.isRequired,
 };
 
-function Person({ person, fetchPeople }) {
-  const [updatingPerson, setUpdatingPerson] = useEffect(false);
+function Person({ person, fetchPeople, setError }) {
+  const [updatingPerson, setUpdatingPerson] = useState(false);
   const { name, affiliation, email, roles} = person;
 
   const deletePerson = () => {
     axios.delete(`${PEOPLE_READ_ENDPOINT}/${email}`)
       .then(fetchPeople)
+      .catch((error) => setError(`There was a problem deleting the person. ${error}`));
   }
   const showUpdatingForm = () => {setUpdatingPerson(true);};
   const hideUpdatingForm = () => {setUpdatingPerson(false);};
@@ -155,9 +170,9 @@ function Person({ person, fetchPeople }) {
       <Link to={name}>
         <div className="person-container">
           <h2>{name}</h2>
-          <p>
-            Email: {email}
-          </p>
+          <p> Email: {email} </p>
+          <p> Affiliation: {affiliation} </p>
+          <p> Roles: {roles} </p>
         </div>
       </Link>
       <button onClick={deletePerson}>Delete Person</button>
@@ -166,8 +181,8 @@ function Person({ person, fetchPeople }) {
         email={email}
         visible={updatingPerson}
         cancel={hideUpdatingForm}
-        fetch={fetchPeople}
-        setError={setError}
+        fetchPeople={fetchPeople}
+        setError = {setError}
       />
     </div>
   );
@@ -180,6 +195,7 @@ Person.propTypes = {
     roles: propTypes.array.isRequired,
   }).isRequired,
   fetchPeople: propTypes.func.isRequired,
+  setError: propTypes.func.isRequired,
 };
 
 function peopleObjectToArray(Data) {
@@ -223,7 +239,7 @@ function People() {
         setError={setError}
       />
       {error && <ErrorMessage message={error} />}
-      {people.map((person) => <Person key={person.name} person={person} fetchPeople={fetchPeople}/>)}
+      {people.map((person) => <Person key={person.name} person={person} fetchPeople={fetchPeople} setError={setError}/>)}
     </div>
   );
 }
