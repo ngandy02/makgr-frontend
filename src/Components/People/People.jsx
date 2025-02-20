@@ -18,13 +18,13 @@ function AddPersonForm({
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [affiliation, setAffiliation] = useState('');
-  const [roles, setRoles] = useState([]);
+  const [role, setRole] = useState('');
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => { setName(event.target.value); };
   const changeAffiliation = (event) => {setAffiliation(event.target.value); };
   const changeEmail = (event) => { setEmail(event.target.value); };
-  const changeRole = (event) => {setRoles(event.target.value.split(',').map((role) => role.trim())); };
+  const changeRole = (event) => {setRole(event.target.value); };
 
   // event handler/function to add a person to the database
   const addPerson = (event) => {
@@ -33,7 +33,7 @@ function AddPersonForm({
       name: name,
       affiliation: affiliation,
       email: email,
-      roles: roles,
+      role: role,
     }
     axios.put(PEOPLE_CREATE_ENDPOINT, newPerson)
       .then(()=> {
@@ -41,7 +41,7 @@ function AddPersonForm({
         setName('');
         setEmail('');
         setAffiliation('');
-        setRoles([]);
+        setRole('');
         cancel();
       })
       .catch((error) => { setError(`There was a problem adding the person. ${error}`); });
@@ -65,7 +65,7 @@ function AddPersonForm({
       <label htmlFor="role">
         Role
       </label>
-      <input required type="text" id="role" value={roles} onChange={changeRole} />
+      <input required type="text" id="role" value={role} onChange={changeRole} />
       <button type="button" onClick={cancel}>Cancel</button>
       <button type="submit" onClick={addPerson}>Submit</button>
     </form>
