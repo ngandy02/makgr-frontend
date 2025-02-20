@@ -18,13 +18,13 @@ function AddPersonForm({
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [affiliation, setAffiliation] = useState('');
-  const [role, setRole] = useState('');
+  const [roles, setRoles] = useState([]);
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => { setName(event.target.value); };
   const changeAffiliation = (event) => {setAffiliation(event.target.value); };
   const changeEmail = (event) => { setEmail(event.target.value); };
-  const changeRole = (event) => {setRole(event.target.value); };
+  const changeRole = (event) => {setRoles(event.target.value.split(',').map((role) => role.trim())); };
 
   // event handler/function to add a person to the database
   const addPerson = (event) => {
@@ -33,11 +33,15 @@ function AddPersonForm({
       name: name,
       affiliation: affiliation,
       email: email,
-      role: role,
+      roles: roles,
     }
     axios.put(PEOPLE_CREATE_ENDPOINT, newPerson)
       .then(()=> {
         fetchPeople();
+        setName('');
+        setEmail('');
+        setAffiliation('');
+        setRoles([]);
         cancel();
       })
       .catch((error) => { setError(`There was a problem adding the person. ${error}`); });
@@ -61,7 +65,7 @@ function AddPersonForm({
       <label htmlFor="role">
         Role
       </label>
-      <input required type="text" id="role" value={role} onChange={changeRole} />
+      <input required type="text" id="role" value={roles} onChange={changeRole} />
       <button type="button" onClick={cancel}>Cancel</button>
       <button type="submit" onClick={addPerson}>Submit</button>
     </form>
@@ -84,12 +88,12 @@ function UpdatePersonForm({
   // original states of the peron's fields
   const [name, setName] = useState('');
   const [affiliation, setAffiliation] = useState('');
-  const [role, setRole] = useState('');
+  const [roles, setRoles] = useState([]);
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => { setName(event.target.value); };
   const changeAffiliation = (event) => {setAffiliation(event.target.value); };
-  const changeRole = (event) => {setRole(event.target.value); };
+  const changeRole = (event) => {setRoles(event.target.value.split(',').map((role) => role.trim())); };
   // no change email becuase you can't change the email of a person
 
   // event handler/function to add a person to the database
@@ -99,11 +103,14 @@ function UpdatePersonForm({
       name: name,
       affiliation: affiliation,
       email: email,
-      role: role,
+      roles: roles,
     }
     axios.put(`${PEOPLE_READ_ENDPOINT}/${email}`, newPerson)
     .then(()=> {
       fetchPeople();
+      setName('');
+      setAffiliation('');
+      setRoles([]);
       cancel();
     })
       .catch((error) => { setError(`There was a problem updating the person. ${error}`); });
@@ -124,7 +131,7 @@ function UpdatePersonForm({
       <label htmlFor="role">
         Role
       </label>
-      <input required type="text" id="role" value={role} onChange={changeRole} />
+      <input required type="text" id="role" value={roles} onChange={changeRole} />
       <button type="button" onClick={cancel}>Cancel</button>
       {/* cancel here calls the hideUpdatingForm which is passed as prop "cancel" */}
       {/* cancel causes the visible var to become false which then makes the update form disappear
@@ -172,7 +179,7 @@ function Person({ person, fetchPeople, setError }) {
           <h2>{name}</h2>
           <p> Email: {email} </p>
           <p> Affiliation: {affiliation} </p>
-          <p> Roles: {roles} </p>
+          <p> Roles: {roles.join(', ')} </p>
         </div>
       </Link>
       <button onClick={deletePerson}>Delete Person</button>
