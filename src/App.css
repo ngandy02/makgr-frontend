@@ -104,13 +104,6 @@ nav {
 
 }
 
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 2rem;
-  padding: 0;
-}
-
 
 nav a {
   color: var(--navy);
@@ -153,14 +146,6 @@ nav a:focus {
   color: var(--accent-color);
   font-weight: bold;
   outline: none;
-}
-
-.home {
-  margin-left: 30px;
-}
-
-.nav-links {
-  margin-right: 30px;
 }
 
 .person-container {
