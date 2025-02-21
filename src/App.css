@@ -115,8 +115,8 @@ nav a {
   border-radius: 5px 5px 0 0;
   position: relative;
 }
-nav a:hover::before,
-nav a:focus::before {
+.navlinks a:hover::before,
+.navlinks a:focus::before {
   content: '';
   position: absolute;
   width: var(--border-radius);
@@ -127,8 +127,8 @@ nav a:focus::before {
   bottom: 0;
   left: calc(var(--padding) * -1 + 1px);
 }
-nav a:hover::after,
-nav a:focus::after {
+.navlinks a:hover::after,
+.navlinks a:focus::after {
   content: '';
   position: absolute;
   width: var(--border-radius);
@@ -140,8 +140,8 @@ nav a:focus::after {
   right: calc(var(--padding) * -1 + 1px);
 }
 
-nav a:hover,
-nav a:focus {
+.navlinks a:hover,
+.navlinks a:focus {
   background-color: var(--background-color);
   color: var(--accent-color);
   font-weight: bold;

@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const PAGES = [
-  { label: 'Home', destination: '/' },
+  { label: 'TITLE', destination: '/' },
   { label: 'Dashboard', destination: '/dashboard' },
   { label: 'Masterhead', destination: '/masterhead' },
   { label: 'Submissions', destination: '/submissions' },
@@ -27,25 +27,21 @@ NavLink.propTypes = {
 
 function Navbar() {
   return (
-    <nav>
-      <div>
-        <ul className='ml-[30px] flex gap-[2rem] p-0 list-none'>
+    <nav className='flex items-center justify-between px-5'>
+      <ul className='text-3xl font-bold'>
           <NavLink 
-            className='home'
-            page = {PAGES[0]}
+            label={PAGES[0].label}
+            destination={PAGES[0].destination}
           />
         </ul>
-      </div>
-      <div>
-        <ul className='mr-[30px] flex gap-[2rem] p-0 list-none'>
+        <ul className='flex gap-[10px] navlinks'>
           {PAGES.map((page) => 
-            page.label !== 'Home' &&
+            page.label !== 'TITLE' &&
               <NavLink 
                 key={page.destination} 
                 label={page.label}
                 destination={page.destination} />)}
         </ul>
-      </div>
     </nav>
   );
 }
