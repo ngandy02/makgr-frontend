@@ -51,8 +51,8 @@ function Navbar() {
       </ul>
     </nav>
     <main className='flex-1 flex justify-center items-center'>
-      <div className='relative'>
-        <h1 className='absolute -top-7 left-0 font-bold text-xl'>{label}</h1>
+      <div className='relative w-full max-w-[75vw]'>
+        <h1 className='absolute -top-9 left-0 font-bold text-2xl'>{label}</h1>
         <div className='bg-white rounded-lg p-10'>
           <Outlet />
         </div>

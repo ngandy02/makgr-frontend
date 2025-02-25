@@ -19,7 +19,7 @@ export default function RegisterForm() {
 
     return (
         <div className='w-full flex items-center justify-center'>
-            <form className='border-2 rounded-lg border-black p-10'>
+            <form className='rounded-lg border-black p-10'>
                 <div>
                     <label htmlFor='username'>Username</label>
                     <input value={username} onChange={e => setUsername(e.target.value)} placeholder='Enter username' id='username' type='text' />
