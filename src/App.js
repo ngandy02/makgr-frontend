@@ -16,6 +16,7 @@ import Masterhead from './Components/Masterhead';
 import Submissions from './Components/Submissions';
 import About from './Components/About';
 import Account from './Components/Account';
+import LoginForm from './Components/Login/LoginForm';
 
 
 function PersonPage() {
@@ -35,7 +36,7 @@ function App() {
         current location */}
         {/* For a different home page, do:
          <Route index element={<Login />} /> */}
-         {/* <Route index element={<Login />} /> */}
+         <Route index element={<LoginForm />} />
         <Route path="" element={<Home />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="masterhead" element={<Masterhead />} />
