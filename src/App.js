@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useParams,
-} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
 
 import './App.css';
 
@@ -19,10 +14,9 @@ import Account from './Components/Account';
 import LoginForm from './Components/Login/LoginForm';
 import RegisterForm from './Components/Login/RegisterForm';
 
-
 function PersonPage() {
   const { name } = useParams();
-  return <h1>{name}</h1>
+  return <h1>{name}</h1>;
 }
 
 function App() {
@@ -37,8 +31,8 @@ function App() {
         current location */}
         {/* For a different home page, do:
          <Route index element={<Login />} /> */}
-         <Route index element={<LoginForm />} />
-         <Route path='register' element={<RegisterForm />} />
+        <Route index element={<LoginForm />} />
+        <Route path="register" element={<RegisterForm />} />
 
         <Route path="" element={<Home />} />
         <Route path="dashboard" element={<Dashboard />} />

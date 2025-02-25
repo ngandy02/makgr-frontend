@@ -27,21 +27,22 @@ NavLink.propTypes = {
 
 function Navbar() {
   return (
-    <nav className='flex items-center justify-between px-5'>
-      <ul className='text-3xl font-bold'>
-          <NavLink 
-            label={PAGES[0].label}
-            destination={PAGES[0].destination}
-          />
-        </ul>
-        <ul className='flex gap-[10px] navlinks'>
-          {PAGES.map((page) => 
-            page.label !== 'TITLE' &&
-              <NavLink 
-                key={page.destination} 
+    <nav className="flex items-center justify-between px-5">
+      <ul className="text-3xl font-bold">
+        <NavLink label={PAGES[0].label} destination={PAGES[0].destination} />
+      </ul>
+      <ul className="flex gap-[10px] navlinks">
+        {PAGES.map(
+          (page) =>
+            page.label !== 'TITLE' && (
+              <NavLink
+                key={page.destination}
                 label={page.label}
-                destination={page.destination} />)}
-        </ul>
+                destination={page.destination}
+              />
+            )
+        )}
+      </ul>
     </nav>
   );
 }
