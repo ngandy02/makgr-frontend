@@ -22,7 +22,7 @@ function PersonPage() {
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      
       <Routes>
         {/* Router allows for react to build a SPA without reloading the 
         full page and jsut have the componenet rendered based on URL path  */}
@@ -31,10 +31,11 @@ function App() {
         current location */}
         {/* For a different home page, do:
          <Route index element={<Login />} /> */}
+         <Route element={<Navbar />}>
         <Route index element={<LoginForm />} />
         <Route path="register" element={<RegisterForm />} />
 
-        <Route path="" element={<Home />} />
+        <Route path="home" element={<Home />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="masterhead" element={<Masterhead />} />
         <Route path="submissions" element={<Submissions />} />
@@ -44,6 +45,7 @@ function App() {
         <Route path="people/:name" element={<PersonPage />} />
         {/* path contains the current URL path excluding the domain name */}
         {/* element contains the Component to be rendered */}
+        </Route>
       </Routes>
     </BrowserRouter>
   );

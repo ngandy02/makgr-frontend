@@ -18,7 +18,7 @@ export default function RegisterForm() {
     }, [password, confirm])
 
     return (
-        <div className='h-[calc(100vh-76px)] w-full flex items-center justify-center'>
+        <div className='w-full flex items-center justify-center'>
             <form className='border-2 rounded-lg border-black p-10'>
                 <div>
                     <label htmlFor='username'>Username</label>

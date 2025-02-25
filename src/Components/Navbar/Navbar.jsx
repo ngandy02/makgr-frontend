@@ -1,6 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const PAGES = [
   { label: 'TITLE', destination: '/' },
@@ -26,7 +26,13 @@ NavLink.propTypes = {
 };
 
 function Navbar() {
+  const location = useLocation();
+  const url = location.pathname;
+  const page = PAGES.filter(obj => obj.destination === url)[0];
+  const label = page? page.label : 'TITLE';
+
   return (
+    <div className='flex flex-col min-h-screen'>
     <nav className="flex items-center justify-between px-5">
       <ul className="text-3xl font-bold">
         <NavLink label={PAGES[0].label} destination={PAGES[0].destination} />
@@ -44,6 +50,15 @@ function Navbar() {
         )}
       </ul>
     </nav>
+    <main className='flex-1 flex justify-center items-center'>
+      <div className='relative'>
+        <h1 className='absolute -top-7 left-0 font-bold text-xl'>{label}</h1>
+        <div className='bg-white rounded-lg p-10'>
+          <Outlet />
+        </div>
+      </div>
+    </main>
+    </div>
   );
 }
 
