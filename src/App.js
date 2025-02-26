@@ -13,6 +13,7 @@ import About from './Components/About';
 import Account from './Components/Account';
 import LoginForm from './Components/Login/LoginForm';
 import RegisterForm from './Components/Login/RegisterForm';
+import Reset from './Components/Login/Reset';
 
 function PersonPage() {
   const { name } = useParams();
@@ -34,6 +35,7 @@ function App() {
          <Route element={<Navbar />}>
         <Route index element={<LoginForm />} />
         <Route path="register" element={<RegisterForm />} />
+        <Route path="reset-password" element = {<Reset />} />
 
         <Route path="home" element={<Home />} />
         <Route path="dashboard" element={<Dashboard />} />
