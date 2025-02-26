@@ -1,3 +1,3 @@
-import Masterhead from './Masterhead';
+import Masterhead from "./Masterhead";
 
 export default Masterhead;

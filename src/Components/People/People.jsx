@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import propTypes from 'prop-types';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import propTypes from "prop-types";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-import { BACKEND_URL } from '../../constants';
+import { BACKEND_URL } from "../../constants";
 
 const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
 const PEOPLE_CREATE_ENDPOINT = `${BACKEND_URL}/people/create`;
 
 function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
   // original states of the peron's fields
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [affiliation, setAffiliation] = useState('');
-  const [role, setRole] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [affiliation, setAffiliation] = useState("");
+  const [role, setRole] = useState("");
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => {
@@ -42,14 +42,17 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
       .put(PEOPLE_CREATE_ENDPOINT, newPerson)
       .then(() => {
         fetchPeople();
-        setName('');
-        setEmail('');
-        setAffiliation('');
-        setRole('');
+        setName("");
+        setEmail("");
+        setAffiliation("");
+        setRole("");
+        setError("");
         cancel();
       })
       .catch((error) => {
-        setError(`There was a problem adding the person. ${error}`);
+        setError(
+          `There was a problem adding the person. ${error.response.data.message}`,
+        );
       });
   };
 
@@ -106,8 +109,8 @@ AddPersonForm.propTypes = {
 
 function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
   // original states of the peron's fields
-  const [name, setName] = useState('');
-  const [affiliation, setAffiliation] = useState('');
+  const [name, setName] = useState("");
+  const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
 
   // event handler/functions to change the state of the person's fields
@@ -118,7 +121,7 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
     setAffiliation(event.target.value);
   };
   const changeRole = (event) => {
-    setRoles(event.target.value.split(',').map((role) => role.trim()));
+    setRoles(event.target.value.split(",").map((role) => role.trim()));
   };
   // no change email becuase you can't change the email of a person
 
@@ -135,13 +138,16 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
       .put(`${PEOPLE_READ_ENDPOINT}/${email}`, newPerson)
       .then(() => {
         fetchPeople();
-        setName('');
-        setAffiliation('');
+        setName("");
+        setAffiliation("");
         setRoles([]);
         cancel();
+        setError("");
       })
       .catch((error) => {
-        setError(`There was a problem updating the person. ${error}`);
+        setError(
+          `There was a problem updating the person. ${error.response.data.message}`,
+        );
       });
   };
 
@@ -209,7 +215,7 @@ function Person({ person, fetchPeople, setError }) {
       .delete(`${PEOPLE_READ_ENDPOINT}/${email}`)
       .then(fetchPeople)
       .catch((error) =>
-        setError(`There was a problem deleting the person. ${error}`)
+        setError(`There was a problem deleting the person. ${error}`),
       );
   };
   const showUpdatingForm = () => {
@@ -226,7 +232,7 @@ function Person({ person, fetchPeople, setError }) {
           <h2>{name}</h2>
           <p> Email: {email} </p>
           <p> Affiliation: {affiliation} </p>
-          <p> Roles: {roles.join(', ')} </p>
+          <p> Roles: {roles.join(", ")} </p>
         </div>
       </Link>
       <button onClick={deletePerson}>Delete Person</button>
@@ -259,7 +265,7 @@ function peopleObjectToArray(Data) {
 }
 
 function People() {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [people, setPeople] = useState([]); // list of people dictionaries
   const [addingPerson, setAddingPerson] = useState(false);
 
@@ -272,7 +278,7 @@ function People() {
         setPeople(peopleObjectToArray(data));
       }) //on success (.then)
       .catch((error) =>
-        setError(`There was a problem retrieving the list of people. ${error}`)
+        setError(`There was a problem retrieving the list of people. ${error}`),
       ); //on failure (.catch)
   };
 

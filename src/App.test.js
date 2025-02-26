@@ -1,28 +1,27 @@
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import userEvent from '@testing-library/user-event'
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import userEvent from "@testing-library/user-event";
+import App from "./App";
 
-
-describe('App', () => {
-  it('renders nav and home', async () => {
+describe("App", () => {
+  it("renders nav and home", async () => {
     render(<App />);
 
-    await screen.findByRole('heading');
-    await screen.findAllByRole('listitem');
+    await screen.findByRole("heading");
+    await screen.findAllByRole("listitem");
 
-    expect(screen.getByRole('heading'))
-      .toHaveTextContent('Published Manuscripts');
-    
-    expect(screen.getAllByRole('listitem')).toHaveLength(7);
+    expect(screen.getByRole("heading")).toHaveTextContent(
+      "Published Manuscripts",
+    );
+
+    expect(screen.getAllByRole("listitem")).toHaveLength(7);
   });
 
-  it('switches to People view', async () => {
+  it("switches to People view", async () => {
     render(<App />);
 
-    userEvent.click(screen.getByText('View All People'));
+    userEvent.click(screen.getByText("View All People"));
 
-    expect(screen.getByRole('heading'))
-      .toHaveTextContent('View All People')
+    expect(screen.getByRole("heading")).toHaveTextContent("View All People");
   });
 });

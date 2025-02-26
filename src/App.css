@@ -55,7 +55,7 @@ button:hover {
 
 form input {
   display: block;
-  margin: .5rem 0 1rem 0;
+  margin: 0.5rem 0 1rem 0;
   padding: 1rem 0.5rem 0.5rem 0.5rem;
   border-radius: 5px;
   border: 2px solid var(--accent-color);
@@ -72,10 +72,10 @@ form label {
 }
 form label::before,
 form label::after {
-  content: '';
+  content: "";
   position: absolute;
   height: 1.65rem;
-  top: -.25rem;
+  top: -0.25rem;
   left: -5px;
   width: calc(100% + 10px);
   border: 2px solid var(--accent-color);
@@ -87,11 +87,11 @@ form label::after {
 form button {
   margin-right: 1rem;
 }
-form button[type=button] {
+form button[type="button"] {
   border-color: var(--background-color);
 }
-form button[type=button]:focus,
-form button[type=button]:hover {
+form button[type="button"]:focus,
+form button[type="button"]:hover {
   border-color: var(--accent-color);
 }
 
@@ -101,9 +101,7 @@ nav {
   background-color: white;
   justify-content: space-between;
   display: flex;
-
 }
-
 
 nav a {
   color: var(--navy);
@@ -117,7 +115,7 @@ nav a {
 }
 .navlinks a:hover::before,
 .navlinks a:focus::before {
-  content: '';
+  content: "";
   position: absolute;
   width: var(--border-radius);
   height: var(--border-radius);
@@ -129,7 +127,7 @@ nav a {
 }
 .navlinks a:hover::after,
 .navlinks a:focus::after {
-  content: '';
+  content: "";
   position: absolute;
   width: var(--border-radius);
   height: var(--border-radius);
