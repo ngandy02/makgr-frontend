@@ -18,6 +18,9 @@ export default function LoginForm() {
                     <input value={password} onChange={e => setPassword(e.target.value)} placeholder='Enter password' id='password' type='password' />
                 </div>
                 <button>Log in</button>
+                <h1>Forgot your password?</h1>
+                <div className='text-sm underline'><Link to={'/reset-password'}>Reset password</Link></div>
+                <h1>No account?</h1>
                 <div className='text-sm underline'><Link to={'/register'}>Create an account</Link></div>
             </form>
 
