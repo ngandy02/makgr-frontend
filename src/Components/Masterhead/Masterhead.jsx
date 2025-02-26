@@ -14,7 +14,7 @@ function Masterhead() {
           </ul>
         </section>
         <section className='space-y-2'>
-          <h2 className='text-lg font-bold'>Manging Editors</h2>
+          <h2 className='text-lg font-bold'>Managing Editors</h2>
           <ul className={`${loading && 'space-y-6'}`}>
           {loading ? loadingSkeleton : managingEditors.map((editor, i) => <li key={editor.name + i}>{editor.name}</li>)}
           </ul>
