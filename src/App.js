@@ -3,16 +3,17 @@ import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 
 import "./App.css";
 
-import Navbar from "./Components/Navbar";
-import People from "./Components/People";
-import Home from "./Components/Home";
-import Dashboard from "./Components/Dashboard";
-import Masterhead from "./Components/Masterhead";
-import Submissions from "./Components/Submissions";
-import About from "./Components/About";
-import Account from "./Components/Account";
-import LoginForm from "./Components/Login/LoginForm";
-import RegisterForm from "./Components/Login/RegisterForm";
+import Navbar from './Components/Navbar';
+import People from './Components/People';
+import Home from './Components/Home';
+import Dashboard from './Components/Dashboard';
+import Masterhead from './Components/Masterhead';
+import Submissions from './Components/Submissions';
+import About from './Components/About';
+import Account from './Components/Account';
+import LoginForm from './Components/Login/LoginForm';
+import RegisterForm from './Components/Login/RegisterForm';
+import Reset from './Components/Login/Reset';
 
 function PersonPage() {
   const { name } = useParams();
@@ -30,9 +31,10 @@ function App() {
         current location */}
         {/* For a different home page, do:
          <Route index element={<Login />} /> */}
-        <Route element={<Navbar />}>
-          <Route index element={<LoginForm />} />
-          <Route path="register" element={<RegisterForm />} />
+         <Route element={<Navbar />}>
+        <Route index element={<LoginForm />} />
+        <Route path="register" element={<RegisterForm />} />
+        <Route path="reset-password" element = {<Reset />} />
 
           <Route path="home" element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
