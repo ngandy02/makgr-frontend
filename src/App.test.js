@@ -5,6 +5,30 @@ import App from './App';
 
 
 describe('App', () => {
+  it('renders login page', async () => {
+    render(<App />);
+
+    userEvent.click(screen.getByRole('link', { name: 'TITLE' }));
+
+    expect(screen.getByLabelText('Username')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Log in' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Create an account' })).toBeInTheDocument();
+  });
+
+  it('renders register page', async () => {
+    render(<App />);
+
+    userEvent.click(screen.getByRole('link', { name: 'TITLE' }));
+    userEvent.click(screen.getByRole('link', { name: 'Create an account' }));
+
+    expect(screen.getByLabelText('Username')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Confirm password')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sign up' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Have an account?' })).toBeInTheDocument();
+  });
+
   it('renders navbar', async () => {
     render(<App />);
 
