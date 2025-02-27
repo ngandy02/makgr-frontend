@@ -27,11 +27,7 @@ function About() {
     fetchAboutText();
   }, []);
 
-  return (
-    <div>
-      {error ? <p className="text-red-500">{error}</p> : <p>{aboutText}</p>}
-    </div>
-  );
+  return <div>{error ? <p className='text-red-500'>{error}</p> : <p>{aboutText}</p>}</div>;
 }
 
 export default About;

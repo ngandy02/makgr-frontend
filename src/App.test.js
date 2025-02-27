@@ -1,7 +1,7 @@
-import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import userEvent from "@testing-library/user-event";
-import App from "./App";
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
+import App from './App';
 
 describe('App', () => {
   it('renders login page', async () => {
@@ -65,10 +65,10 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Consulting Editors' })).toBeInTheDocument();
   });
 
-  it("switches to People view", async () => {
+  it('switches to People view', async () => {
     render(<App />);
 
-    userEvent.click(screen.getByText("View All People"));
+    userEvent.click(screen.getByText('View All People'));
 
     expect(screen.getByRole('button', { name: 'Add a Person' })).toBeInTheDocument();
   });

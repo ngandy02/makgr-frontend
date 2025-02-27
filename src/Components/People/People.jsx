@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import propTypes from "prop-types";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import propTypes from 'prop-types';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-import { BACKEND_URL } from "../../constants";
+import { BACKEND_URL } from '../../constants';
 
 const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
 const PEOPLE_CREATE_ENDPOINT = `${BACKEND_URL}/people/create`;
 
 function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
   // original states of the peron's fields
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [affiliation, setAffiliation] = useState("");
-  const [role, setRole] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [affiliation, setAffiliation] = useState('');
+  const [role, setRole] = useState('');
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => {
@@ -42,59 +42,39 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
       .put(PEOPLE_CREATE_ENDPOINT, newPerson)
       .then(() => {
         fetchPeople();
-        setName("");
-        setEmail("");
-        setAffiliation("");
-        setRole("");
-        setError("");
+        setName('');
+        setEmail('');
+        setAffiliation('');
+        setRole('');
+        setError('');
         cancel();
       })
       .catch((error) => {
-        setError(
-          `There was a problem adding the person. ${error.response.data.message}`,
-        );
+        setError(`There was a problem adding the person. ${error.response.data.message}`);
       });
   };
 
   if (!visible) return null;
   return (
     <form>
-      <label htmlFor="name">Name</label>
+      <label htmlFor='name'>Name</label>
+      <input required type='text' id='name' value={name} onChange={changeName} />
+      <label htmlFor='affiliation'>Affiliation</label>
       <input
         required
-        type="text"
-        id="name"
-        value={name}
-        onChange={changeName}
-      />
-      <label htmlFor="affiliation">Affiliation</label>
-      <input
-        required
-        type="text"
-        id="affiliation"
+        type='text'
+        id='affiliation'
         value={affiliation}
         onChange={changeAffiliation}
       />
-      <label htmlFor="email">Email</label>
-      <input
-        required
-        type="text"
-        id="email"
-        value={email}
-        onChange={changeEmail}
-      />
-      <label htmlFor="role">Role</label>
-      <input
-        required
-        type="text"
-        id="role"
-        value={role}
-        onChange={changeRole}
-      />
-      <button type="button" onClick={cancel}>
+      <label htmlFor='email'>Email</label>
+      <input required type='text' id='email' value={email} onChange={changeEmail} />
+      <label htmlFor='role'>Role</label>
+      <input required type='text' id='role' value={role} onChange={changeRole} />
+      <button type='button' onClick={cancel}>
         Cancel
       </button>
-      <button type="submit" onClick={addPerson}>
+      <button type='submit' onClick={addPerson}>
         Submit
       </button>
     </form>
@@ -109,8 +89,8 @@ AddPersonForm.propTypes = {
 
 function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
   // original states of the peron's fields
-  const [name, setName] = useState("");
-  const [affiliation, setAffiliation] = useState("");
+  const [name, setName] = useState('');
+  const [affiliation, setAffiliation] = useState('');
   const [roles, setRoles] = useState([]);
 
   // event handler/functions to change the state of the person's fields
@@ -121,7 +101,7 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
     setAffiliation(event.target.value);
   };
   const changeRole = (event) => {
-    setRoles(event.target.value.split(",").map((role) => role.trim()));
+    setRoles(event.target.value.split(',').map((role) => role.trim()));
   };
   // no change email becuase you can't change the email of a person
 
@@ -138,53 +118,39 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
       .put(`${PEOPLE_READ_ENDPOINT}/${email}`, newPerson)
       .then(() => {
         fetchPeople();
-        setName("");
-        setAffiliation("");
+        setName('');
+        setAffiliation('');
         setRoles([]);
         cancel();
-        setError("");
+        setError('');
       })
       .catch((error) => {
-        setError(
-          `There was a problem updating the person. ${error.response.data.message}`,
-        );
+        setError(`There was a problem updating the person. ${error.response.data.message}`);
       });
   };
 
   if (!visible) return null;
   return (
     <form>
-      <label htmlFor="name">Name</label>
+      <label htmlFor='name'>Name</label>
+      <input required type='text' id='name' value={name} onChange={changeName} />
+      <label htmlFor='affiliation'>Affiliation</label>
       <input
         required
-        type="text"
-        id="name"
-        value={name}
-        onChange={changeName}
-      />
-      <label htmlFor="affiliation">Affiliation</label>
-      <input
-        required
-        type="text"
-        id="affiliation"
+        type='text'
+        id='affiliation'
         value={affiliation}
         onChange={changeAffiliation}
       />
-      <label htmlFor="role">Role</label>
-      <input
-        required
-        type="text"
-        id="role"
-        value={roles}
-        onChange={changeRole}
-      />
-      <button type="button" onClick={cancel}>
+      <label htmlFor='role'>Role</label>
+      <input required type='text' id='role' value={roles} onChange={changeRole} />
+      <button type='button' onClick={cancel}>
         Cancel
       </button>
       {/* cancel here calls the hideUpdatingForm which is passed as prop "cancel" */}
       {/* cancel causes the visible var to become false which then makes the update form disappear
       which happens in the "Person component" which changes the state of addingPerson causing the whole People component to rerender */}
-      <button type="submit" onClick={updatePerson}>
+      <button type='submit' onClick={updatePerson}>
         Update
       </button>
     </form>
@@ -200,7 +166,7 @@ UpdatePersonForm.propTypes = {
 };
 
 function ErrorMessage({ message }) {
-  return <div className="error-message">{message}</div>;
+  return <div className='error-message'>{message}</div>;
 }
 ErrorMessage.propTypes = {
   message: propTypes.string.isRequired,
@@ -214,9 +180,7 @@ function Person({ person, fetchPeople, setError }) {
     axios
       .delete(`${PEOPLE_READ_ENDPOINT}/${email}`)
       .then(fetchPeople)
-      .catch((error) =>
-        setError(`There was a problem deleting the person. ${error}`),
-      );
+      .catch((error) => setError(`There was a problem deleting the person. ${error}`));
   };
   const showUpdatingForm = () => {
     setUpdatingPerson(true);
@@ -228,11 +192,11 @@ function Person({ person, fetchPeople, setError }) {
   return (
     <div>
       <Link to={name}>
-        <div className="person-container">
+        <div className='person-container'>
           <h2>{name}</h2>
           <p> Email: {email} </p>
           <p> Affiliation: {affiliation} </p>
-          <p> Roles: {roles.join(", ")} </p>
+          <p> Roles: {roles.join(', ')} </p>
         </div>
       </Link>
       <button onClick={deletePerson}>Delete Person</button>
@@ -265,7 +229,7 @@ function peopleObjectToArray(Data) {
 }
 
 function People() {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [people, setPeople] = useState([]); // list of people dictionaries
   const [addingPerson, setAddingPerson] = useState(false);
 
@@ -277,9 +241,7 @@ function People() {
       .then(({ data }) => {
         setPeople(peopleObjectToArray(data));
       }) //on success (.then)
-      .catch((error) =>
-        setError(`There was a problem retrieving the list of people. ${error}`),
-      ); //on failure (.catch)
+      .catch((error) => setError(`There was a problem retrieving the list of people. ${error}`)); //on failure (.catch)
   };
 
   const showAddPersonForm = () => {
@@ -293,10 +255,10 @@ function People() {
   // allows the component to fetch the list of people once right after when the component is rendered
 
   return (
-    <div className="wrapper">
+    <div className='wrapper'>
       <header>
         <h1>View All People</h1>
-        <button type="button" onClick={showAddPersonForm}>
+        <button type='button' onClick={showAddPersonForm}>
           Add a Person
         </button>
       </header>
@@ -308,12 +270,7 @@ function People() {
       />
       {error && <ErrorMessage message={error} />}
       {people.map((person) => (
-        <Person
-          key={person.name}
-          person={person}
-          fetchPeople={fetchPeople}
-          setError={setError}
-        />
+        <Person key={person.name} person={person} fetchPeople={fetchPeople} setError={setError} />
       ))}
     </div>
   );
