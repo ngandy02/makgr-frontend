@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import propTypes from 'prop-types';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { edit, trash } from "../../assets";
 
 import { BACKEND_URL } from '../../constants';
 
@@ -71,10 +72,23 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
       <input required type='text' id='email' value={email} onChange={changeEmail} />
       <label htmlFor='role'>Role</label>
       <input required type='text' id='role' value={role} onChange={changeRole} />
-      <button type='button' onClick={cancel}>
+      <button 
+        onClick={cancel}
+        style={{
+          transition: "0.3s ease",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+        }}
+      >
         Cancel
       </button>
-      <button type='submit' onClick={addPerson}>
+      <button 
+        type="submit" 
+        onClick={addPerson}
+        style={{
+          transition: "0.3s ease",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+        }}
+      >
         Submit
       </button>
     </form>
@@ -144,13 +158,27 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
       />
       <label htmlFor='role'>Role</label>
       <input required type='text' id='role' value={roles} onChange={changeRole} />
-      <button type='button' onClick={cancel}>
+      <button 
+        onClick={cancel}
+        style={{
+          transition: "0.3s ease",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+        }}
+        
+      >
         Cancel
       </button>
       {/* cancel here calls the hideUpdatingForm which is passed as prop "cancel" */}
       {/* cancel causes the visible var to become false which then makes the update form disappear
       which happens in the "Person component" which changes the state of addingPerson causing the whole People component to rerender */}
-      <button type='submit' onClick={updatePerson}>
+      <button 
+        type="submit" 
+        onClick={updatePerson}
+        style={{
+          transition: "0.3s ease",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+        }}
+      >
         Update
       </button>
     </form>
@@ -191,16 +219,24 @@ function Person({ person, fetchPeople, setError }) {
 
   return (
     <div>
-      <Link to={name}>
-        <div className='person-container'>
-          <h2>{name}</h2>
+        <div className="person-container">
+          <h2>
+            <Link to={name} className="font-bold hover:text-orange-500">
+              {name}
+            </Link>
+          </h2>
           <p> Email: {email} </p>
           <p> Affiliation: {affiliation} </p>
-          <p> Roles: {roles.join(', ')} </p>
+          <p> Roles: {roles.join(", ")} </p>
+          <div className="flex space-x-2">
+            <button onClick={showUpdatingForm} className="border-none bg-transparent cursor-pointer hover:bg-gray-200 focus:bg-gray-200">
+              <img src={edit} alt="Update" className="w-5 h-5" />
+            </button>
+            <button onClick={deletePerson} className="border-none bg-transparent cursor-pointer hover:bg-gray-200">
+              <img src={trash} alt="Delete" className="w-5 h-5" />
+            </button>
+          </div>
         </div>
-      </Link>
-      <button onClick={deletePerson}>Delete Person</button>
-      <button onClick={showUpdatingForm}>Update Person</button>
       <UpdatePersonForm
         email={email}
         visible={updatingPerson}
@@ -258,7 +294,21 @@ function People() {
     <div className='wrapper'>
       <header>
         <h1>View All People</h1>
-        <button type='button' onClick={showAddPersonForm}>
+        <button type="button" 
+                onClick={showAddPersonForm} 
+                style={{
+                  transition: "0.3s ease",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.05)";
+                  e.target.style.boxShadow = "0 8px 10px rgba(0, 0, 0, 0.2)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1)";
+                  e.target.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+                }}
+        >
           Add a Person
         </button>
       </header>
