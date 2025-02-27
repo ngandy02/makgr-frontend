@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import propTypes from 'prop-types';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { edit, trash } from "../../assets";
+import { edit, trash } from '../../assets';
 
 import { BACKEND_URL } from '../../constants';
 
@@ -14,7 +14,7 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [affiliation, setAffiliation] = useState('');
-  const [role, setRole] = useState('');
+  const [roles, setRoles] = useState([]);
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => {
@@ -26,8 +26,8 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
   const changeEmail = (event) => {
     setEmail(event.target.value);
   };
-  const changeRole = (event) => {
-    setRole(event.target.value);
+  const changeRoles = (event) => {
+    setRoles(event.target.value.split(',').map((role) => role.trim()));
   };
 
   // event handler/function to add a person to the database
@@ -37,7 +37,7 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
       name: name,
       affiliation: affiliation,
       email: email,
-      role: role,
+      roles: roles,
     };
     axios
       .put(PEOPLE_CREATE_ENDPOINT, newPerson)
@@ -46,7 +46,7 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
         setName('');
         setEmail('');
         setAffiliation('');
-        setRole('');
+        setRoles([]);
         setError('');
         cancel();
       })
@@ -70,23 +70,23 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
       />
       <label htmlFor='email'>Email</label>
       <input required type='text' id='email' value={email} onChange={changeEmail} />
-      <label htmlFor='role'>Role</label>
-      <input required type='text' id='role' value={role} onChange={changeRole} />
-      <button 
+      <label htmlFor='roles'>Roles</label>
+      <input required type='text' id='roles' value={roles} onChange={changeRoles} />
+      <button
         onClick={cancel}
         style={{
-          transition: "0.3s ease",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+          transition: '0.3s ease',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         }}
       >
         Cancel
       </button>
-      <button 
-        type="submit" 
+      <button
+        type='submit'
         onClick={addPerson}
         style={{
-          transition: "0.3s ease",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+          transition: '0.3s ease',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         }}
       >
         Submit
@@ -114,7 +114,7 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
   const changeAffiliation = (event) => {
     setAffiliation(event.target.value);
   };
-  const changeRole = (event) => {
+  const changeRoles = (event) => {
     setRoles(event.target.value.split(',').map((role) => role.trim()));
   };
   // no change email becuase you can't change the email of a person
@@ -156,27 +156,26 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
         value={affiliation}
         onChange={changeAffiliation}
       />
-      <label htmlFor='role'>Role</label>
-      <input required type='text' id='role' value={roles} onChange={changeRole} />
-      <button 
+      <label htmlFor='roles'>Roles</label>
+      <input required type='text' id='roles' value={roles} onChange={changeRoles} />
+      <button
         onClick={cancel}
         style={{
-          transition: "0.3s ease",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+          transition: '0.3s ease',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         }}
-        
       >
         Cancel
       </button>
       {/* cancel here calls the hideUpdatingForm which is passed as prop "cancel" */}
       {/* cancel causes the visible var to become false which then makes the update form disappear
       which happens in the "Person component" which changes the state of addingPerson causing the whole People component to rerender */}
-      <button 
-        type="submit" 
+      <button
+        type='submit'
         onClick={updatePerson}
         style={{
-          transition: "0.3s ease",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+          transition: '0.3s ease',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         }}
       >
         Update
@@ -219,24 +218,30 @@ function Person({ person, fetchPeople, setError }) {
 
   return (
     <div>
-        <div className="person-container">
-          <h2>
-            <Link to={name} className="font-bold hover:text-orange-500">
-              {name}
-            </Link>
-          </h2>
-          <p> Email: {email} </p>
-          <p> Affiliation: {affiliation} </p>
-          <p> Roles: {roles.join(", ")} </p>
-          <div className="flex space-x-2">
-            <button onClick={showUpdatingForm} className="border-none bg-transparent cursor-pointer hover:bg-gray-200 focus:bg-gray-200">
-              <img src={edit} alt="Update" className="w-5 h-5" />
-            </button>
-            <button onClick={deletePerson} className="border-none bg-transparent cursor-pointer hover:bg-gray-200">
-              <img src={trash} alt="Delete" className="w-5 h-5" />
-            </button>
-          </div>
+      <div className='person-container'>
+        <h2>
+          <Link to={name} className='font-bold hover:text-orange-500'>
+            {name}
+          </Link>
+        </h2>
+        <p> Email: {email} </p>
+        <p> Affiliation: {affiliation} </p>
+        <p> Roles: {roles.join(', ')} </p>
+        <div className='flex space-x-2'>
+          <button
+            onClick={showUpdatingForm}
+            className='border-none bg-transparent cursor-pointer hover:bg-gray-200 focus:bg-gray-200'
+          >
+            <img src={edit} alt='Update' className='w-5 h-5' />
+          </button>
+          <button
+            onClick={deletePerson}
+            className='border-none bg-transparent cursor-pointer hover:bg-gray-200'
+          >
+            <img src={trash} alt='Delete' className='w-5 h-5' />
+          </button>
         </div>
+      </div>
       <UpdatePersonForm
         email={email}
         visible={updatingPerson}
@@ -294,20 +299,21 @@ function People() {
     <div className='wrapper'>
       <header>
         <h1>View All People</h1>
-        <button type="button" 
-                onClick={showAddPersonForm} 
-                style={{
-                  transition: "0.3s ease",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = "scale(1.05)";
-                  e.target.style.boxShadow = "0 8px 10px rgba(0, 0, 0, 0.2)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = "scale(1)";
-                  e.target.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
-                }}
+        <button
+          type='button'
+          onClick={showAddPersonForm}
+          style={{
+            transition: '0.3s ease',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'scale(1.05)';
+            e.target.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'scale(1)';
+            e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+          }}
         >
           Add a Person
         </button>
