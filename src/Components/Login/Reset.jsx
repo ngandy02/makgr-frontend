@@ -22,6 +22,7 @@ export default function Reset() {
             placeholder='Enter username'
             id='username'
             type='text'
+            className='w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
         <div>
@@ -32,6 +33,7 @@ export default function Reset() {
             placeholder='Enter password'
             id='newpassword'
             type='password'
+            className='w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
         <div>
@@ -42,6 +44,7 @@ export default function Reset() {
             placeholder='Enter password'
             id='confirm'
             type='password'
+            className='w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
         {passwordsNotMatching && <div className='text-red-600'>Passwords do not match</div>}

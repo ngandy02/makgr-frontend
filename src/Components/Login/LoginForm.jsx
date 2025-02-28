@@ -7,7 +7,7 @@ export default function LoginForm() {
 
   return (
     <div className='w-full flex items-center justify-center'>
-      <form className='rounded-lg border-black p-10'>
+      <form className='rounded-lg p-10'>
         <div>
           <label htmlFor='username'>Username</label>
           <input
@@ -16,6 +16,7 @@ export default function LoginForm() {
             placeholder='Enter username'
             id='username'
             type='text'
+            className='w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
         <div>
@@ -26,16 +27,19 @@ export default function LoginForm() {
             placeholder='Enter password'
             id='password'
             type='password'
+            className='w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
-        <button>Log in</button>
-        <h1>Forgot your password?</h1>
-        <div className='text-sm underline'>
-          <Link to={'/reset-password'}>Reset password</Link>
-        </div>
-        <h1>No account?</h1>
-        <div className='text-sm underline'>
-          <Link to={'/register'}>Create an account</Link>
+        <button className='mt-2'>Log in</button>
+        <div className='text-center mt-2'>
+          <p className='text-sm text-gray-600 mt-3'>Forgot your password?</p>
+          <Link to={'/reset-password'} className='text-sm font-medium text-primary hover:underline'>
+            Reset password
+          </Link>
+          <p className='text-sm text-gray-600 mt-2'>No account?</p>
+          <Link to={'/register'} className='text-sm font-medium text-primary underline'>
+            Create an account
+          </Link>
         </div>
       </form>
     </div>

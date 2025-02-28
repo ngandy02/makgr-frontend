@@ -393,6 +393,7 @@ function People() {
           style={{
             transition: '0.3s ease',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            marginBottom: '0.75rem'
           }}
           onMouseEnter={(e) => {
             e.target.style.transform = 'scale(1.05)';

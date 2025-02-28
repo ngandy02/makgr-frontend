@@ -19,7 +19,7 @@ export default function RegisterForm() {
 
   return (
     <div className='w-full flex items-center justify-center'>
-      <form className='rounded-lg border-black p-10'>
+      <form className='rounded-lg p-10'>
         <div>
           <label htmlFor='username'>Username</label>
           <input
@@ -28,6 +28,7 @@ export default function RegisterForm() {
             placeholder='Enter username'
             id='username'
             type='text'
+            className='w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
         <div>
@@ -38,6 +39,7 @@ export default function RegisterForm() {
             placeholder='Enter password'
             id='password'
             type='password'
+            className='w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
         <div>
@@ -48,12 +50,16 @@ export default function RegisterForm() {
             placeholder='Enter password'
             id='confirm'
             type='password'
+            className='w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary'
           />
         </div>
         {passwordsNotMatching && <div className='text-red-600'>Passwords do not match</div>}
-        <button>Sign up</button>
-        <div className='text-sm underline'>
-          <Link to={'/'}>Have an account?</Link>
+        <button className='mt-2'>Sign up</button>
+        <div className='text-center mt-2'>
+          <p className='text-sm text-gray-600 mt-3'>Have an account?</p>
+          <Link to={'/'} className='text-sm font-medium text-primary hover:underline'>
+            Log in
+          </Link>
         </div>
       </form>
     </div>
