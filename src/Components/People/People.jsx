@@ -8,6 +8,7 @@ import { BACKEND_URL } from '../../constants';
 
 const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
 const PEOPLE_CREATE_ENDPOINT = `${BACKEND_URL}/people/create`;
+const ROLES_READ_ENDPOINT = `${BACKEND_URL}/roles`;
 
 function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
   // original states of the peron's fields
@@ -15,6 +16,18 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
   const [email, setEmail] = useState('');
   const [affiliation, setAffiliation] = useState('');
   const [roles, setRoles] = useState([]);
+  const [availableRoles, setAvailableRoles] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(ROLES_READ_ENDPOINT)
+      .then((response) => {
+        setAvailableRoles(response.data);
+      })
+      .catch((error) => {
+        setError(`Error fetching roles: ${error.response.data.message}`);
+      });
+  }, [setError]);
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => {
@@ -27,7 +40,14 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
     setEmail(event.target.value);
   };
   const changeRoles = (event) => {
-    setRoles(event.target.value.split(',').map((role) => role.trim()));
+    const { value, checked } = event.target;
+    setRoles((prevRoles) => {
+      if (checked) {
+        return [...prevRoles, value];
+      } else {
+        return prevRoles.filter((role) => role !== value);
+      }
+    });
   };
 
   // event handler/function to add a person to the database
@@ -56,6 +76,7 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
   };
 
   if (!visible) return null;
+
   return (
     <form>
       <label htmlFor='name'>Name</label>
@@ -71,26 +92,41 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
       <label htmlFor='email'>Email</label>
       <input required type='text' id='email' value={email} onChange={changeEmail} />
       <label htmlFor='roles'>Roles</label>
-      <input required type='text' id='roles' value={roles} onChange={changeRoles} />
-      <button
-        onClick={cancel}
-        style={{
-          transition: '0.3s ease',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        Cancel
-      </button>
-      <button
-        type='submit'
-        onClick={addPerson}
-        style={{
-          transition: '0.3s ease',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        Submit
-      </button>
+      <div id='roles'>
+        {Object.entries(availableRoles).map(([roleCode, roleName]) => (
+          <div key={roleCode}>
+            <input
+              type='checkbox'
+              id={roleCode}
+              value={roleCode}
+              checked={roles.includes(roleCode)}
+              onChange={changeRoles}
+            />
+            <label htmlFor={roleCode}>{roleName}</label>
+          </div>
+        ))}
+      </div>
+      <div className='flex gap-4'>
+        <button
+          onClick={cancel}
+          style={{
+            transition: '0.3s ease',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          Cancel
+        </button>
+        <button
+          type='submit'
+          onClick={addPerson}
+          style={{
+            transition: '0.3s ease',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          Submit
+        </button>
+      </div>
     </form>
   );
 }
@@ -102,10 +138,41 @@ AddPersonForm.propTypes = {
 };
 
 function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
-  // original states of the peron's fields
   const [name, setName] = useState('');
   const [affiliation, setAffiliation] = useState('');
   const [roles, setRoles] = useState([]);
+  const [availableRoles, setAvailableRoles] = useState([]);
+
+  useEffect(() => {
+    // Fetch available roles for the checkboxes
+    axios
+      .get(ROLES_READ_ENDPOINT)
+      .then((response) => {
+        setAvailableRoles(response.data);
+      })
+      .catch((error) => {
+        setError(`Error fetching roles: ${error.response.data.message}`);
+      });
+
+    if (visible) {
+      // Prepopulate the fields with person's data
+      axios
+        .get(`${PEOPLE_READ_ENDPOINT}/${email}`)
+        .then((response) => {
+          const person = response.data;
+          setName(person.name);
+          setAffiliation(person.affiliation);
+          setRoles(person.roles);
+        })
+        .catch((error) => {
+          setError(`Error fetching person data: ${error.response.data.message}`);
+        });
+    } else {
+      setName('');
+      setAffiliation('');
+      setRoles([]);
+    }
+  }, [email, visible, setError]);
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => {
@@ -115,9 +182,15 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
     setAffiliation(event.target.value);
   };
   const changeRoles = (event) => {
-    setRoles(event.target.value.split(',').map((role) => role.trim()));
+    const { value, checked } = event.target;
+    setRoles((prevRoles) => {
+      if (checked) {
+        return [...prevRoles, value];
+      } else {
+        return prevRoles.filter((role) => role !== value);
+      }
+    });
   };
-  // no change email becuase you can't change the email of a person
 
   // event handler/function to add a person to the database
   const updatePerson = (event) => {
@@ -144,6 +217,7 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
   };
 
   if (!visible) return null;
+
   return (
     <form>
       <label htmlFor='name'>Name</label>
@@ -157,29 +231,44 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
         onChange={changeAffiliation}
       />
       <label htmlFor='roles'>Roles</label>
-      <input required type='text' id='roles' value={roles} onChange={changeRoles} />
-      <button
-        onClick={cancel}
-        style={{
-          transition: '0.3s ease',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        Cancel
-      </button>
-      {/* cancel here calls the hideUpdatingForm which is passed as prop "cancel" */}
-      {/* cancel causes the visible var to become false which then makes the update form disappear
+      <div id='roles'>
+        {Object.entries(availableRoles).map(([roleCode, roleName]) => (
+          <div key={roleCode}>
+            <input
+              type='checkbox'
+              id={roleCode}
+              value={roleCode}
+              checked={roles.includes(roleCode)}
+              onChange={changeRoles}
+            />
+            <label htmlFor={roleCode}>{roleName}</label>
+          </div>
+        ))}
+      </div>
+      <div className='flex gap-4'>
+        <button
+          onClick={cancel}
+          style={{
+            transition: '0.3s ease',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          Cancel
+        </button>
+        {/* cancel here calls the hideUpdatingForm which is passed as prop "cancel" */}
+        {/* cancel causes the visible var to become false which then makes the update form disappear
       which happens in the "Person component" which changes the state of addingPerson causing the whole People component to rerender */}
-      <button
-        type='submit'
-        onClick={updatePerson}
-        style={{
-          transition: '0.3s ease',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        Update
-      </button>
+        <button
+          type='submit'
+          onClick={updatePerson}
+          style={{
+            transition: '0.3s ease',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          Update
+        </button>
+      </div>
     </form>
   );
 }
@@ -298,7 +387,6 @@ function People() {
   return (
     <div className='wrapper'>
       <header>
-        <h1>View All People</h1>
         <button
           type='button'
           onClick={showAddPersonForm}
