@@ -321,13 +321,13 @@ function Person({ person, fetchPeople, setError }) {
             onClick={showUpdatingForm}
             className='border-none bg-transparent cursor-pointer hover:bg-gray-200 focus:bg-gray-200'
           >
-            <img src={edit} alt='Update' className='w-5 h-5' />
+            <img src={edit} alt='Update' className='min-w-5 w-5' />
           </button>
           <button
             onClick={deletePerson}
             className='border-none bg-transparent cursor-pointer hover:bg-gray-200'
           >
-            <img src={trash} alt='Delete' className='w-5 h-5' />
+            <img src={trash} alt='Delete' className='w-5 min-w-5' />
           </button>
         </div>
       </div>
