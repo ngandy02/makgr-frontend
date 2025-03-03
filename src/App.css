@@ -115,7 +115,7 @@ nav a {
 }
 .navlinks a:hover::before,
 .navlinks a:focus::before {
-  content: '';
+  content: "";
   position: absolute;
   width: var(--border-radius);
   height: var(--border-radius);
@@ -127,7 +127,7 @@ nav a {
 }
 .navlinks a:hover::after,
 .navlinks a:focus::after {
-  content: '';
+  content: "";
   position: absolute;
   width: var(--border-radius);
   height: var(--border-radius);
@@ -203,8 +203,8 @@ form label {
   display: block;
 }
 
-form input[type='text'],
-form input[type='email'] {
+form input[type="text"],
+form input[type="email"] {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
@@ -225,7 +225,7 @@ form input[type='email'] {
   gap: 0.4rem;
 }
 
-#roles input[type='checkbox'] {
+#roles input[type="checkbox"] {
   width: 18px;
   height: 18px;
   cursor: pointer;

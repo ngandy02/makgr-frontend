@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function Account() {
   return <h1>My Account</h1>;

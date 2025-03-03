@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import propTypes from 'prop-types';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { edit, trash } from '../../assets';
+import React, { useEffect, useState } from "react";
+import propTypes from "prop-types";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { edit, trash } from "../../assets";
 
-import { BACKEND_URL } from '../../constants';
+import { BACKEND_URL } from "../../constants";
 
 const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
 const PEOPLE_CREATE_ENDPOINT = `${BACKEND_URL}/people/create`;
@@ -12,9 +12,9 @@ const ROLES_READ_ENDPOINT = `${BACKEND_URL}/roles`;
 
 function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
   // original states of the peron's fields
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [affiliation, setAffiliation] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
   const [availableRoles, setAvailableRoles] = useState([]);
 
@@ -63,15 +63,17 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
       .put(PEOPLE_CREATE_ENDPOINT, newPerson)
       .then(() => {
         fetchPeople();
-        setName('');
-        setEmail('');
-        setAffiliation('');
+        setName("");
+        setEmail("");
+        setAffiliation("");
         setRoles([]);
-        setError('');
+        setError("");
         cancel();
       })
       .catch((error) => {
-        setError(`There was a problem adding the person. ${error.response.data.message}`);
+        setError(
+          `There was a problem adding the person. ${error.response.data.message}`,
+        );
       });
   };
 
@@ -79,24 +81,36 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
 
   return (
     <form>
-      <label htmlFor='name'>Name</label>
-      <input required type='text' id='name' value={name} onChange={changeName} />
-      <label htmlFor='affiliation'>Affiliation</label>
+      <label htmlFor="name">Name</label>
       <input
         required
-        type='text'
-        id='affiliation'
+        type="text"
+        id="name"
+        value={name}
+        onChange={changeName}
+      />
+      <label htmlFor="affiliation">Affiliation</label>
+      <input
+        required
+        type="text"
+        id="affiliation"
         value={affiliation}
         onChange={changeAffiliation}
       />
-      <label htmlFor='email'>Email</label>
-      <input required type='text' id='email' value={email} onChange={changeEmail} />
-      <label htmlFor='roles'>Roles</label>
-      <div id='roles'>
+      <label htmlFor="email">Email</label>
+      <input
+        required
+        type="text"
+        id="email"
+        value={email}
+        onChange={changeEmail}
+      />
+      <label htmlFor="roles">Roles</label>
+      <div id="roles">
         {Object.entries(availableRoles).map(([roleCode, roleName]) => (
           <div key={roleCode}>
             <input
-              type='checkbox'
+              type="checkbox"
               id={roleCode}
               value={roleCode}
               checked={roles.includes(roleCode)}
@@ -106,22 +120,22 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
           </div>
         ))}
       </div>
-      <div className='flex gap-4'>
+      <div className="flex gap-4">
         <button
           onClick={cancel}
           style={{
-            transition: '0.3s ease',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            transition: "0.3s ease",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           }}
         >
           Cancel
         </button>
         <button
-          type='submit'
+          type="submit"
           onClick={addPerson}
           style={{
-            transition: '0.3s ease',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            transition: "0.3s ease",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           }}
         >
           Submit
@@ -138,8 +152,8 @@ AddPersonForm.propTypes = {
 };
 
 function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
-  const [name, setName] = useState('');
-  const [affiliation, setAffiliation] = useState('');
+  const [name, setName] = useState("");
+  const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
   const [availableRoles, setAvailableRoles] = useState([]);
 
@@ -165,11 +179,13 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
           setRoles(person.roles);
         })
         .catch((error) => {
-          setError(`Error fetching person data: ${error.response.data.message}`);
+          setError(
+            `Error fetching person data: ${error.response.data.message}`,
+          );
         });
     } else {
-      setName('');
-      setAffiliation('');
+      setName("");
+      setAffiliation("");
       setRoles([]);
     }
   }, [email, visible, setError]);
@@ -205,14 +221,16 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
       .put(`${PEOPLE_READ_ENDPOINT}/${email}`, newPerson)
       .then(() => {
         fetchPeople();
-        setName('');
-        setAffiliation('');
+        setName("");
+        setAffiliation("");
         setRoles([]);
         cancel();
-        setError('');
+        setError("");
       })
       .catch((error) => {
-        setError(`There was a problem updating the person. ${error.response.data.message}`);
+        setError(
+          `There was a problem updating the person. ${error.response.data.message}`,
+        );
       });
   };
 
@@ -220,22 +238,28 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
 
   return (
     <form>
-      <label htmlFor='name'>Name</label>
-      <input required type='text' id='name' value={name} onChange={changeName} />
-      <label htmlFor='affiliation'>Affiliation</label>
+      <label htmlFor="name">Name</label>
       <input
         required
-        type='text'
-        id='affiliation'
+        type="text"
+        id="name"
+        value={name}
+        onChange={changeName}
+      />
+      <label htmlFor="affiliation">Affiliation</label>
+      <input
+        required
+        type="text"
+        id="affiliation"
         value={affiliation}
         onChange={changeAffiliation}
       />
-      <label htmlFor='roles'>Roles</label>
-      <div id='roles'>
+      <label htmlFor="roles">Roles</label>
+      <div id="roles">
         {Object.entries(availableRoles).map(([roleCode, roleName]) => (
           <div key={roleCode}>
             <input
-              type='checkbox'
+              type="checkbox"
               id={roleCode}
               value={roleCode}
               checked={roles.includes(roleCode)}
@@ -245,12 +269,12 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
           </div>
         ))}
       </div>
-      <div className='flex gap-4'>
+      <div className="flex gap-4">
         <button
           onClick={cancel}
           style={{
-            transition: '0.3s ease',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            transition: "0.3s ease",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           }}
         >
           Cancel
@@ -259,11 +283,11 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
         {/* cancel causes the visible var to become false which then makes the update form disappear
       which happens in the "Person component" which changes the state of addingPerson causing the whole People component to rerender */}
         <button
-          type='submit'
+          type="submit"
           onClick={updatePerson}
           style={{
-            transition: '0.3s ease',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            transition: "0.3s ease",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           }}
         >
           Update
@@ -282,7 +306,7 @@ UpdatePersonForm.propTypes = {
 };
 
 function ErrorMessage({ message }) {
-  return <div className='error-message'>{message}</div>;
+  return <div className="error-message">{message}</div>;
 }
 ErrorMessage.propTypes = {
   message: propTypes.string.isRequired,
@@ -296,7 +320,9 @@ function Person({ person, fetchPeople, setError }) {
     axios
       .delete(`${PEOPLE_READ_ENDPOINT}/${email}`)
       .then(fetchPeople)
-      .catch((error) => setError(`There was a problem deleting the person. ${error}`));
+      .catch((error) =>
+        setError(`There was a problem deleting the person. ${error}`),
+      );
   };
   const showUpdatingForm = () => {
     setUpdatingPerson(true);
@@ -307,27 +333,27 @@ function Person({ person, fetchPeople, setError }) {
 
   return (
     <div>
-      <div className='person-container'>
+      <div className="person-container">
         <h2>
-          <Link to={name} className='font-bold hover:text-orange-500'>
+          <Link to={name} className="font-bold hover:text-orange-500">
             {name}
           </Link>
         </h2>
         <p> Email: {email} </p>
         <p> Affiliation: {affiliation} </p>
-        <p> Roles: {roles.join(', ')} </p>
-        <div className='flex space-x-2'>
+        <p> Roles: {roles.join(", ")} </p>
+        <div className="flex space-x-2">
           <button
             onClick={showUpdatingForm}
-            className='border-none bg-transparent cursor-pointer hover:bg-gray-200 focus:bg-gray-200'
+            className="border-none bg-transparent cursor-pointer hover:bg-gray-200 focus:bg-gray-200"
           >
-            <img src={edit} alt='Update' className='min-w-5 w-5' />
+            <img src={edit} alt="Update" className="min-w-5 w-5" />
           </button>
           <button
             onClick={deletePerson}
-            className='border-none bg-transparent cursor-pointer hover:bg-gray-200'
+            className="border-none bg-transparent cursor-pointer hover:bg-gray-200"
           >
-            <img src={trash} alt='Delete' className='w-5 min-w-5' />
+            <img src={trash} alt="Delete" className="w-5 min-w-5" />
           </button>
         </div>
       </div>
@@ -359,7 +385,7 @@ function peopleObjectToArray(Data) {
 }
 
 function People() {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [people, setPeople] = useState([]); // list of people dictionaries
   const [addingPerson, setAddingPerson] = useState(false);
 
@@ -371,7 +397,9 @@ function People() {
       .then(({ data }) => {
         setPeople(peopleObjectToArray(data));
       }) //on success (.then)
-      .catch((error) => setError(`There was a problem retrieving the list of people. ${error}`)); //on failure (.catch)
+      .catch((error) =>
+        setError(`There was a problem retrieving the list of people. ${error}`),
+      ); //on failure (.catch)
   };
 
   const showAddPersonForm = () => {
@@ -385,23 +413,23 @@ function People() {
   // allows the component to fetch the list of people once right after when the component is rendered
 
   return (
-    <div className='wrapper'>
+    <div className="wrapper">
       <header>
         <button
-          type='button'
+          type="button"
           onClick={showAddPersonForm}
           style={{
-            transition: '0.3s ease',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            marginBottom: '0.75rem'
+            transition: "0.3s ease",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            marginBottom: "0.75rem",
           }}
           onMouseEnter={(e) => {
-            e.target.style.transform = 'scale(1.05)';
-            e.target.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.2)';
+            e.target.style.transform = "scale(1.05)";
+            e.target.style.boxShadow = "0 8px 10px rgba(0, 0, 0, 0.2)";
           }}
           onMouseLeave={(e) => {
-            e.target.style.transform = 'scale(1)';
-            e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            e.target.style.transform = "scale(1)";
+            e.target.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
           }}
         >
           Add a Person
@@ -415,7 +443,12 @@ function People() {
       />
       {error && <ErrorMessage message={error} />}
       {people.map((person) => (
-        <Person key={person.name} person={person} fetchPeople={fetchPeople} setError={setError} />
+        <Person
+          key={person.name}
+          person={person}
+          fetchPeople={fetchPeople}
+          setError={setError}
+        />
       ))}
     </div>
   );

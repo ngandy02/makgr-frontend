@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { BACKEND_URL } from '../constants';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { BACKEND_URL } from "../constants";
 
 const MANUSCRIPTS_ENDPOINT = `${BACKEND_URL}/query`;
 
@@ -9,7 +9,7 @@ export default function useManuscripts() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getManuscripts= async () => {
+    const getManuscripts = async () => {
       const res = await axios.get(MANUSCRIPTS_ENDPOINT);
       console.log(res);
       const manuscriptsArray = [];
@@ -23,10 +23,7 @@ export default function useManuscripts() {
   }, []);
 
   useEffect(() => {
-    if (
-      typeof manuscripts === 'object'
-    )
-      setLoading(false);
+    if (typeof manuscripts === "object") setLoading(false);
   }, [manuscripts]);
 
   return { manuscripts, loading };
