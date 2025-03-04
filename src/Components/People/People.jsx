@@ -10,7 +10,7 @@ const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
 const PEOPLE_CREATE_ENDPOINT = `${BACKEND_URL}/people/create`;
 const ROLES_READ_ENDPOINT = `${BACKEND_URL}/roles`;
 
-function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
+function AddPersonForm({ visible, cancel, fetchPeople, setError, setSuccess }) {
   // original states of the peron's fields
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -67,6 +67,7 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError }) {
         setEmail("");
         setAffiliation("");
         setRoles([]);
+        setSuccess(`${name} added successfully!`);
         setError("");
         cancel();
       })
@@ -149,9 +150,10 @@ AddPersonForm.propTypes = {
   cancel: propTypes.func.isRequired,
   fetchPeople: propTypes.func.isRequired,
   setError: propTypes.func.isRequired,
+  setSuccess: propTypes.func.isRequired,
 };
 
-function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
+function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError, setSuccess }) {
   const [name, setName] = useState("");
   const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
@@ -226,6 +228,7 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError }) {
         setRoles([]);
         cancel();
         setError("");
+        setSuccess(`${name} updated successfully!`);
       })
       .catch((error) => {
         setError(
@@ -303,6 +306,7 @@ UpdatePersonForm.propTypes = {
   cancel: propTypes.func.isRequired,
   fetchPeople: propTypes.func.isRequired,
   setError: propTypes.func.isRequired,
+  setSuccess: propTypes.func.isRequired,
 };
 
 function ErrorMessage({ message }) {
@@ -312,14 +316,17 @@ ErrorMessage.propTypes = {
   message: propTypes.string.isRequired,
 };
 
-function Person({ person, fetchPeople, setError }) {
+function Person({ person, fetchPeople, setError, setSuccess }) {
   const [updatingPerson, setUpdatingPerson] = useState(false);
   const { name, affiliation, email, roles } = person;
 
   const deletePerson = () => {
     axios
       .delete(`${PEOPLE_READ_ENDPOINT}/${email}`)
-      .then(fetchPeople)
+      .then(() => {
+        fetchPeople();
+        setSuccess(`${name} deleted successfully!`);
+      })
       .catch((error) =>
         setError(`There was a problem deleting the person. ${error}`),
       );
@@ -363,6 +370,7 @@ function Person({ person, fetchPeople, setError }) {
         cancel={hideUpdatingForm}
         fetchPeople={fetchPeople}
         setError={setError}
+        setSuccess={setSuccess}
       />
     </div>
   );
@@ -376,6 +384,7 @@ Person.propTypes = {
   }).isRequired,
   fetchPeople: propTypes.func.isRequired,
   setError: propTypes.func.isRequired,
+  setSuccess: propTypes.func.isRequired,
 };
 
 function peopleObjectToArray(Data) {
@@ -386,6 +395,7 @@ function peopleObjectToArray(Data) {
 
 function People() {
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [people, setPeople] = useState([]); // list of people dictionaries
   const [addingPerson, setAddingPerson] = useState(false);
 
@@ -415,6 +425,7 @@ function People() {
   return (
     <div className="wrapper">
       <header>
+        <div className="text-green-700">{success}</div>
         <button
           type="button"
           onClick={showAddPersonForm}
@@ -440,6 +451,7 @@ function People() {
         cancel={hideAddPersonForm}
         fetchPeople={fetchPeople}
         setError={setError}
+        setSuccess={setSuccess}
       />
       {error && <ErrorMessage message={error} />}
       {people.map((person) => (
@@ -448,6 +460,7 @@ function People() {
           person={person}
           fetchPeople={fetchPeople}
           setError={setError}
+          setSuccess={setSuccess}
         />
       ))}
     </div>
