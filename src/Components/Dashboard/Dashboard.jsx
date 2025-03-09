@@ -110,8 +110,8 @@ function Dashboard() {
 
   return (
     <div className="wrapper">
-      <h1>To Do</h1>
-      <h1>My Submissions</h1>
+      <h2 className="text-lg font-bold">To Do</h2>
+      <h2 className="text-lg font-bold">My Submissions</h2>
       <div className="text-green-700">{success}</div>
       {error && <ErrorMessage message={error} />}
       {manuscripts.map((manuscript) => (

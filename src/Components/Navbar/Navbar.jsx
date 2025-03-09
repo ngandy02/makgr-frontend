@@ -3,7 +3,7 @@ import propTypes from "prop-types";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 const PAGES = [
-  { label: "TITLE", destination: "/" },
+  { label: "MMANKWGZRZ", destination: "/" },
   { label: "Dashboard", destination: "/dashboard" },
   { label: "Masterhead", destination: "/masterhead" },
   { label: "Submissions", destination: "/submissions" },
@@ -29,7 +29,7 @@ function Navbar() {
   const location = useLocation();
   const url = location.pathname;
   const page = PAGES.filter((obj) => obj.destination === url)[0];
-  const label = page ? page.label : "TITLE";
+  const label = page ? page.label : "MMANKWGZRZ";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -40,7 +40,7 @@ function Navbar() {
         <ul className="flex gap-[10px] navlinks">
           {PAGES.map(
             (page) =>
-              page.label !== "TITLE" && (
+              page.label !== "MMANKWGZRZ" && (
                 <NavLink
                   key={page.destination}
                   label={page.label}
