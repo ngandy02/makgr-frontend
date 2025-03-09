@@ -30,20 +30,21 @@ export default function LoginForm() {
             className="w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
-        <button className="mt-2">Log in</button>
+        <button
+          className="mt-2"
+          style={{
+            transition: "0.3s ease",
+          }}
+        >
+          Log in
+        </button>
         <div className="text-center mt-2">
           <p className="text-sm text-gray-600 mt-3">Forgot your password?</p>
-          <Link
-            to={"/reset-password"}
-            className="text-sm font-medium text-primary hover:underline"
-          >
+          <Link to={"/reset-password"} className="text-sm font-medium text-primary hover:underline">
             Reset password
           </Link>
           <p className="text-sm text-gray-600 mt-2">No account?</p>
-          <Link
-            to={"/register"}
-            className="text-sm font-medium text-primary underline"
-          >
+          <Link to={"/register"} className="text-sm font-medium text-primary underline">
             Create an account
           </Link>
         </div>

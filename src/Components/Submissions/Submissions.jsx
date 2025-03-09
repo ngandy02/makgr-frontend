@@ -80,10 +80,22 @@ function Submissions() {
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <div className="my-3">
-              <button onClick={handleEditClick} className="px-5 py-1 text-md mr-3">
+              <button
+                onClick={handleEditClick}
+                className="px-5 py-1 text-md mr-3"
+                style={{
+                  transition: "0.3s ease",
+                }}
+              >
                 Cancel
               </button>
-              <button onClick={updateSubText} className="px-5 py-1 text-md">
+              <button
+                onClick={updateSubText}
+                className="px-5 py-1 text-md"
+                style={{
+                  transition: "0.3s ease",
+                }}
+              >
                 Update
               </button>
             </div>
@@ -98,7 +110,13 @@ function Submissions() {
           })
         )}
         {!editClicked && (
-          <button onClick={handleEditClick} className="my-3 px-5 py-1 text-md">
+          <button
+            onClick={handleEditClick}
+            className="my-3 px-5 py-1 text-md"
+            style={{
+              transition: "0.3s ease",
+            }}
+          >
             Edit
           </button>
         )}

@@ -13,8 +13,7 @@ export default function RegisterForm() {
   };
 
   useEffect(() => {
-    if (password && confirm && password !== confirm)
-      setPasswordsNotMatching(true);
+    if (password && confirm && password !== confirm) setPasswordsNotMatching(true);
     else setPasswordsNotMatching(false);
   }, [password, confirm]);
 
@@ -54,16 +53,18 @@ export default function RegisterForm() {
             className="w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
-        {passwordsNotMatching && (
-          <div className="text-red-600">Passwords do not match</div>
-        )}
-        <button className="mt-2">Sign up</button>
+        {passwordsNotMatching && <div className="text-red-600">Passwords do not match</div>}
+        <button
+          className="mt-2"
+          style={{
+            transition: "0.3s ease",
+          }}
+        >
+          Sign up
+        </button>
         <div className="text-center mt-2">
           <p className="text-sm text-gray-600 mt-3">Have an account?</p>
-          <Link
-            to={"/"}
-            className="text-sm font-medium text-primary hover:underline"
-          >
+          <Link to={"/"} className="text-sm font-medium text-primary hover:underline">
             Log in
           </Link>
         </div>

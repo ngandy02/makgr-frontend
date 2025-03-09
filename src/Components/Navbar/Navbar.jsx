@@ -33,7 +33,7 @@ function Navbar() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <nav className="flex items-center justify-between px-5">
+      <nav className="flex items-center justify-between py-0 px-5">
         <ul className="text-3xl font-bold">
           <NavLink label={PAGES[0].label} destination={PAGES[0].destination} />
         </ul>
@@ -41,18 +41,14 @@ function Navbar() {
           {PAGES.map(
             (page) =>
               page.label !== "MMANKWGZRZ" && (
-                <NavLink
-                  key={page.destination}
-                  label={page.label}
-                  destination={page.destination}
-                />
-              ),
+                <NavLink key={page.destination} label={page.label} destination={page.destination} />
+              )
           )}
         </ul>
       </nav>
-      <main className="flex-1 flex justify-center items-center">
-        <div className="relative w-full max-w-[75vw]">
-          <h1 className="absolute -top-9 left-0 font-bold text-2xl">{label}</h1>
+      <main className="flex-1 flex justify-center mt-20">
+        <div className="w-full max-w-4xl">
+          <h1 className="font-bold text-2xl mb-4">{label}</h1>
           <div className="bg-white rounded-lg p-10">
             <Outlet />
           </div>
