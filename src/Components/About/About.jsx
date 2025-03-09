@@ -4,10 +4,14 @@ import { BACKEND_URL } from "../../constants";
 
 const TEXT_ENDPOINT = `${BACKEND_URL}/text`;
 const ABOUT_KEY = "AboutKey";
+const ABOUT_TITLE = "About Page";
+const UPDATED_KEY = "Updated Entry";
 
 function About() {
   const [aboutText, setAboutText] = useState("");
   const [error, setError] = useState("");
+  const [editClicked, setEditClicked] = useState(false);
+  const [textAreaValue, setTextAreaValue] = useState("");
 
   useEffect(() => {
     const fetchAboutText = () => {
@@ -16,6 +20,7 @@ function About() {
         .then((response) => {
           if (response.data[ABOUT_KEY]) {
             setAboutText(response.data[ABOUT_KEY].text);
+            setTextAreaValue(response.data[ABOUT_KEY].text);
             setError("");
           } else {
             setError("About page content not found.");
@@ -27,11 +32,79 @@ function About() {
     fetchAboutText();
   }, []);
 
-  return (
-    <div>
-      {error ? <p className="text-red-500">{error}</p> : <p>{aboutText}</p>}
-    </div>
-  );
+  const handleEditClick = () => {
+    setEditClicked(!editClicked);
+    setTextAreaValue(aboutText);
+  };
+
+  const updateAboutText = () => {
+    axios
+      .put(`${TEXT_ENDPOINT}/${ABOUT_KEY}`, { title: ABOUT_TITLE, text: textAreaValue })
+      .then((response) => {
+        const updatedObject = response.data[UPDATED_KEY];
+        if (updatedObject.key === ABOUT_KEY) {
+          setAboutText(updatedObject.text);
+          setError("");
+          setEditClicked(false);
+        } else {
+          setError("About page content not found.");
+        }
+      })
+      .catch((err) => setError(`Error updating about page: ${err.message}`));
+  };
+
+  useEffect(() => {
+    const textarea = document.getElementById("aboutText");
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, [textAreaValue, editClicked]); // Resize textarea to match height of content
+
+  if (error) {
+    return (
+      <div>
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        {editClicked ? (
+          <div>
+            <textarea
+              name="aboutText"
+              id="aboutText"
+              value={textAreaValue}
+              onChange={(e) => setTextAreaValue(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <div className="mt-3">
+              <button onClick={handleEditClick} className="px-5 py-1 text-md mr-3">
+                Cancel
+              </button>
+              <button onClick={updateAboutText} className="px-5 py-1 text-md">
+                Update
+              </button>
+            </div>
+          </div>
+        ) : (
+          aboutText.split("\n").map((paragraph, index) => {
+            // If there is an \n, use <br>
+            if (paragraph === "") {
+              return <br key={index} />;
+            }
+            return <p key={index}>{paragraph}</p>;
+          })
+        )}
+        {!editClicked && (
+          <button onClick={handleEditClick} className="mt-3 px-5 py-1 text-md">
+            Edit
+          </button>
+        )}
+      </div>
+    );
+  }
 }
 
 export default About;
