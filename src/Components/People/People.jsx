@@ -16,13 +16,13 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError, setSuccess }) {
   const [email, setEmail] = useState("");
   const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
-  const [availableRoles, setAvailableRoles] = useState([]);
+  const [roleOptions, setRoleOptions] = useState({});
 
   useEffect(() => {
     axios
       .get(ROLES_READ_ENDPOINT)
       .then((response) => {
-        setAvailableRoles(response.data);
+        setRoleOptions(response.data);
       })
       .catch((error) => {
         setError(`Error fetching roles: ${error.response.data.message}`);
@@ -108,7 +108,7 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError, setSuccess }) {
       />
       <label htmlFor="roles">Roles</label>
       <div id="roles">
-        {Object.entries(availableRoles).map(([roleCode, roleName]) => (
+        {Object.entries(roleOptions).map(([roleCode, roleName]) => (
           <div key={roleCode}>
             <input
               type="checkbox"
@@ -157,14 +157,14 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError, setSu
   const [name, setName] = useState("");
   const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
-  const [availableRoles, setAvailableRoles] = useState([]);
+  const [roleOptions, setRoleOptions] = useState({});
 
   useEffect(() => {
     // Fetch available roles for the checkboxes
     axios
       .get(ROLES_READ_ENDPOINT)
       .then((response) => {
-        setAvailableRoles(response.data);
+        setRoleOptions(response.data);
       })
       .catch((error) => {
         setError(`Error fetching roles: ${error.response.data.message}`);
@@ -259,7 +259,7 @@ function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError, setSu
       />
       <label htmlFor="roles">Roles</label>
       <div id="roles">
-        {Object.entries(availableRoles).map(([roleCode, roleName]) => (
+        {Object.entries(roleOptions).map(([roleCode, roleName]) => (
           <div key={roleCode}>
             <input
               type="checkbox"

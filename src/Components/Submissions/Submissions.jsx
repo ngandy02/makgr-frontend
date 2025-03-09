@@ -23,7 +23,7 @@ function Submissions() {
             setTextAreaValue(response.data[SUB_KEY].text);
             setError("");
           } else {
-            setError("Submission page content not found.");
+            setError("No submission page content to load.");
           }
         })
         .catch((err) => setError(`Error fetching submission page: ${err.message}`));
@@ -47,7 +47,7 @@ function Submissions() {
           setError("");
           setEditClicked(false);
         } else {
-          setError("Submission page content not found.");
+          setError("No submission page content to load.");
         }
       })
       .catch((err) => setError(`Error updating submission page: ${err.message}`));
@@ -70,6 +70,7 @@ function Submissions() {
   } else {
     return (
       <div>
+        <h2 className="text-lg font-bold">Submission Guidelines</h2>
         {editClicked ? (
           <div>
             <textarea
@@ -120,6 +121,7 @@ function Submissions() {
             Edit
           </button>
         )}
+        <h2 className="text-lg font-bold">Submission Form</h2>
         <div>submission form placeholder</div>
       </div>
     );

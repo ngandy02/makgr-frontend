@@ -23,7 +23,7 @@ function About() {
             setTextAreaValue(response.data[ABOUT_KEY].text);
             setError("");
           } else {
-            setError("About page content not found.");
+            setError("No about page content to load.");
           }
         })
         .catch((err) => setError(`Error fetching about page: ${err.message}`));
@@ -47,7 +47,7 @@ function About() {
           setError("");
           setEditClicked(false);
         } else {
-          setError("About page content not found.");
+          setError("No about page content to load.");
         }
       })
       .catch((err) => setError(`Error updating about page: ${err.message}`));
