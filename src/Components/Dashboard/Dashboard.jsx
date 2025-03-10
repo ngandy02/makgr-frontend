@@ -19,15 +19,18 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const { _id, title, author, author_email, referees, state } = manuscript;
 
   const deleteManuscript = () => {
-    axios
-      .delete(`${MANU_READ_ENDPOINT}/${_id}`)
-      .then(() => {
-        fetchManuscripts();
-        setSuccess(`${title} deleted successfully!`);
-      })
-      .catch((error) =>
-        setError(`There was a problem deleting the manuscript. ${error}`),
-      );
+    const res = confirm("Delete this submission?");
+    if (res) {
+      axios
+        .delete(`${MANU_READ_ENDPOINT}/${_id}`)
+        .then(() => {
+          fetchManuscripts();
+          setSuccess(`${title} deleted successfully!`);
+        })
+        .catch((error) =>
+          setError(`There was a problem deleting the manuscript. ${error}`),
+        );
+    }
   };
 
   return (

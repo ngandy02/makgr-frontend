@@ -438,7 +438,7 @@ function People() {
         <div className="text-green-700">{success}</div>
         <button
           type="button"
-          onClick={showAddPersonForm}
+          onClick={addingPerson ? hideAddPersonForm : showAddPersonForm}
           style={{
             transition: "0.3s ease",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",

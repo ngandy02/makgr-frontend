@@ -60,6 +60,11 @@ function Submissions() {
       );
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("submit");
+  };
+
   useEffect(() => {
     const textarea = document.getElementById("subText");
     if (textarea) {
@@ -128,6 +133,21 @@ function Submissions() {
         </button>
       )}
       <h2 className="text-lg font-bold">Submission Form</h2>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="title">Title</label>
+        <input type="text" id="title" required />
+        <label htmlFor="author">Author</label>
+        <input type="text" id="author" required />
+        <label htmlFor="email">Author Email</label>
+        <input type="email" id="email" required />
+        <div className="flex flex-col items-center border-2 rounded-lg font-semibold border-black bg-black text-white">
+          <span>Upload PDF</span>
+          <input type="file" />
+        </div>
+        <button className="bg-black text-white border-2 rounded-lg font-semibold border-black">
+          Submit
+        </button>
+      </form>
     </div>
   );
 }
