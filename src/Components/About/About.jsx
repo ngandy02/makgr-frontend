@@ -39,7 +39,10 @@ function About() {
 
   const updateAboutText = () => {
     axios
-      .put(`${TEXT_ENDPOINT}/${ABOUT_KEY}`, { title: ABOUT_TITLE, text: textAreaValue })
+      .put(`${TEXT_ENDPOINT}/${ABOUT_KEY}`, {
+        title: ABOUT_TITLE,
+        text: textAreaValue,
+      })
       .then((response) => {
         const updatedObject = response.data[UPDATED_KEY];
         if (updatedObject.key === ABOUT_KEY) {

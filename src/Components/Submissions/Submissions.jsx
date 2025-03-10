@@ -26,7 +26,9 @@ function Submissions() {
             setError("No submission page content to load.");
           }
         })
-        .catch((err) => setError(`Error fetching submission page: ${err.message}`));
+        .catch((err) =>
+          setError(`Error fetching submission page: ${err.message}`),
+        );
     };
 
     fetchSubText();
@@ -39,7 +41,10 @@ function Submissions() {
 
   const updateSubText = () => {
     axios
-      .put(`${TEXT_ENDPOINT}/${SUB_KEY}`, { title: SUB_TITLE, text: textAreaValue })
+      .put(`${TEXT_ENDPOINT}/${SUB_KEY}`, {
+        title: SUB_TITLE,
+        text: textAreaValue,
+      })
       .then((response) => {
         const updatedObject = response.data[UPDATED_KEY];
         if (updatedObject.key === SUB_KEY) {
@@ -50,7 +55,9 @@ function Submissions() {
           setError("No submission page content to load.");
         }
       })
-      .catch((err) => setError(`Error updating submission page: ${err.message}`));
+      .catch((err) =>
+        setError(`Error updating submission page: ${err.message}`),
+      );
   };
 
   useEffect(() => {
@@ -61,71 +68,68 @@ function Submissions() {
     }
   }, [textAreaValue, editClicked]); // Resize textarea to match height of content
 
-  if (error) {
-    return (
-      <div>
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <h2 className="text-lg font-bold">Submission Guidelines</h2>
-        {editClicked ? (
-          <div>
-            <textarea
-              name="subText"
-              id="subText"
-              value={textAreaValue}
-              onChange={(e) => setTextAreaValue(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <div className="my-3">
-              <button
-                onClick={handleEditClick}
-                className="px-5 py-1 text-md mr-3"
-                style={{
-                  transition: "0.3s ease",
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={updateSubText}
-                className="px-5 py-1 text-md"
-                style={{
-                  transition: "0.3s ease",
-                }}
-              >
-                Update
-              </button>
-            </div>
+  return (
+    <div>
+      {error && (
+        <div>
+          <p className="text-red-500">{error}</p>
+        </div>
+      )}
+      <h2 className="text-lg font-bold">Submission Guidelines</h2>
+
+      {editClicked ? (
+        <div>
+          <textarea
+            name="subText"
+            id="subText"
+            value={textAreaValue}
+            onChange={(e) => setTextAreaValue(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <div className="my-3">
+            <button
+              onClick={handleEditClick}
+              className="px-5 py-1 text-md mr-3"
+              style={{
+                transition: "0.3s ease",
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={updateSubText}
+              className="px-5 py-1 text-md"
+              style={{
+                transition: "0.3s ease",
+              }}
+            >
+              Update
+            </button>
           </div>
-        ) : (
-          subText.split("\n").map((paragraph, index) => {
-            // If there is an \n, use <br>
-            if (paragraph === "") {
-              return <br key={index} />;
-            }
-            return <p key={index}>{paragraph}</p>;
-          })
-        )}
-        {!editClicked && (
-          <button
-            onClick={handleEditClick}
-            className="my-3 px-5 py-1 text-md"
-            style={{
-              transition: "0.3s ease",
-            }}
-          >
-            Edit
-          </button>
-        )}
-        <h2 className="text-lg font-bold">Submission Form</h2>
-        <div>submission form placeholder</div>
-      </div>
-    );
-  }
+        </div>
+      ) : (
+        subText.split("\n").map((paragraph, index) => {
+          // If there is an \n, use <br>
+          if (paragraph === "") {
+            return <br key={index} />;
+          }
+          return <p key={index}>{paragraph}</p>;
+        })
+      )}
+      {!editClicked && (
+        <button
+          onClick={handleEditClick}
+          className="my-3 px-5 py-1 text-md"
+          style={{
+            transition: "0.3s ease",
+          }}
+        >
+          Edit
+        </button>
+      )}
+      <h2 className="text-lg font-bold">Submission Form</h2>
+    </div>
+  );
 }
 
 export default Submissions;

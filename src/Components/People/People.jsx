@@ -153,7 +153,14 @@ AddPersonForm.propTypes = {
   setSuccess: propTypes.func.isRequired,
 };
 
-function UpdatePersonForm({ email, visible, cancel, fetchPeople, setError, setSuccess }) {
+function UpdatePersonForm({
+  email,
+  visible,
+  cancel,
+  fetchPeople,
+  setError,
+  setSuccess,
+}) {
   const [name, setName] = useState("");
   const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
@@ -321,15 +328,18 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
   const { name, affiliation, email, roles } = person;
 
   const deletePerson = () => {
-    axios
-      .delete(`${PEOPLE_READ_ENDPOINT}/${email}`)
-      .then(() => {
-        fetchPeople();
-        setSuccess(`${name} deleted successfully!`);
-      })
-      .catch((error) =>
-        setError(`There was a problem deleting the person. ${error}`),
-      );
+    const res = confirm("Delete this person?");
+    if (res) {
+      axios
+        .delete(`${PEOPLE_READ_ENDPOINT}/${email}`)
+        .then(() => {
+          fetchPeople();
+          setSuccess(`${name} deleted successfully!`);
+        })
+        .catch((error) =>
+          setError(`There was a problem deleting the person. ${error}`),
+        );
+    }
   };
   const showUpdatingForm = () => {
     setUpdatingPerson(true);
@@ -351,7 +361,7 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
         <p> Roles: {roles.join(", ")} </p>
         <div className="flex space-x-2">
           <button
-            onClick={showUpdatingForm}
+            onClick={updatingPerson ? hideUpdatingForm : showUpdatingForm}
             className="border-none bg-transparent cursor-pointer hover:bg-gray-200 focus:bg-gray-200"
           >
             <img src={edit} alt="Update" className="min-w-5 w-5" />

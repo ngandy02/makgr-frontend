@@ -4,7 +4,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { trash } from "../../assets";
 
-
 import { BACKEND_URL } from "../../constants";
 
 const MANU_READ_ENDPOINT = `${BACKEND_URL}/query`;
@@ -16,9 +15,8 @@ ErrorMessage.propTypes = {
   message: propTypes.string.isRequired,
 };
 
-
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
-  const {_id, title, author, author_email, referees, state } = manuscript;
+  const { _id, title, author, author_email, referees, state } = manuscript;
 
   const deleteManuscript = () => {
     axios
@@ -42,7 +40,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
         </h2>
         <p> Author: {author} </p>
         <p> Email: {author_email} </p>
-        <p> Refs: {referees.join(', ')} </p>
+        <p> Refs: {referees.join(", ")} </p>
         <p> State: {state} </p>
         <div className="flex space-x-2">
           {/* <button
@@ -102,7 +100,9 @@ function Dashboard() {
         setManuscripts(manuscriptObjectToArray(data));
       })
       .catch((error) =>
-        setError(`There was a problem retrieving the list of manuscripts. ${error}`),
+        setError(
+          `There was a problem retrieving the list of manuscripts. ${error}`,
+        ),
       );
   };
 

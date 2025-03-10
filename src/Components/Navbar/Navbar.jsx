@@ -41,8 +41,12 @@ function Navbar() {
           {PAGES.map(
             (page) =>
               page.label !== "MMANKWGZRZ" && (
-                <NavLink key={page.destination} label={page.label} destination={page.destination} />
-              )
+                <NavLink
+                  key={page.destination}
+                  label={page.label}
+                  destination={page.destination}
+                />
+              ),
           )}
         </ul>
       </nav>

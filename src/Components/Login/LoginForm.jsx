@@ -40,11 +40,17 @@ export default function LoginForm() {
         </button>
         <div className="text-center mt-2">
           <p className="text-sm text-gray-600 mt-3">Forgot your password?</p>
-          <Link to={"/reset-password"} className="text-sm font-medium text-primary hover:underline">
+          <Link
+            to={"/reset-password"}
+            className="text-sm font-medium text-primary hover:underline"
+          >
             Reset password
           </Link>
           <p className="text-sm text-gray-600 mt-2">No account?</p>
-          <Link to={"/register"} className="text-sm font-medium text-primary underline">
+          <Link
+            to={"/register"}
+            className="text-sm font-medium text-primary underline"
+          >
             Create an account
           </Link>
         </div>
