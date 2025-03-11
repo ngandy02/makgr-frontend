@@ -349,41 +349,50 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
   };
 
   return (
-    <div>
-      <div className="person-container">
-        <h2>
-          <Link to={name} className="font-bold hover:text-orange-500">
-            {name}
-          </Link>
-        </h2>
-        <p> Email: {email} </p>
-        <p> Affiliation: {affiliation} </p>
-        <p> Roles: {roles.join(", ")} </p>
-        <div className="flex space-x-2">
+    <div className="bg-white shadow-lg rounded-lg p-5 mb-4 border border-gray-200">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">
+            <Link to={name} className="hover:text-orange-500 transition duration-200">
+              {name}
+            </Link>
+          </h2>
+          <p className="text-gray-700"><span className="font-medium">Email:</span> {email}</p>
+          <p className="text-gray-700"><span className="font-medium">Affiliation:</span> {affiliation}</p>
+          <p className="text-gray-700"><span className="font-medium">Roles:</span> {roles.join(", ")}</p>
+        </div>
+  
+        <div className="flex space-x-3">
           <button
             onClick={updatingPerson ? hideUpdatingForm : showUpdatingForm}
-            className="border-none bg-transparent cursor-pointer hover:bg-gray-200 focus:bg-gray-200"
+            className="p-2 border-none rounded-full hover:bg-blue-100 focus:bg-blue-100 transition"
           >
-            <img src={edit} alt="Update" className="min-w-5 w-5" />
+            <img src={edit} alt="Update" className="w-5" />
           </button>
           <button
             onClick={deletePerson}
-            className="border-none bg-transparent cursor-pointer hover:bg-gray-200"
+            className="p-2 border-none rounded-full hover:bg-red-100 focus:bg-red-100 transition"
           >
-            <img src={trash} alt="Delete" className="w-5 min-w-5" />
+            <img src={trash} alt="Delete" className="w-5" />
           </button>
         </div>
       </div>
-      <UpdatePersonForm
-        email={email}
-        visible={updatingPerson}
-        cancel={hideUpdatingForm}
-        fetchPeople={fetchPeople}
-        setError={setError}
-        setSuccess={setSuccess}
-      />
+  
+      {updatingPerson && (
+        <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <UpdatePersonForm
+            email={email}
+            visible={updatingPerson}
+            cancel={hideUpdatingForm}
+            fetchPeople={fetchPeople}
+            setError={setError}
+            setSuccess={setSuccess}
+          />
+        </div>
+      )}
     </div>
   );
+  
 }
 Person.propTypes = {
   person: propTypes.shape({
