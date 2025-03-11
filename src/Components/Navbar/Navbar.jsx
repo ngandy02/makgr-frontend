@@ -5,7 +5,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 const PAGES = [
   { label: "MMANKWGZRZ", destination: "/" },
   { label: "Dashboard", destination: "/dashboard" },
-  { label: "Masterhead", destination: "/masterhead" },
+  { label: "Masthead", destination: "/masthead" },
   { label: "Submissions", destination: "/submissions" },
   { label: "About", destination: "/about" },
   { label: "My Account", destination: "/account" },

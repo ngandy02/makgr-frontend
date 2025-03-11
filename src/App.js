@@ -7,7 +7,7 @@ import Navbar from "./Components/Navbar";
 import People from "./Components/People";
 import Home from "./Components/Home";
 import Dashboard from "./Components/Dashboard";
-import Masterhead from "./Components/Masterhead";
+import Masthead from "./Components/Masthead";
 import Submissions from "./Components/Submissions";
 import About from "./Components/About";
 import Account from "./Components/Account";
@@ -38,7 +38,7 @@ function App() {
 
           <Route path="home" element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="masterhead" element={<Masterhead />} />
+          <Route path="masthead" element={<Masthead />} />
           <Route path="submissions" element={<Submissions />} />
           <Route path="about" element={<About />} />
           <Route path="account" element={<Account />} />

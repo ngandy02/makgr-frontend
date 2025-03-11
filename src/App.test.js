@@ -38,7 +38,7 @@ describe("App", () => {
     const links = [
       "TITLE",
       "Dashboard",
-      "Masterhead",
+      "Masthead",
       "Submissions",
       "About",
       "My Account",
@@ -64,7 +64,7 @@ describe("App", () => {
   it("switches to Masthead view", async () => {
     render(<App />);
 
-    userEvent.click(screen.getByText("Masterhead"));
+    userEvent.click(screen.getByText("Masthead"));
 
     expect(
       screen.getByRole("heading", { name: "Editors" }),

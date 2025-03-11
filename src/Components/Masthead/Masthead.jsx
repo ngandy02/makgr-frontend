@@ -1,7 +1,7 @@
 import React from "react";
 import useMasthead from "../../Hooks/useMasthead";
 
-function Masterhead() {
+function Masthead() {
   const { editors, consultingEditors, managingEditors, loading } =
     useMasthead();
   const loadingSkeleton = Array.from([1, 2]).map((i) => (
@@ -47,4 +47,4 @@ function Masterhead() {
   );
 }
 
-export default Masterhead;
+export default Masthead;
