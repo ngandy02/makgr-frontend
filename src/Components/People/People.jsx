@@ -10,12 +10,7 @@ const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
 const PEOPLE_CREATE_ENDPOINT = `${BACKEND_URL}/people/create`;
 const ROLES_READ_ENDPOINT = `${BACKEND_URL}/roles`;
 
-function AddPersonForm({ visible, cancel, fetchPeople, setError, setSuccess }) {
-  // original states of the peron's fields
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [affiliation, setAffiliation] = useState("");
-  const [roles, setRoles] = useState([]);
+function fetchRoles(setError) {
   const [roleOptions, setRoleOptions] = useState({});
 
   useEffect(() => {
@@ -28,6 +23,17 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError, setSuccess }) {
         setError(`Error fetching roles: ${error.response.data.message}`);
       });
   }, [setError]);
+
+  return roleOptions;
+}
+
+function AddPersonForm({ visible, cancel, fetchPeople, setError, setSuccess }) {
+  // original states of the peron's fields
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [affiliation, setAffiliation] = useState("");
+  const [roles, setRoles] = useState([]);
+  const roleOptions = fetchRoles(setError);
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => {
@@ -73,7 +79,7 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError, setSuccess }) {
       })
       .catch((error) => {
         setError(
-          `There was a problem adding the person. ${error.response.data.message}`,
+          `There was a problem adding the person. ${error.response.data.message}`
         );
       });
   };
@@ -121,7 +127,7 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError, setSuccess }) {
           </div>
         ))}
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 mb-4">
         <button
           onClick={cancel}
           style={{
@@ -164,19 +170,9 @@ function UpdatePersonForm({
   const [name, setName] = useState("");
   const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
-  const [roleOptions, setRoleOptions] = useState({});
+  const roleOptions = fetchRoles(setError);
 
   useEffect(() => {
-    // Fetch available roles for the checkboxes
-    axios
-      .get(ROLES_READ_ENDPOINT)
-      .then((response) => {
-        setRoleOptions(response.data);
-      })
-      .catch((error) => {
-        setError(`Error fetching roles: ${error.response.data.message}`);
-      });
-
     if (visible) {
       // Prepopulate the fields with person's data
       axios
@@ -189,7 +185,7 @@ function UpdatePersonForm({
         })
         .catch((error) => {
           setError(
-            `Error fetching person data: ${error.response.data.message}`,
+            `Error fetching person data: ${error.response.data.message}`
           );
         });
     } else {
@@ -239,7 +235,7 @@ function UpdatePersonForm({
       })
       .catch((error) => {
         setError(
-          `There was a problem updating the person. ${error.response.data.message}`,
+          `There was a problem updating the person. ${error.response.data.message}`
         );
       });
   };
@@ -326,6 +322,8 @@ ErrorMessage.propTypes = {
 function Person({ person, fetchPeople, setError, setSuccess }) {
   const [updatingPerson, setUpdatingPerson] = useState(false);
   const { name, affiliation, email, roles } = person;
+  const roleOptions = fetchRoles(setError);
+  const roleNames = roles.map((role) => roleOptions[role]);
 
   const deletePerson = () => {
     const res = confirm("Delete this person?");
@@ -337,7 +335,7 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
           setSuccess(`${name} deleted successfully!`);
         })
         .catch((error) =>
-          setError(`There was a problem deleting the person. ${error}`),
+          setError(`There was a problem deleting the person. ${error}`)
         );
     }
   };
@@ -353,15 +351,24 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-gray-900">
-            <Link to={name} className="hover:text-orange-500 transition duration-200">
+            <Link
+              to={name}
+              className="hover:text-orange-500 transition duration-200"
+            >
               {name}
             </Link>
           </h2>
-          <p className="text-gray-700"><span className="font-medium">Email:</span> {email}</p>
-          <p className="text-gray-700"><span className="font-medium">Affiliation:</span> {affiliation}</p>
-          <p className="text-gray-700"><span className="font-medium">Roles:</span> {roles.join(", ")}</p>
+          <p className="text-gray-700">
+            <span className="font-medium">Email:</span> {email}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-medium">Affiliation:</span> {affiliation}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-medium">Roles:</span> {roleNames.join(", ")}
+          </p>
         </div>
-  
+
         <div className="flex space-x-3">
           <button
             onClick={updatingPerson ? hideUpdatingForm : showUpdatingForm}
@@ -377,7 +384,7 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
           </button>
         </div>
       </div>
-  
+
       {updatingPerson && (
         <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
           <UpdatePersonForm
@@ -392,7 +399,6 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
       )}
     </div>
   );
-  
 }
 Person.propTypes = {
   person: propTypes.shape({
@@ -427,7 +433,7 @@ function People() {
         setPeople(peopleObjectToArray(data));
       }) //on success (.then)
       .catch((error) =>
-        setError(`There was a problem retrieving the list of people. ${error}`),
+        setError(`There was a problem retrieving the list of people. ${error}`)
       ); //on failure (.catch)
   };
 

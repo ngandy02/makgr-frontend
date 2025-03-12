@@ -50,7 +50,7 @@ function Navbar() {
           )}
         </ul>
       </nav>
-      <main className="flex-1 flex justify-center mt-20">
+      <main className="flex-1 flex justify-center my-20">
         <div className="w-full max-w-4xl">
           <h1 className="font-bold text-2xl mb-4">{label}</h1>
           <div className="bg-white rounded-lg p-10">
