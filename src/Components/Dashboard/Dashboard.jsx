@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import propTypes from "prop-types";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { trash } from "../../assets";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 import { BACKEND_URL } from "../../constants";
 
@@ -54,9 +54,9 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
           </button> */}
           <button
             onClick={deleteManuscript}
-            className="border-none bg-transparent cursor-pointer hover:bg-gray-200"
+            className="p-2 border-none rounded-full hover:bg-red-100 focus:bg-red-100 transition"
           >
-            <img src={trash} alt="Delete" className="w-5 min-w-5" />
+            <FaRegTrashAlt className="w-5 h-5 text-red-500"/>
           </button>
         </div>
       </div>
@@ -131,3 +131,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+

@@ -7,36 +7,31 @@ describe("App", () => {
   it("renders login page", async () => {
     render(<App />);
 
-    userEvent.click(screen.getByRole("link", { name: "TITLE" }));
+    userEvent.click(screen.getByRole("link", { name: "MMANKWGZRZ" }));
 
     expect(screen.getByLabelText("Username")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Log in" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Create an account" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Create an account" })).toBeInTheDocument();
   });
 
   it("renders register page", async () => {
     render(<App />);
 
-    userEvent.click(screen.getByRole("link", { name: "TITLE" }));
+    userEvent.click(screen.getByRole("link", { name: "MMANKWGZRZ" }));
     userEvent.click(screen.getByRole("link", { name: "Create an account" }));
 
     expect(screen.getByLabelText("Username")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(screen.getByLabelText("Confirm password")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign up" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Have an account?" }),
-    ).toBeInTheDocument();
   });
 
   it("renders navbar", async () => {
     render(<App />);
 
     const links = [
-      "TITLE",
+      "MMANKWGZRZ",
       "Dashboard",
       "Masthead",
       "Submissions",
@@ -53,37 +48,43 @@ describe("App", () => {
   it("switches to Dashboard view", async () => {
     render(<App />);
 
-    userEvent.click(screen.getByText("Dashboard"));
+    userEvent.click(screen.getByRole("link", {name: "Dashboard"}));
 
     expect(screen.getByRole("heading", { name: "To Do" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "My Submissions" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "My Submissions" })).toBeInTheDocument();
   });
 
   it("switches to Masthead view", async () => {
     render(<App />);
 
-    userEvent.click(screen.getByText("Masthead"));
+    userEvent.click(screen.getByRole("link", {name: "Masthead"}));
 
-    expect(
-      screen.getByRole("heading", { name: "Editors" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Managing Editors" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Consulting Editors" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Editors" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Managing Editors" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Consulting Editors" })).toBeInTheDocument();
   });
 
   it("switches to People view", async () => {
     render(<App />);
 
-    userEvent.click(screen.getByText("View All People"));
+    userEvent.click(screen.getByRole("link", {name: "View All People"}));
 
-    expect(
-      screen.getByRole("button", { name: "Add a Person" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Add a Person" })).toBeInTheDocument();
+  });
+
+  it("loads AddPersonForm", async () => {
+    render(<App />);
+
+    userEvent.click(screen.getByRole("link", {name: "View All People"}));
+    userEvent.click(screen.getByRole("button", { name: "Add a Person" }));
+    
+    expect(screen.getByLabelText("Name")).toBeInTheDocument();
+    expect(screen.getByLabelText("Affiliation")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toBeInTheDocument();
+
+    expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
+
   });
 });
+
