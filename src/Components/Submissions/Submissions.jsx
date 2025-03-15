@@ -27,7 +27,7 @@ function Submissions() {
           }
         })
         .catch((err) =>
-          setError(`Error fetching submission page: ${err.message}`),
+          setError(`Error fetching submission page: ${err.message}`)
         );
     };
 
@@ -56,7 +56,7 @@ function Submissions() {
         }
       })
       .catch((err) =>
-        setError(`Error updating submission page: ${err.message}`),
+        setError(`Error updating submission page: ${err.message}`)
       );
   };
 
@@ -132,19 +132,45 @@ function Submissions() {
           Edit
         </button>
       )}
-      <h2 className="text-lg font-bold">Submission Form</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="title">Title</label>
-        <input type="text" id="title" required />
-        <label htmlFor="author">Author</label>
-        <input type="text" id="author" required />
-        <label htmlFor="email">Author Email</label>
-        <input type="email" id="email" required />
-        <div className="flex flex-col items-center border-2 rounded-lg font-semibold border-black bg-black text-white">
-          <span>Upload PDF</span>
-          <input type="file" />
+      <h2 className="text-lg font-bold mt-5">Submission Form</h2>
+      <form onSubmit={handleSubmit} className="mt-3">
+        <label htmlFor="title" className="block font-medium">
+          Title
+        </label>
+        <input
+          type="text"
+          id="title"
+          required
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <label htmlFor="author" className="block font-medium">
+          Author
+        </label>
+        <input
+          type="text"
+          id="author"
+          required
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <label htmlFor="email" className="block font-medium">
+          Author Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          required
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <div className="flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-3 my-3">
+          <span className="font-medium">Upload PDF</span>
+          <input type="file" className="mt-2" />
         </div>
-        <button className="bg-black text-white border-2 rounded-lg font-semibold border-black">
+        <button
+          className="px-5 py-2 rounded-lg font-semibold"
+          style={{
+            transition: "0.3s ease",
+          }}
+        >
           Submit
         </button>
       </form>
