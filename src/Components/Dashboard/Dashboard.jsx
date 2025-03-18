@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import propTypes from "prop-types";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { FaRegTrashAlt } from "react-icons/fa";
 
 import { BACKEND_URL } from "../../constants";
 
 const MANU_READ_ENDPOINT = `${BACKEND_URL}/query`;
+const FSM_ENDPOINT = `${BACKEND_URL}/query/handle_action`;
 
 function ErrorMessage({ message }) {
   return <div className="error-message">{message}</div>;
@@ -18,56 +18,76 @@ ErrorMessage.propTypes = {
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const { _id, title, author, author_email, referees, state } = manuscript;
 
-  const deleteManuscript = () => {
-    const res = confirm("Delete this submission?");
-    if (res) {
-      axios
-        .delete(`${MANU_READ_ENDPOINT}/${_id}`)
-        .then(() => {
-          fetchManuscripts();
-          setSuccess(`${title} deleted successfully!`);
-        })
-        .catch((error) =>
-          setError(`There was a problem deleting the manuscript. ${error}`),
-        );
+  const [manu, setManu] = useState([]);
+
+  const withdrawManuscript = () => {
+    const thisManu = {
+      "_id": _id,
+      "referees": referees,
+      "curr_state": state,
+      "action": "WDN"
     }
+
+    axios
+      .put(FSM_ENDPOINT, thisManu)
+      .then((response) => {
+        const newState = response.data.return;
+        setManu((prevManuscripts) =>
+          prevManuscripts.map((m) =>
+            m._id === manu._id ? { ...m, state: newState} : m
+          )
+        );
+        fetchManuscripts();
+        setSuccess(`${title} withdrawn successfully!`);
+      })
+      .catch((error) =>
+        setError(`There was a problem withdrawing the manuscript. ${error}`),
+      );
   };
 
+  useEffect(fetchManuscripts, []);
+
   return (
-    <div>
-      <div className="my-4 flex text-lg justify-between border-accent p-8 bg-white shadow-lg rounded-lg mb-4 border border-gray-200">
-        <h2 className="text-xl">
-          <Link to={title} className="font-bold hover:text-orange-500">
-            {title}
-          </Link>
-        </h2>
-        <p className=""> Author: {author} </p>
-        <p className=""> Email: {author_email} </p>
-        <p className=""> Refs: {referees.join(", ")} </p>
-        <p className=""> State: {state} </p>
-        <div className="flex space-x-2">
-          {/* <button
-            onClick={showUpdatingForm}
-            className="border-none bg-transparent cursor-pointer hover:bg-gray-200 focus:bg-gray-200"
-          >
-            <img src={edit} alt="Update" className="min-w-5 w-5" />
-          </button> */}
+    <div className="bg-white shadow-lg rounded-lg p-5 mb-4 border border-gray-200 relative">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">
+            <Link
+              to={title}
+              className="hover:text-orange-500 transition duration-200"
+            >
+              {title}
+            </Link>
+          </h2>
+          <p className="text-gray-700">
+            <span className="font-bold">Author:</span> {author}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-bold">Email:</span> {author_email}
+          </p>
+          <p className="text-gray-700 font-bold">Referees:</p>
+            <ul className="list-disc pl-6 text-gray-700">
+              {referees.map((referee, index) => (
+                <li key={index}>{referee}</li>
+              ))}
+            </ul>
+          <p className="text-gray-700">
+            <span className="font-bold">State:</span> {state}
+          </p>
+        </div>
+
+        <div className="absolute bottom-4 right-4">
           <button
-            onClick={deleteManuscript}
-            className="p-2 border-none rounded-full hover:bg-red-100 focus:bg-red-100 transition"
+            onClick={withdrawManuscript}
+            style={{
+              transition: "0.3s ease",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
           >
-            <FaRegTrashAlt className="w-5 h-5 text-red-500" />
+            Withdraw
           </button>
         </div>
       </div>
-      {/* <UpdatePersonForm
-        email={email}
-        visible={updatingPerson}
-        cancel={hideUpdatingForm}
-        fetchPeople={fetchPeople}
-        setError={setError}
-        setSuccess={setSuccess}
-      /> */}
     </div>
   );
 }
