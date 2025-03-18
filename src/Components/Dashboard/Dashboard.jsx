@@ -35,16 +35,16 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
 
   return (
     <div>
-      <div className="person-container">
-        <h2>
+      <div className="my-4 flex justify-between rounded border-2 border-accent p-8">
+        <h2 className="text-xl">
           <Link to={title} className="font-bold hover:text-orange-500">
             {title}
           </Link>
         </h2>
-        <p> Author: {author} </p>
-        <p> Email: {author_email} </p>
-        <p> Refs: {referees.join(", ")} </p>
-        <p> State: {state} </p>
+        <p className="text-xl"> Author: {author} </p>
+        <p className="text-xl"> Email: {author_email} </p>
+        <p className="text-xl"> Refs: {referees.join(", ")} </p>
+        <p className="text-xl"> State: {state} </p>
         <div className="flex space-x-2">
           {/* <button
             onClick={showUpdatingForm}
@@ -56,7 +56,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
             onClick={deleteManuscript}
             className="p-2 border-none rounded-full hover:bg-red-100 focus:bg-red-100 transition"
           >
-            <FaRegTrashAlt className="w-5 h-5 text-red-500"/>
+            <FaRegTrashAlt className="w-5 h-5 text-red-500" />
           </button>
         </div>
       </div>
@@ -131,4 +131,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-

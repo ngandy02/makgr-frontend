@@ -146,21 +146,6 @@ nav a {
   outline: none;
 }
 
-.person-container {
-  border: 2px solid var(--accent-color);
-  margin: 1rem 0;
-  padding: 2rem;
-  display: flex;
-  justify-content: space-between;
-  border-radius: 5px;
-}
-
-.person-container p,
-.person-container h2 {
-  margin: 0;
-  font-size: 1.25rem;
-}
-
 /* form #roles {
   display: flex;
   flex-wrap: wrap;

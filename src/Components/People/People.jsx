@@ -79,7 +79,7 @@ function AddPersonForm({ visible, cancel, fetchPeople, setError, setSuccess }) {
       })
       .catch((error) => {
         setError(
-          `There was a problem adding the person. ${error.response.data.message}`
+          `There was a problem adding the person. ${error.response.data.message}`,
         );
       });
   };
@@ -185,7 +185,7 @@ function UpdatePersonForm({
         })
         .catch((error) => {
           setError(
-            `Error fetching person data: ${error.response.data.message}`
+            `Error fetching person data: ${error.response.data.message}`,
           );
         });
     } else {
@@ -235,7 +235,7 @@ function UpdatePersonForm({
       })
       .catch((error) => {
         setError(
-          `There was a problem updating the person. ${error.response.data.message}`
+          `There was a problem updating the person. ${error.response.data.message}`,
         );
       });
   };
@@ -335,7 +335,7 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
           setSuccess(`${name} deleted successfully!`);
         })
         .catch((error) =>
-          setError(`There was a problem deleting the person. ${error}`)
+          setError(`There was a problem deleting the person. ${error}`),
         );
     }
   };
@@ -433,7 +433,7 @@ function People() {
         setPeople(peopleObjectToArray(data));
       }) //on success (.then)
       .catch((error) =>
-        setError(`There was a problem retrieving the list of people. ${error}`)
+        setError(`There was a problem retrieving the list of people. ${error}`),
       ); //on failure (.catch)
   };
 
@@ -448,8 +448,8 @@ function People() {
   // allows the component to fetch the list of people once right after when the component is rendered
 
   return (
-    <div className="wrapper">
-      <header>
+    <div className="mx-auto max-w-3xl px-8">
+      <header className="flex justify-between items-center flex-wrap">
         <div className="text-green-700">{success}</div>
         <button
           type="button"
