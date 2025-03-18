@@ -35,16 +35,16 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
 
   return (
     <div>
-      <div className="my-4 flex justify-between rounded border-2 border-accent p-8">
+      <div className="my-4 flex text-lg justify-between border-accent p-8 bg-white shadow-lg rounded-lg mb-4 border border-gray-200">
         <h2 className="text-xl">
           <Link to={title} className="font-bold hover:text-orange-500">
             {title}
           </Link>
         </h2>
-        <p className="text-xl"> Author: {author} </p>
-        <p className="text-xl"> Email: {author_email} </p>
-        <p className="text-xl"> Refs: {referees.join(", ")} </p>
-        <p className="text-xl"> State: {state} </p>
+        <p className=""> Author: {author} </p>
+        <p className=""> Email: {author_email} </p>
+        <p className=""> Refs: {referees.join(", ")} </p>
+        <p className=""> State: {state} </p>
         <div className="flex space-x-2">
           {/* <button
             onClick={showUpdatingForm}

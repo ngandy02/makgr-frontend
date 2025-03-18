@@ -1,5 +1,7 @@
 import React from "react";
 import useMasthead from "../../Hooks/useMasthead";
+import { Link } from "react-router-dom";
+import propTypes from "prop-types";
 
 function Masthead() {
   const { editors, consultingEditors, managingEditors, loading } =
@@ -19,7 +21,7 @@ function Masthead() {
           {loading
             ? loadingSkeleton
             : editors.map((editor, i) => (
-                <li key={editor.name + i}>{editor.name}</li>
+                <NameLink key={editor.name + i} name={editor.name} />
               ))}
         </ul>
       </section>
@@ -29,7 +31,7 @@ function Masthead() {
           {loading
             ? loadingSkeleton
             : managingEditors.map((editor, i) => (
-                <li key={editor.name + i}>{editor.name}</li>
+                <NameLink key={editor.name + i} name={editor.name} />
               ))}
         </ul>
       </section>
@@ -39,11 +41,26 @@ function Masthead() {
           {loading
             ? loadingSkeleton
             : consultingEditors.map((editor, i) => (
-                <li key={editor.name + i}>{editor.name}</li>
+                <NameLink key={editor.name + i} name={editor.name} />
               ))}
         </ul>
       </section>
     </div>
+  );
+}
+
+NameLink.propTypes = {
+  name: propTypes.string.isRequired,
+};
+
+function NameLink({ name }) {
+  return (
+    <Link
+      to={`/people/${name}`}
+      className="hover:text-orange-500 transition duration-200"
+    >
+      <li>{name}</li>
+    </Link>
   );
 }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function RegisterForm() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [passwordsNotMatching, setPasswordsNotMatching] = useState(false);
@@ -22,12 +22,12 @@ export default function RegisterForm() {
     <div className="w-full flex items-center justify-center">
       <form className="rounded-lg p-10">
         <div>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter username"
-            id="username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter email"
+            id="email"
             type="text"
             className="w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary"
           />
