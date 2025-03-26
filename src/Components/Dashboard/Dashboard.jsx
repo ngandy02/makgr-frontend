@@ -7,6 +7,7 @@ import { BACKEND_URL } from "../../constants";
 
 const MANU_READ_ENDPOINT = `${BACKEND_URL}/query`;
 const FSM_ENDPOINT = `${BACKEND_URL}/query/handle_action`;
+const STATES_ENDPOINT = `${BACKEND_URL}/query/states`;
 
 function ErrorMessage({ message }) {
   return <div className="error-message">{message}</div>;
@@ -15,8 +16,27 @@ ErrorMessage.propTypes = {
   message: propTypes.string.isRequired,
 };
 
+function fetchStates(setError) {
+  const [stateOptions, setStateOptions] = useState({});
+
+  useEffect(() => {
+    axios
+      .get(STATES_ENDPOINT)
+      .then((response) => {
+        setStateOptions(response.data);
+      })
+      .catch((error) => {
+        setError(`Error fetching states: ${error.response.data.message}`);
+      });
+  }, [setError]);
+
+  return stateOptions;
+}
+
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const { _id, title, author, author_email, referees, state } = manuscript;
+  const stateOptions = fetchStates(setError);
+  const stateName = stateOptions[state];
 
   const [manu, setManu] = useState([]);
 
@@ -72,7 +92,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
               ))}
             </ul>
           <p className="text-gray-700">
-            <span className="font-bold">State:</span> {state}
+            <span className="font-bold">State:</span> {stateName}
           </p>
         </div>
 
