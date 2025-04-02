@@ -161,7 +161,7 @@ function Submissions() {
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        <div className="flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-3 my-3">
+        <div className="flex flex-col items-center justify-center border-[1.5px] border-gray-300 rounded-md p-3 my-3">
           <span className="font-medium">Upload PDF</span>
           <input type="file" className="mt-2" />
         </div>

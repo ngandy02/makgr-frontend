@@ -42,11 +42,11 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
 
   const withdrawManuscript = () => {
     const thisManu = {
-      "_id": _id,
-      "referees": referees,
-      "curr_state": state,
-      "action": "WDN"
-    }
+      _id: _id,
+      referees: referees,
+      curr_state: state,
+      action: "WDN",
+    };
 
     axios
       .put(FSM_ENDPOINT, thisManu)
@@ -54,8 +54,8 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
         const newState = response.data.return;
         setManu((prevManuscripts) =>
           prevManuscripts.map((m) =>
-            m._id === manu._id ? { ...m, state: newState} : m
-          )
+            m._id === manu._id ? { ...m, state: newState } : m,
+          ),
         );
         fetchManuscripts();
         setSuccess(`${title} withdrawn successfully!`);
@@ -86,11 +86,11 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
             <span className="font-bold">Email:</span> {author_email}
           </p>
           <p className="text-gray-700 font-bold">Referees:</p>
-            <ul className="list-disc pl-6 text-gray-700">
-              {referees.map((referee, index) => (
-                <li key={index}>{referee}</li>
-              ))}
-            </ul>
+          <ul className="list-disc pl-6 text-gray-700">
+            {referees.map((referee, index) => (
+              <li key={index}>{referee}</li>
+            ))}
+          </ul>
           <p className="text-gray-700">
             <span className="font-bold">State:</span> {stateName}
           </p>
