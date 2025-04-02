@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FaBackspace } from "react-icons/fa";
 
 export default function Reset() {
   const [username, setUsername] = useState("");
@@ -15,8 +16,11 @@ export default function Reset() {
   return (
     <div className="w-full flex items-center justify-center">
       <form className="rounded-lg border-black p-10">
-        <Link className="border-2 w-fit p-1 rounded-md" to={"/"}>
-          Go Back
+        <Link className=" w-fit p-1 rounded-md" to={"/"}>
+          <div className="flex gap-1 items-center">
+            <FaBackspace />
+            <span>Go Back</span>
+          </div>
         </Link>
         <div>
           <label htmlFor="username">Username</label>

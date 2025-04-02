@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaBackspace } from "react-icons/fa";
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("");
@@ -21,6 +22,13 @@ export default function RegisterForm() {
   return (
     <div className="w-full flex items-center justify-center">
       <form className="rounded-lg p-10">
+        <Link className=" w-fit p-1 rounded-md" to={"/"}>
+          <div className="flex gap-1 items-center">
+            <FaBackspace />
+            <span>Go Back</span>
+          </div>
+        </Link>
+
         <div>
           <label htmlFor="email">Email</label>
           <input
