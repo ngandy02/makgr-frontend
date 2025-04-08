@@ -12,12 +12,16 @@ function Submissions() {
   const [error, setError] = useState("");
   const [editClicked, setEditClicked] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
+  const [manuAreaValue , setManuAreaValue] = useState("");
+  // const [manuText, setManuText] = useState("");
+  const [manuClicked, setManuClicked] = useState(false);
+  // const []
 
   useEffect(() => {
     const fetchSubText = () => {
       axios
         .get(TEXT_ENDPOINT)
-        .then((response) => {
+        .then((response) => { 
           if (response.data[SUB_KEY]) {
             setSubText(response.data[SUB_KEY].text);
             setTextAreaValue(response.data[SUB_KEY].text);
@@ -38,6 +42,7 @@ function Submissions() {
     setEditClicked(!editClicked);
     setTextAreaValue(subText);
   };
+
 
   const updateSubText = () => {
     axios
@@ -72,6 +77,17 @@ function Submissions() {
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
   }, [textAreaValue, editClicked]); // Resize textarea to match height of content
+
+ 
+ // This effect is for the manuscript textarea
+  // It will resize the textarea to match the height of the content
+  useEffect(() => {
+    const textArea = document.getElementById("manuText");
+    if (textArea){
+      textArea.style.height = "auto";
+      textArea.style.height =  `${textArea.scrollHeight}px`;
+    }
+  }, [manuAreaValue, editClicked]);
 
   return (
     <div>
@@ -114,6 +130,9 @@ function Submissions() {
         </div>
       ) : (
         subText.split("\n").map((paragraph, index) => {
+          // split creates an array of paragraphs
+          // paragraph is the current paragraph being processed (text between \n's)
+          // index is the index of the current par in the array
           // If there is an \n, use <br>
           if (paragraph === "") {
             return <br key={index} />;
@@ -161,6 +180,45 @@ function Submissions() {
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         />
+        
+        {(manuClicked) ? (
+
+            <div> 
+              <label htmlFor="manuText" className="block font-medium">
+                Manuscript Text
+              </label>
+              <textarea
+                id="manuText"
+                name="manuText"
+                value={setManuAreaValue}
+                onChange={(e) => setManuAreaValue(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <button 
+                className="px-5 py-2 rounded-lg font-semibold"
+                style={{
+                  transition: "0.3s ease",
+                }}
+                onClick={() => {(setManuClicked(!manuClicked))}}>
+                Cancel
+              </button>
+            </div> 
+            ) : (null)}
+        
+        {(!manuClicked) ? (
+          <div>
+            <button 
+              className="px-5 py-2 rounded-lg font-semibold"
+              style={{
+                transition: "0.3s ease",
+              }}
+              onClick={() => (setManuClicked(!manuClicked))}
+            >
+              Add Manuscript Text
+            </button>
+          </div>
+        ) : (null)}
+
         <div className="flex flex-col items-center justify-center border-[1.5px] border-gray-300 rounded-md p-3 my-3">
           <span className="font-medium">Upload PDF</span>
           <input type="file" className="mt-2" />
