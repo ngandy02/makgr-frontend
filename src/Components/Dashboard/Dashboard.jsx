@@ -38,6 +38,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const { _id, title, author, author_email, referees, state } = manuscript;
   const stateOptions = fetchStates(setError);
   const stateName = stateOptions[state];
+  const [selectedAction, setSelectedAction] = useState("");
   const [validActions, setValidActions] = useState([]);
 
   const [manu, setManu] = useState([]);
@@ -109,6 +110,26 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
           <p className="text-gray-700">
             <span className="font-bold">State:</span> {stateName}
           </p>
+        </div>
+
+        <div className="mt-3">
+          <label className="block font-semibold">
+            Choose Action:
+          </label>
+          <select
+              className="mt-1 p-2 border border-gray-300 rounded"
+              value={selectedAction}
+              onChange={(e) => setSelectedAction(e.target.value)}
+          >
+            <option value="" disabled>
+              -- Select an Action --
+            </option>
+            {validActions.map((action, index) => (
+              <option key={index} value={action}>
+                {action}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="absolute bottom-4 right-4">
