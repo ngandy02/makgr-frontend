@@ -8,6 +8,7 @@ import { BACKEND_URL } from "../../constants";
 const MANU_READ_ENDPOINT = `${BACKEND_URL}/query`;
 const FSM_ENDPOINT = `${BACKEND_URL}/query/handle_action`;
 const STATES_ENDPOINT = `${BACKEND_URL}/query/states`;
+const ACTIONS_ENDPOINT = `${BACKEND_URL}/query/actions`;
 
 function ErrorMessage({ message }) {
   return <div className="error-message">{message}</div>;
@@ -37,6 +38,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const { _id, title, author, author_email, referees, state } = manuscript;
   const stateOptions = fetchStates(setError);
   const stateName = stateOptions[state];
+  const [validActions, setValidActions] = useState([]);
 
   const [manu, setManu] = useState([]);
 
@@ -63,9 +65,22 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       .catch((error) =>
         setError(`There was a problem withdrawing the manuscript. ${error}`),
       );
+      
   };
 
+  const fetchValidActions = () => {
+    axios
+      .get(`${ACTIONS_ENDPOINT}/${state}`)
+      .then((response) => {
+        setValidActions(response.data.return);
+      })
+      .catch((error) => {
+        setError(`Error fetching valid actions: ${error.response.data.message}`);
+      });
+  }
+
   useEffect(fetchManuscripts, []);
+  useEffect(fetchValidActions, [state])
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-5 mb-4 border border-gray-200 relative">
