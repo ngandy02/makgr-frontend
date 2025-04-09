@@ -61,12 +61,13 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
 
   const [manu, setManu] = useState([]);
 
-  const withdrawManuscript = () => {
+
+  const handleAction = () => {
     const thisManu = {
       _id: _id,
       referees: referees,
       curr_state: state,
-      action: "WDN",
+      action: selectedAction,
     };
 
     axios
@@ -79,13 +80,15 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
           ),
         );
         fetchManuscripts();
-        setSuccess(`${title} withdrawn successfully!`);
+        setSuccess(`${title} performed "${actionOptions[selectedAction]}" successfully!`);
+        setSelectedAction("");
       })
       .catch((error) =>
-        setError(`There was a problem withdrawing the manuscript. ${error}`),
+        setError(`There was a problem performing action on the manuscript. ${error}`),
       );
       
   };
+
 
   const fetchValidActions = () => {
     axios
@@ -153,13 +156,13 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
 
         <div className="absolute bottom-4 right-4">
           <button
-            onClick={withdrawManuscript}
+            onClick={handleAction}
             style={{
               transition: "0.3s ease",
               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             }}
           >
-            Withdraw
+            Submit
           </button>
         </div>
       </div>
