@@ -34,10 +34,28 @@ function fetchStates(setError) {
   return stateOptions;
 }
 
+function fetchActions(setError){
+  const [actionOptions, setActionOptions] = useState({});
+
+  useEffect(() => {
+    axios
+      .get(ACTIONS_ENDPOINT)
+      .then((response) => {
+        setActionOptions(response.data);
+      })
+      .catch((error) => {
+        setError(`Error fetching actions: ${error.response.data.message}`);
+      });
+  }, [setError]);
+
+  return actionOptions;
+}
+
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const { _id, title, author, author_email, referees, state } = manuscript;
   const stateOptions = fetchStates(setError);
   const stateName = stateOptions[state];
+  const actionOptions = fetchActions(setError);
   const [selectedAction, setSelectedAction] = useState("");
   const [validActions, setValidActions] = useState([]);
 
@@ -73,7 +91,8 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
     axios
       .get(`${ACTIONS_ENDPOINT}/${state}`)
       .then((response) => {
-        setValidActions(response.data.return);
+        setValidActions(response.data);
+        console.log("Fetched valid actions:", response.data);
       })
       .catch((error) => {
         setError(`Error fetching valid actions: ${error.response.data.message}`);
@@ -112,7 +131,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
           </p>
         </div>
 
-        <div className="mt-3">
+        <div className="absolute top-4 right-4">
           <label className="block font-semibold">
             Choose Action:
           </label>
@@ -124,9 +143,9 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
             <option value="" disabled>
               -- Select an Action --
             </option>
-            {validActions.map((action, index) => (
+            {validActions?.map((action, index) => (
               <option key={index} value={action}>
-                {action}
+                {actionOptions[action]}
               </option>
             ))}
           </select>
