@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import propTypes from "prop-types";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { FaPen, FaRegTrashAlt } from "react-icons/fa";
 
 import { BACKEND_URL } from "../../constants";
@@ -351,12 +350,7 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-gray-900">
-            <Link
-              to={name}
-              className="hover:text-orange-500 transition duration-200"
-            >
               {name}
-            </Link>
           </h2>
           <p className="text-gray-700">
             <span className="font-medium">Email:</span> {email}
