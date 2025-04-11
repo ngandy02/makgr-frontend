@@ -29,7 +29,7 @@ function Navbar() {
   const location = useLocation();
   const url = location.pathname;
   const page = PAGES.filter((obj) => obj.destination === url)[0];
-  const label = page ? page.label : "MMANKWGZRZ";
+  const label = page ? page.label : "";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -46,9 +46,24 @@ function Navbar() {
                   label={page.label}
                   destination={page.destination}
                 />
-              ),
+              )
           )}
         </ul>
+        <div className="flex items-center gap-4">
+          <Link
+            to="/login"
+            className="px-6 py-2 border border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white transition"
+          >
+            Log In
+          </Link>
+          <Link
+            to="/register"
+            className="px-6 py-2 font-semibold rounded-xl bg-primary text-white hover:bg-opacity-90 transition"
+          >
+            Sign Up
+          </Link>
+        </div>
+
       </nav>
       <main className="flex-1 flex justify-center my-20">
         <div className="w-full max-w-4xl">

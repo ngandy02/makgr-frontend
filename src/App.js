@@ -32,11 +32,11 @@ function App() {
         {/* For a different home page, do:
          <Route index element={<Login />} /> */}
         <Route element={<Navbar />}>
-          <Route index element={<LoginForm />} />
+          <Route path="login" element={<LoginForm />} />
           <Route path="register" element={<RegisterForm />} />
           <Route path="reset-password" element={<Reset />} />
 
-          <Route path="home" element={<Home />} />
+          <Route index element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="masthead" element={<Masthead />} />
           <Route path="submissions" element={<Submissions />} />
