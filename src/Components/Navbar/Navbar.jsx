@@ -33,7 +33,7 @@ function Navbar() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <nav className="flex items-center justify-between py-0 px-5">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md px-5 py-2 flex items-center justify-between">
         <ul className="text-3xl font-bold">
           <NavLink label={PAGES[0].label} destination={PAGES[0].destination} />
         </ul>
@@ -63,9 +63,8 @@ function Navbar() {
             Sign Up
           </Link>
         </div>
-
       </nav>
-      <main className="flex-1 flex justify-center my-20">
+      <main className="flex-1 flex justify-center pt-32 mb-20 px-4">
         <div className="w-full max-w-4xl">
           <h1 className="font-bold text-2xl mb-4">{label}</h1>
           <div className="bg-white rounded-lg p-10">
