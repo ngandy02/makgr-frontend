@@ -2,8 +2,10 @@ import React from "react";
 import propTypes from "prop-types";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
+const HOME_NAME = "MMANKWGZRZ";
+const HOME_LABEL = "Published Manuscripts";
 const PAGES = [
-  { label: "MMANKWGZRZ", destination: "/" },
+  { label: HOME_NAME, destination: "/" },
   { label: "Dashboard", destination: "/dashboard" },
   { label: "Masthead", destination: "/masthead" },
   { label: "Submissions", destination: "/submissions" },
@@ -40,7 +42,7 @@ function Navbar() {
         <ul className="flex gap-[10px] navlinks">
           {PAGES.map(
             (page) =>
-              page.label !== "MMANKWGZRZ" && (
+              page.label !== HOME_NAME && (
                 <NavLink
                   key={page.destination}
                   label={page.label}
@@ -66,7 +68,9 @@ function Navbar() {
       </nav>
       <main className="flex-1 flex justify-center pt-32 mb-20 px-4">
         <div className="w-full max-w-4xl">
-          <h1 className="font-bold text-2xl mb-4">{label}</h1>
+          <h1 className="font-bold text-2xl mb-4">
+            {label === HOME_NAME ? HOME_LABEL : label}
+          </h1>
           <div className="bg-white rounded-lg p-10">
             <Outlet />
           </div>

@@ -5,8 +5,11 @@ import { BACKEND_URL } from "../../constants";
 import axios from "axios";
 
 const REGISTER_ENDPOINT = `${BACKEND_URL}/register`;
+const PEOPLE_CREATE_ENDPOINT = `${BACKEND_URL}/people/create`;
 
 export default function RegisterForm() {
+  const [name, setName] = useState("");
+  const [affiliation, setAffiliation] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -40,7 +43,15 @@ export default function RegisterForm() {
       });
 
       setSuccess(res.data.message || "Registration successful!");
-      setError("");
+
+      const person = {
+        name,
+        affiliation,
+        email,
+        roles: [],
+      };
+
+      await axios.put(PEOPLE_CREATE_ENDPOINT, person);
 
       setTimeout(() => navigate("/"), 1500);
     } catch (err) {
@@ -75,6 +86,29 @@ export default function RegisterForm() {
         <h2 className="text-center text-3xl font-bold mb-2">Sign Up</h2>
 
         <div>
+          <label htmlFor="name">Name</label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter full name"
+            id="name"
+            type="text"
+            className="w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="affiliation">Affiliation</label>
+          <input
+            value={affiliation}
+            onChange={(e) => setAffiliation(e.target.value)}
+            placeholder="Enter affiliation"
+            id="affiliation"
+            type="text"
+            className="w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <div>
           <label htmlFor="email">Email</label>
           <input
             value={email}
@@ -101,7 +135,7 @@ export default function RegisterForm() {
           <input
             value={confirm}
             onChange={(e) => handlePasswordChange(e, "confirm")}
-            placeholder="Enter password"
+            placeholder="Reenter password"
             id="confirm"
             type="password"
             className="w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary"
