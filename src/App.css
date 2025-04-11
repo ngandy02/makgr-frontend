@@ -31,19 +31,31 @@ html {
 }
 
 button {
-  font-size: 1.5rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-
-  border-radius: 5px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 0.75rem;
   border: 2px solid var(--accent-color);
   color: var(--accent-color);
-  background: var(--background-color);
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
 }
-button:focus,
-button:hover {
-  background: var(--accent-color);
-  color: var(--background-color);
+
+button:hover,
+button:focus {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.button-primary {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+}
+
+.button-primary:hover,
+.button-primary:focus {
+  opacity: 0.9;
 }
 
 .error-message {
@@ -52,48 +64,6 @@ button:hover {
   margin: 1em 0;
   border-radius: 5px;
 }
-
-/* form input {
-  display: block;
-  margin: 0.5rem 0 1rem 0;
-  padding: 1rem 0.5rem 0.5rem 0.5rem;
-  border-radius: 5px;
-  border: 2px solid var(--accent-color);
-  font-size: 1rem;
-}
-
-form label {
-  margin-left: 1rem;
-  display: block;
-  height: 0;
-  width: fit-content;
-  position: relative;
-  z-index: 1;
-}
-form label::before,
-form label::after {
-  content: "";
-  position: absolute;
-  height: 1.65rem;
-  top: -0.25rem;
-  left: -5px;
-  width: calc(100% + 10px);
-  border: 2px solid var(--accent-color);
-  border-radius: 5px;
-  background-color: white;
-  z-index: -1;
-}
-
-form button {
-  margin-right: 1rem;
-}
-form button[type="button"] {
-  border-color: var(--background-color);
-}
-form button[type="button"]:focus,
-form button[type="button"]:hover {
-  border-color: var(--accent-color);
-} */
 
 nav {
   margin: 0;
@@ -145,36 +115,6 @@ nav a {
   font-weight: bold;
   outline: none;
 }
-
-/* form #roles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-
-form #roles div {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-form input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  accent-color: var(--accent-color);
-}
-
-form label[for] {
-  cursor: pointer;
-  font-size: 1rem;
-  color: var(--accent-color);
-}
-
-form input[type="checkbox"]:focus + label {
-  font-weight: bold;
-} */
 
 form {
   display: flex;

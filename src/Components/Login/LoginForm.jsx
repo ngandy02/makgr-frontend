@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../constants";
 import axios from "axios";
+import { useAuth } from "../../Contexts/AuthContext";
 
 const LOGIN_ENDPOINT = `${BACKEND_URL}/login`;
 
@@ -13,6 +14,7 @@ export default function LoginForm() {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const navigate = useNavigate();
+  const { logIn } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,24 +27,17 @@ export default function LoginForm() {
       const res = await axios.post(LOGIN_ENDPOINT, { email, password });
 
       setSuccess(res.data.message || "Login successful!");
-      setTimeout(() => navigate("/dashboard"), 1500);
+      logIn(email);
+
+      navigate("/dashboard");
     } catch (err) {
-      if (err.response && err.response.data && err.response.data.message) {
+      if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
         setError("Something went wrong.");
       }
     }
   };
-
-  let message = null;
-  if (hasSubmitted) {
-    if (error) {
-      message = <div className="text-red-600">{error}</div>;
-    } else if (success) {
-      message = <div className="text-green-600">{success}</div>;
-    }
-  }
 
   return (
     <div className="w-full flex items-center justify-center">
@@ -73,7 +68,12 @@ export default function LoginForm() {
           />
         </div>
 
-        <div className="text-center">{message}</div>
+        <div className="text-center">
+          {hasSubmitted && error && <div className="text-red-600">{error}</div>}
+          {hasSubmitted && success && (
+            <div className="text-green-600">{success}</div>
+          )}
+        </div>
 
         <button
           type="submit"

@@ -1,9 +1,11 @@
 import React from "react";
 import propTypes from "prop-types";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../Contexts/AuthContext";
 
 const HOME_NAME = "MMANKWGZRZ";
 const HOME_LABEL = "Published Manuscripts";
+
 const PAGES = [
   { label: HOME_NAME, destination: "/" },
   { label: "Dashboard", destination: "/dashboard" },
@@ -29,9 +31,17 @@ NavLink.propTypes = {
 
 function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const url = location.pathname;
-  const page = PAGES.filter((obj) => obj.destination === url)[0];
+  const page = PAGES.find((obj) => obj.destination === url);
   const label = page ? page.label : "";
+
+  const { userEmail, userName, logOut } = useAuth();
+
+  const handleSignOut = () => {
+    logOut();
+    navigate("/login");
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -40,30 +50,43 @@ function Navbar() {
           <NavLink label={PAGES[0].label} destination={PAGES[0].destination} />
         </ul>
         <ul className="flex gap-[10px] navlinks">
-          {PAGES.map(
-            (page) =>
-              page.label !== HOME_NAME && (
-                <NavLink
-                  key={page.destination}
-                  label={page.label}
-                  destination={page.destination}
-                />
-              )
-          )}
+          {PAGES.filter((page) => page.label !== HOME_NAME).map((page) => (
+            <NavLink
+              key={page.destination}
+              label={page.label}
+              destination={page.destination}
+            />
+          ))}
         </ul>
         <div className="flex items-center gap-4">
-          <Link
-            to="/login"
-            className="px-6 py-2 border border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white transition"
-          >
-            Log In
-          </Link>
-          <Link
-            to="/register"
-            className="px-6 py-2 font-semibold rounded-xl bg-primary text-white hover:bg-opacity-90 transition"
-          >
-            Sign Up
-          </Link>
+          {userEmail ? (
+            <>
+              <span className="text-sm font-semibold text-gray-700">
+                Welcome, {userName}
+              </span>
+              <button
+                onClick={handleSignOut}
+                className="button-primary"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="px-6 py-2 border border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white transition"
+              >
+                Log In
+              </Link>
+              <Link
+                to="/register"
+                className="px-6 py-2 font-semibold rounded-xl bg-primary text-white hover:bg-opacity-90 transition"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </nav>
       <main className="flex-1 flex justify-center pt-32 mb-20 px-4">

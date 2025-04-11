@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaBackspace } from "react-icons/fa";
 import { BACKEND_URL } from "../../constants";
 import axios from "axios";
+import { useAuth } from "../../Contexts/AuthContext";
 
 const REGISTER_ENDPOINT = `${BACKEND_URL}/register`;
 const PEOPLE_CREATE_ENDPOINT = `${BACKEND_URL}/people/create`;
@@ -18,6 +19,7 @@ export default function RegisterForm() {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const navigate = useNavigate();
+  const { logIn } = useAuth();
 
   const handlePasswordChange = (e, type) => {
     if (type === "password") setPassword(e.target.value);
@@ -26,7 +28,6 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setHasSubmitted(true);
     setError("");
     setSuccess("");
@@ -37,25 +38,17 @@ export default function RegisterForm() {
     }
 
     try {
-      const res = await axios.post(REGISTER_ENDPOINT, {
-        email,
-        password,
-      });
+      const res = await axios.post(REGISTER_ENDPOINT, { email, password });
 
-      setSuccess(res.data.message || "Registration successful!");
-
-      const person = {
-        name,
-        affiliation,
-        email,
-        roles: [],
-      };
-
+      const person = { name, affiliation, email, roles: [] };
       await axios.put(PEOPLE_CREATE_ENDPOINT, person);
 
-      setTimeout(() => navigate("/"), 1500);
+      setSuccess(res.data.message || "Registration successful!");
+      logIn(email);
+
+      navigate("/");
     } catch (err) {
-      if (err.response && err.response.data && err.response.data.message) {
+      if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
         setError("Something went wrong.");
@@ -64,19 +57,10 @@ export default function RegisterForm() {
     }
   };
 
-  let message = null;
-  if (hasSubmitted) {
-    if (error) {
-      message = <div className="text-red-600">{error}</div>;
-    } else if (success) {
-      message = <div className="text-green-600">{success}</div>;
-    }
-  }
-
   return (
     <div className="w-full flex items-center justify-center">
       <form className="rounded-lg p-10 w-full max-w-md" onSubmit={handleSubmit}>
-        <Link className=" w-fit p-1 rounded-md" to={"/"}>
+        <Link className="w-fit p-1 rounded-md" to={"/"}>
           <div className="flex gap-1 items-center">
             <FaBackspace />
             <span>Go Back</span>
@@ -108,6 +92,7 @@ export default function RegisterForm() {
             className="w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
+
         <div>
           <label htmlFor="email">Email</label>
           <input
@@ -119,6 +104,7 @@ export default function RegisterForm() {
             className="w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
+
         <div>
           <label htmlFor="password">Password</label>
           <input
@@ -130,6 +116,7 @@ export default function RegisterForm() {
             className="w-full rounded border p-2 outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
+
         <div>
           <label htmlFor="confirm">Confirm password</label>
           <input
@@ -142,7 +129,12 @@ export default function RegisterForm() {
           />
         </div>
 
-        <div className="text-center">{message}</div>
+        <div className="text-center">
+          {hasSubmitted && error && <div className="text-red-600">{error}</div>}
+          {hasSubmitted && success && (
+            <div className="text-green-600">{success}</div>
+          )}
+        </div>
 
         <button
           type="submit"
