@@ -2,35 +2,37 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
+import { AuthProvider } from "./Contexts/AuthContext";
+
+const renderWithProvider = (ui) => {
+  return render(<AuthProvider>{ui}</AuthProvider>);
+};
 
 describe("App", () => {
   it("renders login page", async () => {
-    render(<App />);
+    renderWithProvider(<App />);
 
-    userEvent.click(screen.getByRole("link", { name: "MMANKWGZRZ" }));
+    userEvent.click(screen.getByRole("link", { name: "Log In" }));
 
-    expect(screen.getByLabelText("Username")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Log in" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Create an account" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Sign up" })).toBeInTheDocument();
   });
 
   it("renders register page", async () => {
-    render(<App />);
+    renderWithProvider(<App />);
 
-    userEvent.click(screen.getByRole("link", { name: "MMANKWGZRZ" }));
-    userEvent.click(screen.getByRole("link", { name: "Create an account" }));
+    userEvent.click(screen.getByRole("link", { name: "Sign Up" }));
 
-    expect(screen.getByLabelText("Username")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(screen.getByLabelText("Confirm password")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign up" })).toBeInTheDocument();
   });
 
   it("renders navbar", async () => {
-    render(<App />);
+    renderWithProvider(<App />);
 
     const links = [
       "MMANKWGZRZ",
@@ -48,44 +50,44 @@ describe("App", () => {
   });
 
   it("switches to Dashboard view", async () => {
-    render(<App />);
+    renderWithProvider(<App />);
 
     userEvent.click(screen.getByRole("link", { name: "Dashboard" }));
 
     expect(screen.getByRole("heading", { name: "To Do" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "My Submissions" }),
+      screen.getByRole("heading", { name: "My Submissions" })
     ).toBeInTheDocument();
   });
 
   it("switches to Masthead view", async () => {
-    render(<App />);
+    renderWithProvider(<App />);
 
     userEvent.click(screen.getByRole("link", { name: "Masthead" }));
 
     expect(
-      screen.getByRole("heading", { name: "Editors" }),
+      screen.getByRole("heading", { name: "Editors" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Managing Editors" }),
+      screen.getByRole("heading", { name: "Managing Editors" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Consulting Editors" }),
+      screen.getByRole("heading", { name: "Consulting Editors" })
     ).toBeInTheDocument();
   });
 
   it("switches to People view", async () => {
-    render(<App />);
+    renderWithProvider(<App />);
 
     userEvent.click(screen.getByRole("link", { name: "View All People" }));
 
     expect(
-      screen.getByRole("button", { name: "Add a Person" }),
+      screen.getByRole("button", { name: "Add a Person" })
     ).toBeInTheDocument();
   });
 
   it("loads AddPersonForm", async () => {
-    render(<App />);
+    renderWithProvider(<App />);
 
     userEvent.click(screen.getByRole("link", { name: "View All People" }));
     userEvent.click(screen.getByRole("button", { name: "Add a Person" }));
