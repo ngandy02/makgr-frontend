@@ -64,10 +64,7 @@ function Navbar() {
               <span className="text-sm font-semibold text-gray-700">
                 Welcome, {userName}
               </span>
-              <button
-                onClick={handleSignOut}
-                className="button-primary"
-              >
+              <button onClick={handleSignOut} className="button-primary">
                 Sign Out
               </button>
             </>

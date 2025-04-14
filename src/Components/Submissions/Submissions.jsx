@@ -12,7 +12,7 @@ function Submissions() {
   const [error, setError] = useState("");
   const [editClicked, setEditClicked] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
-  const [manuAreaValue , setManuAreaValue] = useState("");
+  const [manuAreaValue, setManuAreaValue] = useState("");
   // const [manuText, setManuText] = useState("");
   const [manuClicked, setManuClicked] = useState(false);
   // const []
@@ -21,7 +21,7 @@ function Submissions() {
     const fetchSubText = () => {
       axios
         .get(TEXT_ENDPOINT)
-        .then((response) => { 
+        .then((response) => {
           if (response.data[SUB_KEY]) {
             setSubText(response.data[SUB_KEY].text);
             setTextAreaValue(response.data[SUB_KEY].text);
@@ -42,7 +42,6 @@ function Submissions() {
     setEditClicked(!editClicked);
     setTextAreaValue(subText);
   };
-
 
   const updateSubText = () => {
     axios
@@ -78,14 +77,13 @@ function Submissions() {
     }
   }, [textAreaValue, editClicked]); // Resize textarea to match height of content
 
- 
- // This effect is for the manuscript textarea
+  // This effect is for the manuscript textarea
   // It will resize the textarea to match the height of the content
   useEffect(() => {
     const textArea = document.getElementById("manuText");
-    if (textArea){
+    if (textArea) {
       textArea.style.height = "auto";
-      textArea.style.height =  `${textArea.scrollHeight}px`;
+      textArea.style.height = `${textArea.scrollHeight}px`;
     }
   }, [manuAreaValue, editClicked]);
 
@@ -180,44 +178,46 @@ function Submissions() {
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        
-        {(manuClicked) ? (
 
-            <div> 
-              <label htmlFor="manuText" className="block font-medium">
-                Manuscript Text
-              </label>
-              <textarea
-                id="manuText"
-                name="manuText"
-                value={setManuAreaValue}
-                onChange={(e) => setManuAreaValue(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <button 
-                className="px-5 py-2 rounded-lg font-semibold"
-                style={{
-                  transition: "0.3s ease",
-                }}
-                onClick={() => {(setManuClicked(!manuClicked))}}>
-                Cancel
-              </button>
-            </div> 
-            ) : (null)}
-        
-        {(!manuClicked) ? (
+        {manuClicked ? (
           <div>
-            <button 
+            <label htmlFor="manuText" className="block font-medium">
+              Manuscript Text
+            </label>
+            <textarea
+              id="manuText"
+              name="manuText"
+              value={setManuAreaValue}
+              onChange={(e) => setManuAreaValue(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <button
               className="px-5 py-2 rounded-lg font-semibold"
               style={{
                 transition: "0.3s ease",
               }}
-              onClick={() => (setManuClicked(!manuClicked))}
+              onClick={() => {
+                setManuClicked(!manuClicked);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : null}
+
+        {!manuClicked ? (
+          <div>
+            <button
+              className="px-5 py-2 rounded-lg font-semibold"
+              style={{
+                transition: "0.3s ease",
+              }}
+              onClick={() => setManuClicked(!manuClicked)}
             >
               Add Manuscript Text
             </button>
           </div>
-        ) : (null)}
+        ) : null}
 
         <div className="flex flex-col items-center justify-center border-[1.5px] border-gray-300 rounded-md p-3 my-3">
           <span className="font-medium">Upload PDF</span>

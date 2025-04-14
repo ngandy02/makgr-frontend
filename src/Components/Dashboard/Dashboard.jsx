@@ -34,7 +34,7 @@ function fetchStates(setError) {
   return stateOptions;
 }
 
-function fetchActions(setError){
+function fetchActions(setError) {
   const [actionOptions, setActionOptions] = useState({});
 
   useEffect(() => {
@@ -61,7 +61,6 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
 
   const [manu, setManu] = useState([]);
 
-
   const handleAction = () => {
     const thisManu = {
       _id: _id,
@@ -80,15 +79,17 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
           ),
         );
         fetchManuscripts();
-        setSuccess(`${title} performed "${actionOptions[selectedAction]}" successfully!`);
+        setSuccess(
+          `${title} performed "${actionOptions[selectedAction]}" successfully!`,
+        );
         setSelectedAction("");
       })
       .catch((error) =>
-        setError(`There was a problem performing action on the manuscript. ${error}`),
+        setError(
+          `There was a problem performing action on the manuscript. ${error}`,
+        ),
       );
-      
   };
-
 
   const fetchValidActions = () => {
     axios
@@ -98,12 +99,14 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
         console.log("Fetched valid actions:", response.data);
       })
       .catch((error) => {
-        setError(`Error fetching valid actions: ${error.response.data.message}`);
+        setError(
+          `Error fetching valid actions: ${error.response.data.message}`,
+        );
       });
-  }
+  };
 
   useEffect(fetchManuscripts, []);
-  useEffect(fetchValidActions, [state])
+  useEffect(fetchValidActions, [state]);
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-5 mb-4 border border-gray-200 relative">
@@ -135,13 +138,11 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
         </div>
 
         <div className="absolute top-4 right-4">
-          <label className="block font-semibold">
-            Choose Action:
-          </label>
+          <label className="block font-semibold">Choose Action:</label>
           <select
-              className="mt-1 p-2 border border-gray-300 rounded"
-              value={selectedAction}
-              onChange={(e) => setSelectedAction(e.target.value)}
+            className="mt-1 p-2 border border-gray-300 rounded"
+            value={selectedAction}
+            onChange={(e) => setSelectedAction(e.target.value)}
           >
             <option value="" disabled>
               -- Select an Action --

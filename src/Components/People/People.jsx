@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import propTypes from "prop-types";
 import axios from "axios";
 import { FaPen, FaRegTrashAlt } from "react-icons/fa";
+import { useAuth } from "../../Contexts/AuthContext";
 
 import { BACKEND_URL } from "../../constants";
 
@@ -170,6 +171,7 @@ function UpdatePersonForm({
   const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
   const roleOptions = fetchRoles(setError);
+  const { userEmail } = useAuth();
 
   useEffect(() => {
     if (visible) {
@@ -222,7 +224,12 @@ function UpdatePersonForm({
       roles: roles,
     };
     axios
-      .put(`${PEOPLE_READ_ENDPOINT}/${email}`, newPerson)
+      .put(`${PEOPLE_READ_ENDPOINT}/${email}`, newPerson, {
+        headers: {
+          Authorization: `Bearer ${userEmail}`,
+          "Content-Type": "application/json",
+        },
+      })
       .then(() => {
         fetchPeople();
         setName("");
@@ -323,12 +330,18 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
   const { name, affiliation, email, roles } = person;
   const roleOptions = fetchRoles(setError);
   const roleNames = roles.map((role) => roleOptions[role]);
+  const { userEmail } = useAuth();
 
   const deletePerson = () => {
     const res = confirm("Delete this person?");
     if (res) {
       axios
-        .delete(`${PEOPLE_READ_ENDPOINT}/${email}`)
+        .delete(`${PEOPLE_READ_ENDPOINT}/${email}`, {
+          headers: {
+            Authorization: `Bearer ${userEmail}`,
+            "Content-Type": "application/json",
+          },
+        })
         .then(() => {
           fetchPeople();
           setSuccess(`${name} deleted successfully!`);
@@ -349,9 +362,7 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
     <div className="bg-white shadow-lg rounded-lg p-5 mb-4 border border-gray-200">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">
-              {name}
-          </h2>
+          <h2 className="text-xl font-bold text-gray-900">{name}</h2>
           <p className="text-gray-700">
             <span className="font-medium">Email:</span> {email}
           </p>
@@ -475,7 +486,7 @@ function People() {
       {error && <ErrorMessage message={error} />}
       {people.map((person) => (
         <Person
-          key={person.name}
+          key={person.email}
           person={person}
           fetchPeople={fetchPeople}
           setError={setError}

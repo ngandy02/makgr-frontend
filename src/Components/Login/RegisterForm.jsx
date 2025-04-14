@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBackspace } from "react-icons/fa";
 import { BACKEND_URL } from "../../constants";
 import axios from "axios";
 import { useAuth } from "../../Contexts/AuthContext";
@@ -60,13 +59,6 @@ export default function RegisterForm() {
   return (
     <div className="w-full flex items-center justify-center">
       <form className="rounded-lg p-10 w-full max-w-md" onSubmit={handleSubmit}>
-        <Link className="w-fit p-1 rounded-md" to={"/"}>
-          <div className="flex gap-1 items-center">
-            <FaBackspace />
-            <span>Go Back</span>
-          </div>
-        </Link>
-
         <h2 className="text-center text-3xl font-bold mb-2">Sign Up</h2>
 
         <div>

@@ -56,7 +56,7 @@ describe("App", () => {
 
     expect(screen.getByRole("heading", { name: "To Do" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "My Submissions" })
+      screen.getByRole("heading", { name: "My Submissions" }),
     ).toBeInTheDocument();
   });
 
@@ -66,13 +66,13 @@ describe("App", () => {
     userEvent.click(screen.getByRole("link", { name: "Masthead" }));
 
     expect(
-      screen.getByRole("heading", { name: "Editors" })
+      screen.getByRole("heading", { name: "Editors" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Managing Editors" })
+      screen.getByRole("heading", { name: "Managing Editors" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Consulting Editors" })
+      screen.getByRole("heading", { name: "Consulting Editors" }),
     ).toBeInTheDocument();
   });
 
@@ -82,7 +82,7 @@ describe("App", () => {
     userEvent.click(screen.getByRole("link", { name: "View All People" }));
 
     expect(
-      screen.getByRole("button", { name: "Add a Person" })
+      screen.getByRole("button", { name: "Add a Person" }),
     ).toBeInTheDocument();
   });
 
