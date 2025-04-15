@@ -52,7 +52,7 @@ function fetchActions(setError) {
 }
 
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
-  const { _id, title, author, author_email, referees, state } = manuscript;
+  const { _id, title, author, author_email, referees, state, text } = manuscript;
   const stateOptions = fetchStates(setError);
   const stateName = stateOptions[state];
   const actionOptions = fetchActions(setError);
@@ -67,6 +67,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       referees: referees,
       curr_state: state,
       action: selectedAction,
+      text: text,
     };
 
     axios
@@ -114,7 +115,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
         <div>
           <h2 className="text-xl font-bold text-gray-900">
             <Link
-              to={title}
+              to={`${_id}`}
               className="hover:text-orange-500 transition duration-200"
             >
               {title}
@@ -178,6 +179,7 @@ Manuscript.propTypes = {
     author_email: propTypes.string.isRequired,
     referees: propTypes.array.isRequired,
     state: propTypes.string.isRequired,
+    text: propTypes.string.isRequired,
   }).isRequired,
   fetchManuscripts: propTypes.func.isRequired,
   setError: propTypes.func.isRequired,
@@ -217,6 +219,7 @@ function Dashboard() {
       <div className="text-green-700">{success}</div>
       {error && <ErrorMessage message={error} />}
       {manuscripts.map((manuscript) => (
+        manuscript.state !== "WDN" &&
         <Manuscript
           key={manuscript.id}
           manuscript={manuscript}

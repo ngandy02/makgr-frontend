@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, } from "react-router-dom";
 
 import "./App.css";
 
@@ -14,11 +14,8 @@ import Account from "./Components/Account";
 import LoginForm from "./Components/Login/LoginForm";
 import RegisterForm from "./Components/Login/RegisterForm";
 import Reset from "./Components/Login/Reset";
+import ManuscriptText from "./Components/ManuscriptText"
 
-function PersonPage() {
-  const { name } = useParams();
-  return <h1>{name}</h1>;
-}
 
 function App() {
   return (
@@ -43,7 +40,7 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="account" element={<Account />} />
           <Route path="people" element={<People />} />
-          <Route path="people/:name" element={<PersonPage />} />
+          <Route path="dashboard/:id" element={<ManuscriptText />} />
           {/* path contains the current URL path excluding the domain name */}
           {/* element contains the Component to be rendered */}
         </Route>
