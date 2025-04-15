@@ -3,9 +3,12 @@ import axios from "axios";
 import { BACKEND_URL } from "../../constants";
 
 const TEXT_ENDPOINT = `${BACKEND_URL}/text`;
+const MANU_CREATE_ENDPOINT = `${BACKEND_URL}/query/create`
 const SUB_KEY = "SubKey";
 const SUB_TITLE = "Submission Page";
 const UPDATED_KEY = "Updated Entry";
+const SUBMITTED = 'SUB';
+
 
 function Submissions() {
   const [subText, setSubText] = useState("");
@@ -13,9 +16,15 @@ function Submissions() {
   const [editClicked, setEditClicked] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
   const [manuAreaValue, setManuAreaValue] = useState("");
-  // const [manuText, setManuText] = useState("");
   const [manuClicked, setManuClicked] = useState(false);
-  // const []
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [email, setEmail] = useState("");
+  const [state, setState] = useState("");
+  const [manuText, setManuText] = useState("");
+  const [referee, setReferee] = useState([]);
+  
+    // const []
 
   useEffect(() => {
     const fetchSubText = () => {
@@ -67,6 +76,9 @@ function Submissions() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("submit");
+    setState(SUBMITTED);
+    uploadManu;
+
   };
 
   useEffect(() => {
@@ -87,6 +99,35 @@ function Submissions() {
     }
   }, [manuAreaValue, editClicked]);
 
+  const uploadManu = (event) =>{
+    event.preventDefault();
+    setState(SUBMITTED);
+    const newManu = {
+      title: title,
+      author: author, 
+      email: email,
+      referee: referee,
+      state: state,
+      text: manuText
+      // need to add referee input
+    };
+    axios 
+    .put(MANU_CREATE_ENDPOINT, newManu)
+    .then(() => {
+      setTitle("");
+      setAuthor("");
+      setEmail("");
+      setState("");
+      setReferee([]);
+      setManuText("");
+      // setSuccess("Manuscript addded successfully!");
+    })
+    .catch((error) => {
+      setError(`There was a problem adding the person. ${error.response.data.message}`);
+    })
+    };
+
+  
   return (
     <div>
       {error && (
@@ -159,6 +200,7 @@ function Submissions() {
           id="title"
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          onChange={(e) => setTitle(e.target.value)}
         />
         <label htmlFor="author" className="block font-medium">
           Author
@@ -168,6 +210,7 @@ function Submissions() {
           id="author"
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          onChange={(e) => setAuthor(e.target.value)}
         />
         <label htmlFor="email" className="block font-medium">
           Author Email
@@ -177,6 +220,9 @@ function Submissions() {
           id="email"
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          onChange={(e) => setEmail(e.target.value)}
+
+          
         />
 
         {manuClicked ? (
@@ -187,7 +233,7 @@ function Submissions() {
             <textarea
               id="manuText"
               name="manuText"
-              value={setManuAreaValue}
+              value={manuAreaValue}
               onChange={(e) => setManuAreaValue(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
@@ -201,6 +247,16 @@ function Submissions() {
               }}
             >
               Cancel
+            </button>
+            
+            <button 
+            className="ml-5 px-5 py-2 rounded-lg font-semibold"
+            style={{
+              transition: "0.3s ease",
+            }}
+            onClick={() => setManuText(manuAreaValue)}
+            >
+              Finish
             </button>
           </div>
         ) : null}
@@ -218,7 +274,6 @@ function Submissions() {
             </button>
           </div>
         ) : null}
-
         <div className="flex flex-col items-center justify-center border-[1.5px] border-gray-300 rounded-md p-3 my-3">
           <span className="font-medium">Upload PDF</span>
           <input type="file" className="mt-2" />
