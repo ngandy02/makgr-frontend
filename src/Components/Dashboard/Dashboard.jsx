@@ -52,7 +52,8 @@ function fetchActions(setError) {
 }
 
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
-  const { _id, title, author, author_email, referees, state, text } = manuscript;
+  const { _id, title, author, author_email, referees, state, text } =
+    manuscript;
   const stateOptions = fetchStates(setError);
   const stateName = stateOptions[state];
   const actionOptions = fetchActions(setError);
@@ -218,16 +219,18 @@ function Dashboard() {
       <h2 className="mb-2 text-lg font-bold">My Submissions</h2>
       <div className="text-green-700">{success}</div>
       {error && <ErrorMessage message={error} />}
-      {manuscripts.map((manuscript) => (
-        manuscript.state !== "WDN" &&
-        <Manuscript
-          key={manuscript.id}
-          manuscript={manuscript}
-          fetchManuscripts={fetchManuscripts}
-          setError={setError}
-          setSuccess={setSuccess}
-        />
-      ))}
+      {manuscripts.map(
+        (manuscript) =>
+          manuscript.state !== "WDN" && (
+            <Manuscript
+              key={manuscript.id}
+              manuscript={manuscript}
+              fetchManuscripts={fetchManuscripts}
+              setError={setError}
+              setSuccess={setSuccess}
+            />
+          ),
+      )}
     </div>
   );
 }

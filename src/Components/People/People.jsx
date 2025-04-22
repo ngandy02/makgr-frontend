@@ -172,7 +172,6 @@ function UpdatePersonForm({
   const [roles, setRoles] = useState([]);
   const roleOptions = fetchRoles(setError);
   const { userEmail } = useAuth();
-
   useEffect(() => {
     if (visible) {
       // Prepopulate the fields with person's data
@@ -226,7 +225,7 @@ function UpdatePersonForm({
     axios
       .put(`${PEOPLE_READ_ENDPOINT}/${email}`, newPerson, {
         headers: {
-          Authorization: `Bearer ${userEmail}`,
+          Authorization: `Bearer ${userEmail ? userEmail : ""}`,
           "Content-Type": "application/json",
         },
       })
@@ -331,7 +330,6 @@ function Person({ person, fetchPeople, setError, setSuccess }) {
   const roleOptions = fetchRoles(setError);
   const roleNames = roles.map((role) => roleOptions[role]);
   const { userEmail } = useAuth();
-
   const deletePerson = () => {
     const res = confirm("Delete this person?");
     if (res) {
@@ -451,7 +449,6 @@ function People() {
 
   useEffect(fetchPeople, []);
   // allows the component to fetch the list of people once right after when the component is rendered
-
   return (
     <div className="mx-auto max-w-3xl px-8">
       <header className="flex justify-between items-center flex-wrap">

@@ -15,13 +15,12 @@ function ManuscriptText() {
       .get(`${MANU_READ_ENDPOINT}/${id}`)
       .then((response) => setManuscript(response.data))
       .catch((err) =>
-        setError(`There was a problem retrieving the manuscript. ${err}`)
+        setError(`There was a problem retrieving the manuscript. ${err}`),
       );
   }, [id]);
 
   if (error) return <div className="text-red-500">{error}</div>;
   if (!manuscript) return <div>Loading...</div>;
-
 
   return (
     <div className="p-6 max-w-3xl mx-auto">

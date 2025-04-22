@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "./App.css";
 
@@ -14,8 +14,7 @@ import Account from "./Components/Account";
 import LoginForm from "./Components/Login/LoginForm";
 import RegisterForm from "./Components/Login/RegisterForm";
 import Reset from "./Components/Login/Reset";
-import ManuscriptText from "./Components/ManuscriptText"
-
+import ManuscriptText from "./Components/ManuscriptText";
 
 function App() {
   return (

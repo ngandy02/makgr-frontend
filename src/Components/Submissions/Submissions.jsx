@@ -3,12 +3,11 @@ import axios from "axios";
 import { BACKEND_URL } from "../../constants";
 
 const TEXT_ENDPOINT = `${BACKEND_URL}/text`;
-const MANU_CREATE_ENDPOINT = `${BACKEND_URL}/query/create`
+const MANU_CREATE_ENDPOINT = `${BACKEND_URL}/query/create`;
 const SUB_KEY = "SubKey";
 const SUB_TITLE = "Submission Page";
 const UPDATED_KEY = "Updated Entry";
-const SUBMITTED = 'SUB';
-
+const SUBMITTED = "SUB";
 
 function Submissions() {
   const [subText, setSubText] = useState("");
@@ -23,8 +22,8 @@ function Submissions() {
   const [state, setState] = useState("");
   const [manuText, setManuText] = useState("");
   const [referee, setReferee] = useState([]);
-  
-    // const []
+
+  // const []
 
   useEffect(() => {
     const fetchSubText = () => {
@@ -78,7 +77,6 @@ function Submissions() {
     console.log("submit");
     setState(SUBMITTED);
     uploadManu;
-
   };
 
   useEffect(() => {
@@ -99,35 +97,36 @@ function Submissions() {
     }
   }, [manuAreaValue, editClicked]);
 
-  const uploadManu = (event) =>{
+  const uploadManu = (event) => {
     event.preventDefault();
     setState(SUBMITTED);
     const newManu = {
       title: title,
-      author: author, 
+      author: author,
       email: email,
       referee: referee,
       state: state,
-      text: manuText
+      text: manuText,
       // need to add referee input
     };
-    axios 
-    .put(MANU_CREATE_ENDPOINT, newManu)
-    .then(() => {
-      setTitle("");
-      setAuthor("");
-      setEmail("");
-      setState("");
-      setReferee([]);
-      setManuText("");
-      // setSuccess("Manuscript addded successfully!");
-    })
-    .catch((error) => {
-      setError(`There was a problem adding the person. ${error.response.data.message}`);
-    })
-    };
+    axios
+      .put(MANU_CREATE_ENDPOINT, newManu)
+      .then(() => {
+        setTitle("");
+        setAuthor("");
+        setEmail("");
+        setState("");
+        setReferee([]);
+        setManuText("");
+        // setSuccess("Manuscript addded successfully!");
+      })
+      .catch((error) => {
+        setError(
+          `There was a problem adding the person. ${error.response.data.message}`,
+        );
+      });
+  };
 
-  
   return (
     <div>
       {error && (
@@ -221,8 +220,6 @@ function Submissions() {
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           onChange={(e) => setEmail(e.target.value)}
-
-          
         />
 
         {manuClicked ? (
@@ -248,13 +245,13 @@ function Submissions() {
             >
               Cancel
             </button>
-            
-            <button 
-            className="ml-5 px-5 py-2 rounded-lg font-semibold"
-            style={{
-              transition: "0.3s ease",
-            }}
-            onClick={() => setManuText(manuAreaValue)}
+
+            <button
+              className="ml-5 px-5 py-2 rounded-lg font-semibold"
+              style={{
+                transition: "0.3s ease",
+              }}
+              onClick={() => setManuText(manuAreaValue)}
             >
               Finish
             </button>
