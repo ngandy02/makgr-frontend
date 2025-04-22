@@ -25,15 +25,8 @@ function Submissions() {
   const [manuAreaValue, setManuAreaValue] = useState("");
   const [manuClicked, setManuClicked] = useState(false);
   const [manuText, setManuText] = useState("");
-<<<<<<< Updated upstream
-  const [referee, setReferee] = useState([]);
 
   // const []
-=======
-  
-  
-    // const []
->>>>>>> Stashed changes
 
   useEffect(() => {
     const fetchSubText = () => {
@@ -49,7 +42,7 @@ function Submissions() {
           }
         })
         .catch((err) =>
-          setError(`Error fetching submission page: ${err.message}`),
+          setError(`Error fetching submission page: ${err.message}`)
         );
     };
 
@@ -78,7 +71,7 @@ function Submissions() {
         }
       })
       .catch((err) =>
-        setError(`Error updating submission page: ${err.message}`),
+        setError(`Error updating submission page: ${err.message}`)
       );
   };
 
@@ -87,15 +80,10 @@ function Submissions() {
     console.log("submit");
     console.log(title);
     setState(SUBMITTED);
-<<<<<<< Updated upstream
-    uploadManu;
-=======
     setTitle(titleAreaValue);
     setAuthor(authorAreaValue);
     setEmail(emailAreaValue);
     uploadManu(e);
-
->>>>>>> Stashed changes
   };
 
   useEffect(() => {
@@ -121,20 +109,13 @@ function Submissions() {
     setState(SUBMITTED);
     const newManu = {
       title: title,
-<<<<<<< Updated upstream
       author: author,
-      email: email,
-      referee: referee,
-=======
-      author: author, 
       author_email: email,
       referees: referees,
->>>>>>> Stashed changes
       state: state,
       text: manuText,
       // need to add referee input
     };
-<<<<<<< Updated upstream
     axios
       .put(MANU_CREATE_ENDPOINT, newManu)
       .then(() => {
@@ -142,34 +123,17 @@ function Submissions() {
         setAuthor("");
         setEmail("");
         setState("");
-        setReferee([]);
+        setReferees([]);
         setManuText("");
+
         // setSuccess("Manuscript addded successfully!");
       })
       .catch((error) => {
         setError(
-          `There was a problem adding the person. ${error.response.data.message}`,
+          `There was a problem adding the person. ${error.response.data.message}`
         );
       });
   };
-=======
-    axios 
-    .put(MANU_CREATE_ENDPOINT, newManu)
-    .then(() => {
-      setTitle("");
-      setAuthor("");
-      setEmail("");
-      setState("");
-      setReferees([]);
-      setManuText("");
-      
-      // setSuccess("Manuscript addded successfully!");
-    })
-    .catch((error) => {
-      setError(`There was a problem adding the person. ${error.response.data.message}`);
-    })
-    };
->>>>>>> Stashed changes
 
   return (
     <div>
@@ -245,7 +209,6 @@ function Submissions() {
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           value={titleAreaValue}
           onChange={(e) => setTitleAreaValue(e.target.value)}
-          
         />
         <label htmlFor="author" className="block font-medium">
           Author
@@ -266,14 +229,8 @@ function Submissions() {
           id="email"
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-<<<<<<< Updated upstream
-          onChange={(e) => setEmail(e.target.value)}
-=======
           value={emailAreaValue}
           onChange={(e) => setEmailAreaValue(e.target.value)}
-
-          
->>>>>>> Stashed changes
         />
 
         {manuClicked ? (
