@@ -14,16 +14,26 @@ function Submissions() {
   const [error, setError] = useState("");
   const [editClicked, setEditClicked] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
-  const [manuAreaValue, setManuAreaValue] = useState("");
-  const [manuClicked, setManuClicked] = useState(false);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [email, setEmail] = useState("");
   const [state, setState] = useState("");
+  const [referees, setReferees] = useState([]);
+  const [titleAreaValue, setTitleAreaValue] = useState("");
+  const [authorAreaValue, setAuthorAreaValue] = useState("");
+  const [emailAreaValue, setEmailAreaValue] = useState("");
+  const [manuAreaValue, setManuAreaValue] = useState("");
+  const [manuClicked, setManuClicked] = useState(false);
   const [manuText, setManuText] = useState("");
+<<<<<<< Updated upstream
   const [referee, setReferee] = useState([]);
 
   // const []
+=======
+  
+  
+    // const []
+>>>>>>> Stashed changes
 
   useEffect(() => {
     const fetchSubText = () => {
@@ -75,8 +85,17 @@ function Submissions() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("submit");
+    console.log(title);
     setState(SUBMITTED);
+<<<<<<< Updated upstream
     uploadManu;
+=======
+    setTitle(titleAreaValue);
+    setAuthor(authorAreaValue);
+    setEmail(emailAreaValue);
+    uploadManu(e);
+
+>>>>>>> Stashed changes
   };
 
   useEffect(() => {
@@ -102,13 +121,20 @@ function Submissions() {
     setState(SUBMITTED);
     const newManu = {
       title: title,
+<<<<<<< Updated upstream
       author: author,
       email: email,
       referee: referee,
+=======
+      author: author, 
+      author_email: email,
+      referees: referees,
+>>>>>>> Stashed changes
       state: state,
       text: manuText,
       // need to add referee input
     };
+<<<<<<< Updated upstream
     axios
       .put(MANU_CREATE_ENDPOINT, newManu)
       .then(() => {
@@ -126,6 +152,24 @@ function Submissions() {
         );
       });
   };
+=======
+    axios 
+    .put(MANU_CREATE_ENDPOINT, newManu)
+    .then(() => {
+      setTitle("");
+      setAuthor("");
+      setEmail("");
+      setState("");
+      setReferees([]);
+      setManuText("");
+      
+      // setSuccess("Manuscript addded successfully!");
+    })
+    .catch((error) => {
+      setError(`There was a problem adding the person. ${error.response.data.message}`);
+    })
+    };
+>>>>>>> Stashed changes
 
   return (
     <div>
@@ -199,7 +243,9 @@ function Submissions() {
           id="title"
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          onChange={(e) => setTitle(e.target.value)}
+          value={titleAreaValue}
+          onChange={(e) => setTitleAreaValue(e.target.value)}
+          
         />
         <label htmlFor="author" className="block font-medium">
           Author
@@ -209,7 +255,8 @@ function Submissions() {
           id="author"
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          onChange={(e) => setAuthor(e.target.value)}
+          value={authorAreaValue}
+          onChange={(e) => setAuthorAreaValue(e.target.value)}
         />
         <label htmlFor="email" className="block font-medium">
           Author Email
@@ -219,7 +266,14 @@ function Submissions() {
           id="email"
           required
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+<<<<<<< Updated upstream
           onChange={(e) => setEmail(e.target.value)}
+=======
+          value={emailAreaValue}
+          onChange={(e) => setEmailAreaValue(e.target.value)}
+
+          
+>>>>>>> Stashed changes
         />
 
         {manuClicked ? (
@@ -280,6 +334,7 @@ function Submissions() {
           style={{
             transition: "0.3s ease",
           }}
+          type="submit"
         >
           Submit
         </button>
