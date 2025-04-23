@@ -9,6 +9,7 @@ const MANU_READ_ENDPOINT = `${BACKEND_URL}/query`;
 const FSM_ENDPOINT = `${BACKEND_URL}/query/handle_action`;
 const STATES_ENDPOINT = `${BACKEND_URL}/query/states`;
 const ACTIONS_ENDPOINT = `${BACKEND_URL}/query/actions`;
+const PEOPLE_BY_ROLE_ENDPOINT = `${BACKEND_URL}/people/role`;
 
 function ErrorMessage({ message }) {
   return <div className="error-message">{message}</div>;
@@ -49,6 +50,23 @@ function fetchActions(setError) {
   }, [setError]);
 
   return actionOptions;
+}
+
+function fetchReferees(setError) {
+  const [referees, setReferees] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${PEOPLE_BY_ROLE_ENDPOINT}/RE`)
+      .then((response) => {
+        setReferees(response.data.people);
+      })
+      .catch((error) => {
+        setError(`Error fetching referees: ${error.response.data.message}`);
+      });
+  }, [setError]);
+
+  return referees;
 }
 
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
@@ -107,6 +125,47 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       });
   };
 
+
+  function AddRefereeForm({ visible, fetchReferees, setError }) {
+    const [selectedRefs, setSelectedRefs] = useState([]);
+    const refereeOptions = fetchReferees(setError);
+  
+    const changeReferees = (event) => {
+      const { value, checked } = event.target;
+      setSelectedRefs((prev) =>
+        checked ? [...prev, value] : prev.filter((ref) => ref !== value)
+      );
+    };
+
+    if (!visible) return null;
+
+    return (
+      <div>
+        <label className="block font-semibold mb-2">Select Referees</label>
+        {refereeOptions.map((person) => (
+          <div key={person.email} className="mb-1">
+            <input
+              type="checkbox"
+              id={person.email}
+              value={person.email}
+              checked={selectedRefs.includes(person.email)}
+              onChange={changeReferees}
+            />
+            <label htmlFor={person.email} className="ml-2">
+              {person.name} ({person.email})
+            </label>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  AddRefereeForm.propTypes = {
+    visible: propTypes.bool.isRequired,
+    fetchReferees: propTypes.func.isRequired,
+    setError: propTypes.func.isRequired,
+  };
+
   useEffect(fetchManuscripts, []);
   useEffect(fetchValidActions, [state]);
 
@@ -156,6 +215,12 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
             ))}
           </select>
         </div>
+
+        <AddRefereeForm
+        visible={true}
+        fetchReferees={fetchReferees}
+        setError={setError}
+        />
 
         <div className="absolute bottom-4 right-4">
           <button
