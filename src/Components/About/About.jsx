@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../../constants";
+import { useAuth } from "../../Contexts/AuthContext";
 
 const TEXT_ENDPOINT = `${BACKEND_URL}/text`;
 const ABOUT_KEY = "AboutKey";
@@ -12,6 +13,9 @@ function About() {
   const [error, setError] = useState("");
   const [editClicked, setEditClicked] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
+
+  const { userEmail } = useAuth();
+  const [hasPermission, setHasPermission] = useState(false);
 
   useEffect(() => {
     const fetchAboutText = () => {
@@ -31,6 +35,26 @@ function About() {
 
     fetchAboutText();
   }, []);
+
+  useEffect(() => {
+    if (userEmail) {
+      axios
+        .get(`${BACKEND_URL}/permissions`, {
+          params: {
+            feature: "text",
+            action: "update",
+            user_email: userEmail,
+          },
+        })
+        .then((res) => {
+          setHasPermission(res.data.permitted);
+        })
+        .catch((err) => {
+          console.error("Permission check failed:", err);
+          setHasPermission(false);
+        });
+    }
+  }, [userEmail]);
 
   const handleEditClick = () => {
     setEditClicked(!editClicked);
@@ -112,7 +136,7 @@ function About() {
             return <p key={index}>{paragraph}</p>;
           })
         )}
-        {!editClicked && (
+        {!editClicked && hasPermission && (
           <button
             onClick={handleEditClick}
             className="mt-3 px-5 py-1 text-md"
@@ -122,6 +146,11 @@ function About() {
           >
             Edit
           </button>
+        )}
+        {!editClicked && !hasPermission && userEmail && (
+          <p className="mt-2 text-sm text-gray-500">
+            You don&#39;t have permission to edit this section.
+          </p>
         )}
       </div>
     );

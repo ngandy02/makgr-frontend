@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../../constants";
+import { useAuth } from "../../Contexts/AuthContext";
 
 const TEXT_ENDPOINT = `${BACKEND_URL}/text`;
 const MANU_CREATE_ENDPOINT = `${BACKEND_URL}/query/create`;
@@ -26,7 +27,8 @@ function Submissions() {
   const [manuClicked, setManuClicked] = useState(false);
   const [manuText, setManuText] = useState("");
 
-  // const []
+  const { userEmail } = useAuth();
+  const [hasPermission, setHasPermission] = useState(false);
 
   useEffect(() => {
     const fetchSubText = () => {
@@ -48,6 +50,25 @@ function Submissions() {
 
     fetchSubText();
   }, []);
+
+  useEffect(() => {
+    if (userEmail) {
+      axios
+        .get(`${BACKEND_URL}/permissions`, {
+          params: {
+            feature: "text",
+            action: "update",
+            user_email: userEmail,
+          },
+        })
+        .then((res) => {
+          setHasPermission(res.data.permitted === true);
+        })
+        .catch(() => {
+          setHasPermission(false);
+        });
+    }
+  }, [userEmail]);
 
   const handleEditClick = () => {
     setEditClicked(!editClicked);
@@ -186,17 +207,21 @@ function Submissions() {
           return <p key={index}>{paragraph}</p>;
         })
       )}
-      {!editClicked && (
+      {!editClicked && hasPermission && (
         <button
           onClick={handleEditClick}
           className="my-3 px-5 py-1 text-md"
-          style={{
-            transition: "0.3s ease",
-          }}
+          style={{ transition: "0.3s ease" }}
         >
           Edit
         </button>
       )}
+      {!editClicked && !hasPermission && userEmail && (
+        <p className="mt-2 text-sm text-gray-500">
+          You don&#39;t have permission to edit this section.
+        </p>
+      )}
+
       <h2 className="text-lg font-bold mt-5">Submission Form</h2>
       <form onSubmit={handleSubmit} className="mt-3">
         <label htmlFor="title" className="block font-medium">
