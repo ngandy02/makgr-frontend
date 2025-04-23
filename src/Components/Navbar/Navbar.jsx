@@ -3,11 +3,10 @@ import propTypes from "prop-types";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
 
-const HOME_NAME = "MMANKWGZRZ";
 const HOME_LABEL = "Published Manuscripts";
 
 const PAGES = [
-  { label: HOME_NAME, destination: "/" },
+  { label: "Home", destination: "/" },
   { label: "Dashboard", destination: "/dashboard" },
   { label: "Masthead", destination: "/masthead" },
   { label: "Submissions", destination: "/submissions" },
@@ -43,14 +42,20 @@ function Navbar() {
     navigate("/login");
   };
 
+  const allowedPathsForGuests = ["/", "/masthead", "/submissions", "/about"];
+
   return (
     <div className="flex flex-col min-h-screen">
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md px-5 py-2 flex items-center justify-between">
         <ul className="text-3xl font-bold">
-          <NavLink label={PAGES[0].label} destination={PAGES[0].destination} />
+          <li>
+            <Link to="/">MMANKWGZRZ</Link>
+          </li>
         </ul>
         <ul className="flex gap-[10px] navlinks">
-          {PAGES.filter((page) => page.label !== HOME_NAME).map((page) => (
+          {PAGES.filter((page) =>
+            userEmail ? true : allowedPathsForGuests.includes(page.destination)
+          ).map((page) => (
             <NavLink
               key={page.destination}
               label={page.label}
@@ -89,7 +94,7 @@ function Navbar() {
       <main className="flex-1 flex justify-center pt-32 mb-20 px-4">
         <div className="w-full max-w-4xl">
           <h1 className="font-bold text-2xl mb-4">
-            {label === HOME_NAME ? HOME_LABEL : label}
+            {label === "Home" ? HOME_LABEL : label}
           </h1>
           <div className="bg-white rounded-lg p-10">
             <Outlet />
