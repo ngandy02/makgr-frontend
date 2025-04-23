@@ -326,7 +326,10 @@ ErrorMessage.propTypes = {
 
 function Person({ person, fetchPeople, setError, setSuccess }) {
   const [updatingPerson, setUpdatingPerson] = useState(false);
-  const { name, affiliation, email, roles } = person;
+  // const { name, affiliation, email, roles } = person;
+  // const roleOptions = fetchRoles(setError);
+  // const roleNames = roles.map((role) => roleOptions[role]);
+  const { name, affiliation, email, roles = [] } = person;
   const roleOptions = fetchRoles(setError);
   const roleNames = roles.map((role) => roleOptions[role]);
   const { userEmail } = useAuth();
