@@ -1,0 +1,38 @@
+(For touch babel.config.json)
+{
+"presets": [
+"@babel/preset-env",
+["@babel/preset-react", {"runtime": "automatic"}]
+],
+"plugins": [ "@babel/plugin-syntax-jsx" ]
+}
+
+=============
+
+testEnvironment: "jsdom",
+
+moduleNameMapper: {
+'\\.(css|less)$': '<rootDir>/test/jest/__mocks__/styleMock.js',
+'\\.(png|less)$': '<rootDir>/test/jest/__mocks__/imgMock.js',
+},
+
+transform: {
+"\\.[jt]sx?$": "babel-jest"
+},
+
+transformIgnorePatterns: ["node_modules/(?!axios|@bundled-es-modules|jest-fixed-jsdom)"],
+
+
+=============
+
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event'
+import App from './App';
+
+
+describe('App', () => {
+it('renders properly', () => {
+
+})
+});
