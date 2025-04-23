@@ -76,6 +76,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const stateName = stateOptions[state];
   const actionOptions = fetchActions(setError);
   const [selectedAction, setSelectedAction] = useState("");
+  const [selectedRefs, setSelectedRefs] = useState([]);
   const [validActions, setValidActions] = useState([]);
 
   const [manu, setManu] = useState([]);
@@ -88,6 +89,18 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       action: selectedAction,
       text: text,
     };
+
+    let updatedReferees = [...referees];
+
+    if (selectedAction === "ARF") {
+      selectedRefs.forEach((ref) => {
+        if (!updatedReferees.includes(ref.name)) {
+          updatedReferees.push(ref.name);
+        }
+      });
+    }
+
+    thisManu.referees = updatedReferees
 
     axios
       .put(FSM_ENDPOINT, thisManu)
@@ -126,8 +139,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   };
 
 
-  function AddRefereeForm({ visible, fetchReferees, setError }) {
-    const [selectedRefs, setSelectedRefs] = useState([]);
+  function AddRefereeForm({ fetchReferees, setError }) {
     const refereeOptions = fetchReferees(setError);
   
     const changeReferees = (event) => {
@@ -136,8 +148,6 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
         checked ? [...prev, value] : prev.filter((ref) => ref !== value)
       );
     };
-
-    if (!visible) return null;
 
     return (
       <div>
@@ -161,7 +171,6 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   }
 
   AddRefereeForm.propTypes = {
-    visible: propTypes.bool.isRequired,
     fetchReferees: propTypes.func.isRequired,
     setError: propTypes.func.isRequired,
   };
@@ -198,40 +207,45 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
           </p>
         </div>
 
-        <div className="absolute top-4 right-4">
-          <label className="block font-semibold">Choose Action:</label>
-          <select
-            className="mt-1 p-2 border border-gray-300 rounded"
-            value={selectedAction}
-            onChange={(e) => setSelectedAction(e.target.value)}
-          >
-            <option value="" disabled>
-              -- Select an Action --
-            </option>
-            {validActions?.map((action, index) => (
-              <option key={index} value={action}>
-                {actionOptions[action]}
+        <div className="flex flex-col items-end space-y-4">
+          <div>
+            <label className="block font-semibold">Choose Action:</label>
+            <select
+              className="mt-1 p-2 border border-gray-300 rounded"
+              value={selectedAction}
+              onChange={(e) => setSelectedAction(e.target.value)}
+            >
+              <option value="" disabled>
+                -- Select an Action --
               </option>
-            ))}
-          </select>
-        </div>
+              {validActions?.map((action, index) => (
+                <option key={index} value={action}>
+                  {actionOptions[action]}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          {selectedAction == 'ARF' &&
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <AddRefereeForm
+              fetchReferees={fetchReferees}
+              setError={setError}
+              />
+            </div>
+          }
 
-        <AddRefereeForm
-        visible={true}
-        fetchReferees={fetchReferees}
-        setError={setError}
-        />
-
-        <div className="absolute bottom-4 right-4">
-          <button
-            onClick={handleAction}
-            style={{
-              transition: "0.3s ease",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            Submit
-          </button>
+          <div>
+            <button
+              onClick={handleAction}
+              style={{
+                transition: "0.3s ease",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              Submit
+            </button>
+          </div>
         </div>
       </div>
     </div>
