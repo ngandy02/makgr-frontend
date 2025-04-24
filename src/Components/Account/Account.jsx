@@ -5,10 +5,12 @@ import { BACKEND_URL } from "../../constants";
 import propTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const ROLES_READ_ENDPOINT = `${BACKEND_URL}/roles`;
 const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
-const CHANGE_PW_ENDPOINT = `${BACKEND_URL}/account/password`;
+const ACC_ENDPOINT = `${BACKEND_URL}/account`;
+const CHANGE_PW_ENDPOINT = `${ACC_ENDPOINT}/password`;
 
 function Account() {
   const [error, setError] = useState("");
@@ -25,7 +27,6 @@ function Account() {
       .get(`${PEOPLE_READ_ENDPOINT}/${userEmail}`)
       .then((response) => {
         const person = response.data;
-        console.log(person);
         setName(person.name);
         setAffiliation(person.affiliation);
         setRoles(person.roles);
@@ -60,7 +61,7 @@ function Account() {
       </button>
 
       {isFromVisible && (
-        <div>
+        <div className="space-y-4 mt-2">
           <UpdatePersonForm
             setError={setError}
             setSuccess={setSuccess}
@@ -72,6 +73,7 @@ function Account() {
             affiliation={affiliation}
           />
           <ChangePasswordForm />
+          <DeleteAccountButton />
         </div>
       )}
     </div>
@@ -285,6 +287,46 @@ function ChangePasswordForm() {
           Update
         </button>
       </form>
+    </div>
+  );
+}
+
+function DeleteAccountButton() {
+  const { userEmail, logOut } = useAuth();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+
+  const onClick = async () => {
+    const isConfirmed = confirm("Delete your account?");
+    if (!isConfirmed) return;
+    try {
+      const res = await axios.delete(`${ACC_ENDPOINT}/${userEmail}`, {
+        headers: {
+          Authorization: `Bearer ${userEmail ? userEmail : ""}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setError("");
+      setSuccess(res.data.message);
+      logOut();
+      navigate("/");
+    } catch (e) {
+      setSuccess("");
+      setError(e.response.data.message);
+    }
+  };
+
+  return (
+    <div>
+      {error && <div className="error-message">{error}</div>}
+      <div className="text-green-700">{success}</div>
+      <button
+        className="bg-red-500 text-white border-red-500 hover:bg-red-600"
+        onClick={onClick}
+      >
+        Delete Account
+      </button>
     </div>
   );
 }
