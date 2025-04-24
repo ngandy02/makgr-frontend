@@ -26,6 +26,8 @@ function Submissions() {
   const [manuAreaValue, setManuAreaValue] = useState("");
   const [manuClicked, setManuClicked] = useState(false);
   const [manuText, setManuText] = useState("");
+  // const [abstractAreaValue, setAbstractAreaValue] = useState("");
+  // const [abstractText, setAbstractText] = useState("");
 
   const { userEmail } = useAuth();
   const [hasPermission, setHasPermission] = useState(false);
@@ -104,6 +106,7 @@ function Submissions() {
     setTitle(titleAreaValue);
     setAuthor(authorAreaValue);
     setEmail(emailAreaValue);
+    // setAbstractText
     uploadManu(e);
   };
 
@@ -257,6 +260,17 @@ function Submissions() {
           value={emailAreaValue}
           onChange={(e) => setEmailAreaValue(e.target.value)}
         />
+        {/* <label htmlFor="abstract" className="block font-medium">
+          Abstract
+        </label>
+        <input
+        type="text"
+        id="abstract"
+        required
+        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        value={abstractAreaValue}
+        onChange={(e) => setAbstractAreaValue(e.target.value)}
+        /> */}
 
         {manuClicked ? (
           <div>

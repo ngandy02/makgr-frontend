@@ -36,3 +36,6 @@ it('renders properly', () => {
 
 })
 });
+
+
+serve -s build
