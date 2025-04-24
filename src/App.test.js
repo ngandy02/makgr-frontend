@@ -47,13 +47,13 @@ describe("App (guest view)", () => {
     const hiddenLinks = ["Dashboard", "My Account", "View All People"];
     hiddenLinks.forEach((link) => {
       expect(
-        screen.queryByRole("link", { name: link })
+        screen.queryByRole("link", { name: link }),
       ).not.toBeInTheDocument();
     });
 
     // Check that the title link is also present
     expect(
-      screen.getByRole("link", { name: "MMANKWGZRZ" })
+      screen.getByRole("link", { name: "MMANKWGZRZ" }),
     ).toBeInTheDocument();
   });
 });
@@ -85,7 +85,7 @@ describe("App (authenticated view)", () => {
 
     expect(screen.getByRole("heading", { name: "To Do" })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "My Submissions" })
+      screen.getByRole("heading", { name: "My Submissions" }),
     ).toBeInTheDocument();
   });
 
@@ -95,13 +95,13 @@ describe("App (authenticated view)", () => {
     userEvent.click(screen.getByRole("link", { name: "Masthead" }));
 
     expect(
-      screen.getByRole("heading", { name: "Editors" })
+      screen.getByRole("heading", { name: "Editors" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Managing Editors" })
+      screen.getByRole("heading", { name: "Managing Editors" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Consulting Editors" })
+      screen.getByRole("heading", { name: "Consulting Editors" }),
     ).toBeInTheDocument();
   });
 
@@ -111,7 +111,7 @@ describe("App (authenticated view)", () => {
     userEvent.click(screen.getByRole("link", { name: "View All People" }));
 
     expect(
-      screen.getByRole("button", { name: "Add a Person" })
+      screen.getByRole("button", { name: "Add a Person" }),
     ).toBeInTheDocument();
   });
 

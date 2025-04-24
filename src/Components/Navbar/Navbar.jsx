@@ -54,7 +54,7 @@ function Navbar() {
         </ul>
         <ul className="flex gap-[10px] navlinks">
           {PAGES.filter((page) =>
-            userEmail ? true : allowedPathsForGuests.includes(page.destination)
+            userEmail ? true : allowedPathsForGuests.includes(page.destination),
           ).map((page) => (
             <NavLink
               key={page.destination}

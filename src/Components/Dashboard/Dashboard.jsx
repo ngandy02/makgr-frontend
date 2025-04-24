@@ -100,7 +100,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       });
     }
 
-    thisManu.referees = updatedReferees
+    thisManu.referees = updatedReferees;
 
     axios
       .put(FSM_ENDPOINT, thisManu)
@@ -138,14 +138,13 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       });
   };
 
-
   function AddRefereeForm({ fetchReferees, setError }) {
     const refereeOptions = fetchReferees(setError);
-  
+
     const changeReferees = (event) => {
       const { value, checked } = event.target;
       setSelectedRefs((prev) =>
-        checked ? [...prev, value] : prev.filter((ref) => ref !== value)
+        checked ? [...prev, value] : prev.filter((ref) => ref !== value),
       );
     };
 
@@ -225,15 +224,15 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
               ))}
             </select>
           </div>
-          
-          {selectedAction == 'ARF' &&
+
+          {selectedAction == "ARF" && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
               <AddRefereeForm
-              fetchReferees={fetchReferees}
-              setError={setError}
+                fetchReferees={fetchReferees}
+                setError={setError}
               />
             </div>
-          }
+          )}
 
           <div>
             <button

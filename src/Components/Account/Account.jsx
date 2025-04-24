@@ -8,22 +8,49 @@ import { useAuth } from "../../Contexts/AuthContext";
 
 const ROLES_READ_ENDPOINT = `${BACKEND_URL}/roles`;
 const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
+const CHANGE_PW_ENDPOINT = `${BACKEND_URL}/account/password`;
 
 function Account() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isFromVisible, setIsFormVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [affiliation, setAffiliation] = useState("");
+  const [roles, setRoles] = useState([]);
+  const { userEmail } = useAuth();
+
+  useEffect(() => {
+    // Prepopulate the fields with person's data
+    axios
+      .get(`${PEOPLE_READ_ENDPOINT}/${userEmail}`)
+      .then((response) => {
+        const person = response.data;
+        console.log(person);
+        setName(person.name);
+        setAffiliation(person.affiliation);
+        setRoles(person.roles);
+      })
+      .catch((error) => {
+        setError(`Error fetching person data: ${error.response.data.message}`);
+      });
+  }, [userEmail]);
 
   return (
     <div className="wrapper">
       {error && <div className="error-message">{error}</div>}
       <div className="text-green-700">{success}</div>
 
-      <h1 className="text-lg font-bold">Name of Person</h1>
-      <h1 className="text-md font-bold">Email</h1>
-      <h1 className="text-md font-bold">Password</h1>
-      <h1 className="text-md font-bold">Role</h1>
-      <h1 className="text-md font-bold">Date Created</h1>
+      <h1 className="text-lg font-bold">{name}</h1>
+      <h1 className="text-md font-bold">{userEmail}</h1>
+      <h1 className="text-md font-bold">
+        Roles:{" "}
+        {roles.map((role, i) => (
+          <span key={role}>
+            {role}
+            {i + 1 < roles.length ? "," : ""}
+          </span>
+        ))}
+      </h1>
 
       <button
         className="mt-2"
@@ -33,7 +60,19 @@ function Account() {
       </button>
 
       {isFromVisible && (
-        <UpdatePersonForm setError={setError} setSuccess={setSuccess} />
+        <div>
+          <UpdatePersonForm
+            setError={setError}
+            setSuccess={setSuccess}
+            setName={setName}
+            name={name}
+            setAffiliation={setAffiliation}
+            setRoles={setRoles}
+            roles={roles}
+            affiliation={affiliation}
+          />
+          <ChangePasswordForm />
+        </div>
       )}
     </div>
   );
@@ -56,26 +95,18 @@ function fetchRoles(setError) {
   return roleOptions;
 }
 
-function UpdatePersonForm({ setError, setSuccess }) {
-  const [name, setName] = useState("");
-  const [affiliation, setAffiliation] = useState("");
-  const [roles, setRoles] = useState([]);
+function UpdatePersonForm({
+  setError,
+  setSuccess,
+  setName,
+  name,
+  setAffiliation,
+  setRoles,
+  roles,
+  affiliation,
+}) {
   const roleOptions = fetchRoles(setError);
   const { userEmail } = useAuth();
-  useEffect(() => {
-    // Prepopulate the fields with person's data
-    axios
-      .get(`${PEOPLE_READ_ENDPOINT}/${userEmail}`)
-      .then((response) => {
-        const person = response.data;
-        setName(person.name);
-        setAffiliation(person.affiliation);
-        setRoles(person.roles);
-      })
-      .catch((error) => {
-        setError(`Error fetching person data: ${error.response.data.message}`);
-      });
-  }, [userEmail, setError]);
 
   // event handler/functions to change the state of the person's fields
   const changeName = (event) => {
@@ -173,11 +204,87 @@ function UpdatePersonForm({ setError, setSuccess }) {
 }
 
 UpdatePersonForm.propTypes = {
-  visible: propTypes.bool.isRequired,
-  cancel: propTypes.func.isRequired,
-  fetchPeople: propTypes.func.isRequired,
+  setError: propTypes.func.isRequired,
+  setSuccess: propTypes.func.isRequired,
+  setName: propTypes.func.isRequired,
+  name: propTypes.string,
+  setAffiliation: propTypes.func.isRequired,
+  setRoles: propTypes.func.isRequired,
+  roles: propTypes.array,
+  affiliation: propTypes.string,
+};
+
+ChangePasswordForm.propTypes = {
   setError: propTypes.func.isRequired,
   setSuccess: propTypes.func.isRequired,
 };
 
 export default Account;
+
+function ChangePasswordForm() {
+  const { userEmail } = useAuth();
+
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    };
+    try {
+      const res = await axios.post(`${CHANGE_PW_ENDPOINT}`, payload, {
+        headers: {
+          Authorization: `Bearer ${userEmail ? userEmail : ""}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setError("");
+      setSuccess(res.data.message);
+      setOldPassword("");
+      setNewPassword("");
+    } catch (e) {
+      setSuccess("");
+      setError(e.response.data.message);
+    }
+  };
+
+  return (
+    <div>
+      {error && <div className="error-message">{error}</div>}
+      <div className="text-green-700">{success}</div>
+      <form onSubmit={onSubmit}>
+        <label htmlFor="oldPw">Old Password</label>
+        <input
+          required
+          type="password"
+          id="oldPw"
+          value={oldPassword}
+          onChange={(e) => setOldPassword(e.target.value)}
+        />
+        <label htmlFor="newPw">New Password</label>
+        <input
+          required
+          type="password"
+          id="newPw"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+
+        <button
+          type="submit"
+          className="self-start"
+          style={{
+            transition: "0.3s ease",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          Update
+        </button>
+      </form>
+    </div>
+  );
+}

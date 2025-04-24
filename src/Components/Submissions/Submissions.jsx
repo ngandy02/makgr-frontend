@@ -44,7 +44,7 @@ function Submissions() {
           }
         })
         .catch((err) =>
-          setError(`Error fetching submission page: ${err.message}`)
+          setError(`Error fetching submission page: ${err.message}`),
         );
     };
 
@@ -92,7 +92,7 @@ function Submissions() {
         }
       })
       .catch((err) =>
-        setError(`Error updating submission page: ${err.message}`)
+        setError(`Error updating submission page: ${err.message}`),
       );
   };
 
@@ -151,7 +151,7 @@ function Submissions() {
       })
       .catch((error) => {
         setError(
-          `There was a problem adding the person. ${error.response.data.message}`
+          `There was a problem adding the person. ${error.response.data.message}`,
         );
       });
   };
