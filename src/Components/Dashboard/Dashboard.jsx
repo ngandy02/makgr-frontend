@@ -69,38 +69,61 @@ function fetchReferees(setError) {
   return referees;
 }
 
+function AddRefereeForm({ fetchReferees, setError, selectedRef, setSelectedRef, referees }) {
+  const refereeOptions = fetchReferees(setError);
+
+  const changeReferee = (event) => {
+    setSelectedRef(event.target.value);
+  };
+
+  return (
+    <div>
+      <label className="block font-semibold mb-2">Select Referee</label>
+      {refereeOptions.map((person) => (
+        !referees.includes(person.email) && 
+        <div key={person.email} className="mb-1">
+          <input
+            type="radio"
+            id={person.email}
+            value={person.email}
+            checked={selectedRef === person.email}
+            onChange={changeReferee}
+          />
+          <label htmlFor={person.email} className="ml-2">
+            {person.name} ({person.email})
+          </label>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+AddRefereeForm.propTypes = {
+  fetchReferees: propTypes.func.isRequired,
+  setError: propTypes.func.isRequired,
+  selectedRef: propTypes.string.isRequired,
+  setSelectedRef: propTypes.func.isRequired,
+  referees: propTypes.array.isrequired,
+};
+
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
-  const { _id, title, author, author_email, referees, state, text } =
+  const { _id, title, author, author_email, referees, state,} =
     manuscript;
   const stateOptions = fetchStates(setError);
   const stateName = stateOptions[state];
   const actionOptions = fetchActions(setError);
   const [selectedAction, setSelectedAction] = useState("");
-  const [selectedRefs, setSelectedRefs] = useState([]);
   const [validActions, setValidActions] = useState([]);
+  const [selectedRef, setSelectedRef] = useState("");
 
   const [manu, setManu] = useState([]);
 
   const handleAction = () => {
     const thisManu = {
       _id: _id,
-      referees: referees,
-      curr_state: state,
       action: selectedAction,
-      text: text,
+      referees: selectedRef
     };
-
-    let updatedReferees = [...referees];
-
-    if (selectedAction === "ARF") {
-      selectedRefs.forEach((ref) => {
-        if (!updatedReferees.includes(ref.name)) {
-          updatedReferees.push(ref.name);
-        }
-      });
-    }
-
-    thisManu.referees = updatedReferees;
 
     axios
       .put(FSM_ENDPOINT, thisManu)
@@ -129,7 +152,6 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       .get(`${ACTIONS_ENDPOINT}/${state}`)
       .then((response) => {
         setValidActions(response.data);
-        console.log("Fetched valid actions:", response.data);
       })
       .catch((error) => {
         setError(
@@ -138,41 +160,6 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       });
   };
 
-  function AddRefereeForm({ fetchReferees, setError }) {
-    const refereeOptions = fetchReferees(setError);
-
-    const changeReferees = (event) => {
-      const { value, checked } = event.target;
-      setSelectedRefs((prev) =>
-        checked ? [...prev, value] : prev.filter((ref) => ref !== value),
-      );
-    };
-
-    return (
-      <div>
-        <label className="block font-semibold mb-2">Select Referees</label>
-        {refereeOptions.map((person) => (
-          <div key={person.email} className="mb-1">
-            <input
-              type="checkbox"
-              id={person.email}
-              value={person.email}
-              checked={selectedRefs.includes(person.email)}
-              onChange={changeReferees}
-            />
-            <label htmlFor={person.email} className="ml-2">
-              {person.name} ({person.email})
-            </label>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  AddRefereeForm.propTypes = {
-    fetchReferees: propTypes.func.isRequired,
-    setError: propTypes.func.isRequired,
-  };
 
   useEffect(fetchManuscripts, []);
   useEffect(fetchValidActions, [state]);
@@ -230,6 +217,9 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
               <AddRefereeForm
                 fetchReferees={fetchReferees}
                 setError={setError}
+                selectedRef = {selectedRef}
+                setSelectedRef = {setSelectedRef}
+                referees = {referees}
               />
             </div>
           )}
