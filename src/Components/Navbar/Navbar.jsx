@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import propTypes from "prop-types";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
+import axios from "axios";
+import { BACKEND_URL } from "../../constants";
 
 const HOME_LABEL = "Published Manuscripts";
 
@@ -36,6 +38,7 @@ function Navbar() {
   const label = page ? page.label : "";
 
   const { userEmail, userName, logOut } = useAuth();
+  const [canViewPeople, setCanViewPeople] = useState(false);
 
   const handleSignOut = () => {
     logOut();
@@ -43,6 +46,28 @@ function Navbar() {
   };
 
   const allowedPathsForGuests = ["/", "/masthead", "/submissions", "/about"];
+
+  useEffect(() => {
+    if (userEmail) {
+      axios
+        .get(`${BACKEND_URL}/permissions`, {
+          params: {
+            feature: "people",
+            action: "read",
+            user_email: userEmail,
+          },
+        })
+        .then((res) => {
+          setCanViewPeople(res.data.permitted);
+        })
+        .catch((err) => {
+          console.error("Permission check for people read failed:", err);
+          setCanViewPeople(false);
+        });
+    } else {
+      setCanViewPeople(false);
+    }
+  }, [userEmail]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -53,9 +78,15 @@ function Navbar() {
           </li>
         </ul>
         <ul className="flex gap-[10px] navlinks">
-          {PAGES.filter((page) =>
-            userEmail ? true : allowedPathsForGuests.includes(page.destination)
-          ).map((page) => (
+          {PAGES.filter((page) => {
+            if (!userEmail) {
+              return allowedPathsForGuests.includes(page.destination);
+            }
+            if (page.destination === "/people") {
+              return canViewPeople;
+            }
+            return true;
+          }).map((page) => (
             <NavLink
               key={page.destination}
               label={page.label}
