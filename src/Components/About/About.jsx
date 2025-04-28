@@ -147,11 +147,6 @@ function About() {
             Edit
           </button>
         )}
-        {!editClicked && !hasPermission && userEmail && (
-          <p className="mt-2 text-sm text-gray-500">
-            You don&#39;t have permission to edit this section.
-          </p>
-        )}
       </div>
     );
   }

@@ -46,7 +46,7 @@ function Submissions() {
           }
         })
         .catch((err) =>
-          setError(`Error fetching submission page: ${err.message}`),
+          setError(`Error fetching submission page: ${err.message}`)
         );
     };
 
@@ -94,7 +94,7 @@ function Submissions() {
         }
       })
       .catch((err) =>
-        setError(`Error updating submission page: ${err.message}`),
+        setError(`Error updating submission page: ${err.message}`)
       );
   };
 
@@ -154,7 +154,7 @@ function Submissions() {
       })
       .catch((error) => {
         setError(
-          `There was a problem adding the person. ${error.response.data.message}`,
+          `There was a problem adding the person. ${error.response.data.message}`
         );
       });
   };
@@ -218,11 +218,6 @@ function Submissions() {
         >
           Edit
         </button>
-      )}
-      {!editClicked && !hasPermission && userEmail && (
-        <p className="mt-2 text-sm text-gray-500">
-          You don&#39;t have permission to edit this section.
-        </p>
       )}
 
       <h2 className="text-lg font-bold mt-5">Submission Form</h2>
