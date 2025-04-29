@@ -106,6 +106,43 @@ AddRefereeForm.propTypes = {
   referees: propTypes.array.isrequired,
 };
 
+function DeleteRefereeForm({ fetchReferees, setError, selectedRef, setSelectedRef, referees }) {
+  const refereeOptions = fetchReferees(setError);
+
+  const changeReferee = (event) => {
+    setSelectedRef(event.target.value);
+  };
+
+  return (
+    <div>
+      <label className="block font-semibold mb-2">Select Referee</label>
+      {refereeOptions.map((person) => (
+        referees.includes(person.email) && 
+        <div key={person.email} className="mb-1">
+          <input
+            type="radio"
+            id={person.email}
+            value={person.email}
+            checked={selectedRef === person.email}
+            onChange={changeReferee}
+          />
+          <label htmlFor={person.email} className="ml-2">
+            {person.name} ({person.email})
+          </label>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+DeleteRefereeForm.propTypes = {
+  fetchReferees: propTypes.func.isRequired,
+  setError: propTypes.func.isRequired,
+  selectedRef: propTypes.string.isRequired,
+  setSelectedRef: propTypes.func.isRequired,
+  referees: propTypes.array.isrequired,
+};
+
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const { _id, title, author, author_email, referees, state,} =
     manuscript;
@@ -215,6 +252,17 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
           {selectedAction == "ARF" && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
               <AddRefereeForm
+                fetchReferees={fetchReferees}
+                setError={setError}
+                selectedRef = {selectedRef}
+                setSelectedRef = {setSelectedRef}
+                referees = {referees}
+              />
+            </div>
+          )}
+          {selectedAction == "DRF" && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <DeleteRefereeForm
                 fetchReferees={fetchReferees}
                 setError={setError}
                 selectedRef = {selectedRef}
