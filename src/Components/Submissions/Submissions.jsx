@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../../constants";
 import { useAuth } from "../../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const TEXT_ENDPOINT = `${BACKEND_URL}/text`;
 const MANU_CREATE_ENDPOINT = `${BACKEND_URL}/query/create`;
@@ -15,42 +16,28 @@ function Submissions() {
   const [error, setError] = useState("");
   const [editClicked, setEditClicked] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [email, setEmail] = useState("");
-  const [state, setState] = useState("");
   const [referees, setReferees] = useState([]);
   const [titleAreaValue, setTitleAreaValue] = useState("");
-  const [authorAreaValue, setAuthorAreaValue] = useState("");
-  const [emailAreaValue, setEmailAreaValue] = useState("");
   const [manuAreaValue, setManuAreaValue] = useState("");
-  const [manuClicked, setManuClicked] = useState(false);
-  const [manuText, setManuText] = useState("");
-  // const [abstractAreaValue, setAbstractAreaValue] = useState("");
-  // const [abstractText, setAbstractText] = useState("");
-
   const { userEmail } = useAuth();
+  const [authorName, setAuthorName] = useState("");
   const [hasPermission, setHasPermission] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchSubText = () => {
-      axios
-        .get(TEXT_ENDPOINT)
-        .then((response) => {
-          if (response.data[SUB_KEY]) {
-            setSubText(response.data[SUB_KEY].text);
-            setTextAreaValue(response.data[SUB_KEY].text);
-            setError("");
-          } else {
-            setError("No submission page content to load.");
-          }
-        })
-        .catch((err) =>
-          setError(`Error fetching submission page: ${err.message}`)
-        );
-    };
-
-    fetchSubText();
+    axios
+      .get(TEXT_ENDPOINT)
+      .then((response) => {
+        if (response.data[SUB_KEY]) {
+          setSubText(response.data[SUB_KEY].text);
+          setTextAreaValue(response.data[SUB_KEY].text);
+        } else {
+          setError("No submission page content to load.");
+        }
+      })
+      .catch((err) =>
+        setError(`Error fetching submission page: ${err.message}`)
+      );
   }, []);
 
   useEffect(() => {
@@ -68,6 +55,15 @@ function Submissions() {
         })
         .catch(() => {
           setHasPermission(false);
+        });
+
+      axios
+        .get(`${BACKEND_URL}/people/${encodeURIComponent(userEmail)}`)
+        .then((res) => {
+          setAuthorName(res.data.name);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch author name:", err);
         });
     }
   }, [userEmail]);
@@ -87,10 +83,9 @@ function Submissions() {
         const updatedObject = response.data[UPDATED_KEY];
         if (updatedObject.key === SUB_KEY) {
           setSubText(updatedObject.text);
-          setError("");
           setEditClicked(false);
         } else {
-          setError("No submission page content to load.");
+          setError("Failed to update submission page.");
         }
       })
       .catch((err) =>
@@ -100,14 +95,36 @@ function Submissions() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submit");
-    console.log(title);
-    setState(SUBMITTED);
-    setTitle(titleAreaValue);
-    setAuthor(authorAreaValue);
-    setEmail(emailAreaValue);
-    // setAbstractText
-    uploadManu(e);
+
+    if (!userEmail) {
+      navigate("/login");
+      return;
+    }
+
+    const newManu = {
+      title: titleAreaValue,
+      author: authorName,
+      author_email: userEmail,
+      referees,
+      state: SUBMITTED,
+      text: manuAreaValue,
+    };
+
+    axios
+      .put(MANU_CREATE_ENDPOINT, newManu)
+      .then(() => {
+        setReferees([]);
+        setManuAreaValue("");
+        setTitleAreaValue("");
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        setError(
+          `There was a problem adding the manuscript. ${
+            error.response?.data?.message || ""
+          }`
+        );
+      });
   };
 
   useEffect(() => {
@@ -118,54 +135,18 @@ function Submissions() {
     }
   }, [textAreaValue, editClicked]); // Resize textarea to match height of content
 
-  // This effect is for the manuscript textarea
-  // It will resize the textarea to match the height of the content
   useEffect(() => {
     const textArea = document.getElementById("manuText");
     if (textArea) {
       textArea.style.height = "auto";
       textArea.style.height = `${textArea.scrollHeight}px`;
     }
-  }, [manuAreaValue, editClicked]);
-
-  const uploadManu = (event) => {
-    event.preventDefault();
-    setState(SUBMITTED);
-    const newManu = {
-      title: title,
-      author: author,
-      author_email: email,
-      referees: referees,
-      state: state,
-      text: manuText,
-      // need to add referee input
-    };
-    axios
-      .put(MANU_CREATE_ENDPOINT, newManu)
-      .then(() => {
-        setTitle("");
-        setAuthor("");
-        setEmail("");
-        setState("");
-        setReferees([]);
-        setManuText("");
-
-        // setSuccess("Manuscript addded successfully!");
-      })
-      .catch((error) => {
-        setError(
-          `There was a problem adding the person. ${error.response.data.message}`
-        );
-      });
-  };
+  }, [manuAreaValue]); // Resize textarea to match height of content
 
   return (
     <div>
-      {error && (
-        <div>
-          <p className="text-red-500">{error}</p>
-        </div>
-      )}
+      {error && <p className="text-red-500">{error}</p>}
+
       <h2 className="text-lg font-bold">Submission Guidelines</h2>
 
       {editClicked ? (
@@ -181,46 +162,39 @@ function Submissions() {
             <button
               onClick={handleEditClick}
               className="px-5 py-1 text-md mr-3"
-              style={{
-                transition: "0.3s ease",
-              }}
             >
               Cancel
             </button>
-            <button
-              onClick={updateSubText}
-              className="px-5 py-1 text-md"
-              style={{
-                transition: "0.3s ease",
-              }}
-            >
+            <button onClick={updateSubText} className="px-5 py-1 text-md">
               Update
             </button>
           </div>
         </div>
       ) : (
-        subText.split("\n").map((paragraph, index) => {
-          // split creates an array of paragraphs
-          // paragraph is the current paragraph being processed (text between \n's)
-          // index is the index of the current par in the array
-          // If there is an \n, use <br>
-          if (paragraph === "") {
-            return <br key={index} />;
-          }
-          return <p key={index}>{paragraph}</p>;
-        })
+        subText
+          .split("\n")
+          .map((paragraph, index) =>
+            paragraph === "" ? (
+              <br key={index} />
+            ) : (
+              <p key={index}>{paragraph}</p>
+            )
+          )
       )}
+
       {!editClicked && hasPermission && (
-        <button
-          onClick={handleEditClick}
-          className="my-3 px-5 py-1 text-md"
-          style={{ transition: "0.3s ease" }}
-        >
+        <button onClick={handleEditClick} className="my-3 px-5 py-1 text-md">
           Edit
         </button>
       )}
 
       <h2 className="text-lg font-bold mt-5">Submission Form</h2>
+      {userEmail && (
+        <p className="mb-2 text-gray-600">
+          Submitting as <strong>{authorName}</strong> ({userEmail})
+        </p>
+      )}
+
       <form onSubmit={handleSubmit} className="mt-3">
         <label htmlFor="title" className="block font-medium">
           Title
@@ -233,98 +207,22 @@ function Submissions() {
           value={titleAreaValue}
           onChange={(e) => setTitleAreaValue(e.target.value)}
         />
-        <label htmlFor="author" className="block font-medium">
-          Author
-        </label>
-        <input
-          type="text"
-          id="author"
-          required
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          value={authorAreaValue}
-          onChange={(e) => setAuthorAreaValue(e.target.value)}
-        />
-        <label htmlFor="email" className="block font-medium">
-          Author Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          required
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          value={emailAreaValue}
-          onChange={(e) => setEmailAreaValue(e.target.value)}
-        />
-        {/* <label htmlFor="abstract" className="block font-medium">
-          Abstract
-        </label>
-        <input
-        type="text"
-        id="abstract"
-        required
-        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-        value={abstractAreaValue}
-        onChange={(e) => setAbstractAreaValue(e.target.value)}
-        /> */}
 
-        {manuClicked ? (
-          <div>
-            <label htmlFor="manuText" className="block font-medium">
-              Manuscript Text
-            </label>
-            <textarea
-              id="manuText"
-              name="manuText"
-              value={manuAreaValue}
-              onChange={(e) => setManuAreaValue(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <button
-              className="px-5 py-2 rounded-lg font-semibold"
-              style={{
-                transition: "0.3s ease",
-              }}
-              onClick={() => {
-                setManuClicked(!manuClicked);
-              }}
-            >
-              Cancel
-            </button>
-
-            <button
-              className="ml-5 px-5 py-2 rounded-lg font-semibold"
-              style={{
-                transition: "0.3s ease",
-              }}
-              onClick={() => setManuText(manuAreaValue)}
-            >
-              Finish
-            </button>
-          </div>
-        ) : null}
-
-        {!manuClicked ? (
-          <div>
-            <button
-              className="px-5 py-2 rounded-lg font-semibold"
-              style={{
-                transition: "0.3s ease",
-              }}
-              onClick={() => setManuClicked(!manuClicked)}
-            >
-              Add Manuscript Text
-            </button>
-          </div>
-        ) : null}
-        <div className="flex flex-col items-center justify-center border-[1.5px] border-gray-300 rounded-md p-3 my-3">
-          <span className="font-medium">Upload PDF</span>
-          <input type="file" className="mt-2" />
+        <div className="mt-4">
+          <label htmlFor="manuText" className="block font-medium">
+            Manuscript Text
+          </label>
+          <textarea
+            id="manuText"
+            name="manuText"
+            value={manuAreaValue}
+            onChange={(e) => setManuAreaValue(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
         </div>
+
         <button
-          className="px-5 py-2 rounded-lg font-semibold"
-          style={{
-            transition: "0.3s ease",
-          }}
+          className="px-5 py-2 rounded-lg font-semibold mt-5"
           type="submit"
         >
           Submit
