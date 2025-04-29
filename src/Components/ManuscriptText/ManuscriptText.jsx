@@ -24,9 +24,13 @@ function ManuscriptText() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">{manuscript.title}</h1>
-      <h1 className="text-xl font-semibold mb-4">{manuscript.author}</h1>
-      <p className="text-gray-700 whitespace-pre-line">{manuscript.text}</p>
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold text-gray-900">{manuscript.title}</h2>
+        <p className="text-md text-gray-600 italic">by {manuscript.author}</p>
+      </div>
+      <div>
+        <p className="text-gray-800">{manuscript.text}</p>
+      </div>
     </div>
   );
 }
