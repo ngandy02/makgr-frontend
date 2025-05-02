@@ -109,6 +109,7 @@ function Submissions() {
       referees,
       state: SUBMITTED,
       text: manuAreaValue,
+      abstract: abstractAreaValue,
     };
 
     axios
@@ -117,6 +118,7 @@ function Submissions() {
         setReferees([]);
         setManuAreaValue("");
         setTitleAreaValue("");
+        setAbstractAreaValue("");
         navigate("/dashboard");
       })
       .catch((error) => {
@@ -143,6 +145,14 @@ function Submissions() {
       textArea.style.height = `${textArea.scrollHeight}px`;
     }
   }, [manuAreaValue]); // Resize textarea to match height of content
+
+  useEffect(() => {
+    const textArea = document.getElementById("abstract");
+    if (textArea) {
+      textArea.style.height = "auto";
+      textArea.style.height = `${textArea.scrollHeight}px`;
+    }
+  }, [abstractAreaValue]);
 
   return (
     <div>
