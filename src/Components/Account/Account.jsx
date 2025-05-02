@@ -8,6 +8,7 @@ import { BACKEND_URL } from "../../constants";
 const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
 const ACC_ENDPOINT = `${BACKEND_URL}/account`;
 const CHANGE_PW_ENDPOINT = `${ACC_ENDPOINT}/password`;
+const ROLES_READ_ENDPOINT = `${BACKEND_URL}/roles`;
 
 function Account() {
   const [error, setError] = useState("");
@@ -16,6 +17,7 @@ function Account() {
   const [name, setName] = useState("");
   const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
+  const [roleOptions, setRoleOptions] = useState({});
   const { userEmail } = useAuth();
 
   useEffect(() => {
@@ -32,6 +34,15 @@ function Account() {
       });
   }, [userEmail]);
 
+  useEffect(() => {
+    axios
+      .get(ROLES_READ_ENDPOINT)
+      .then((res) => setRoleOptions(res.data))
+      .catch((err) => {
+        console.error("Error fetching role options", err);
+      });
+  }, []);
+
   return (
     <div className="wrapper">
       {error && <div className="error-message">{error}</div>}
@@ -43,7 +54,7 @@ function Account() {
         Roles:{" "}
         {roles.map((role, i) => (
           <span key={role}>
-            {role}
+            {roleOptions[role] || role}
             {i + 1 < roles.length ? ", " : ""}
           </span>
         ))}
@@ -65,6 +76,7 @@ function Account() {
             name={name}
             setAffiliation={setAffiliation}
             affiliation={affiliation}
+            roles={roles}
           />
           <ChangePasswordForm />
           <DeleteAccountButton />
@@ -81,6 +93,7 @@ function UpdatePersonForm({
   name,
   setAffiliation,
   affiliation,
+  roles,
 }) {
   const { userEmail } = useAuth();
 
@@ -93,7 +106,7 @@ function UpdatePersonForm({
       name,
       affiliation,
       email: userEmail,
-      // roles intentionally excluded
+      roles, // ✅ preserve roles
     };
 
     axios
@@ -156,6 +169,7 @@ UpdatePersonForm.propTypes = {
   name: propTypes.string,
   setAffiliation: propTypes.func.isRequired,
   affiliation: propTypes.string,
+  roles: propTypes.array.isRequired,
 };
 
 function ChangePasswordForm() {
