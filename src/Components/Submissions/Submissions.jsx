@@ -19,6 +19,7 @@ function Submissions() {
   const [referees, setReferees] = useState([]);
   const [titleAreaValue, setTitleAreaValue] = useState("");
   const [manuAreaValue, setManuAreaValue] = useState("");
+  const [abstractAreaValue, setAbstractAreaValue] = useState("");
   const { userEmail } = useAuth();
   const [authorName, setAuthorName] = useState("");
   const [hasPermission, setHasPermission] = useState(false);
@@ -217,6 +218,16 @@ function Submissions() {
             name="manuText"
             value={manuAreaValue}
             onChange={(e) => setManuAreaValue(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <label htmlFor="abstract" className="block font-medium">
+            Abstract 
+          </label>
+          <textarea
+            id="abstract"
+            name="abstract"
+            value={abstractAreaValue}
+            onChange={(e) => setAbstractAreaValue(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
