@@ -1,13 +1,10 @@
-import React from "react";
-import axios from "axios";
-import { BACKEND_URL } from "../../constants";
-
+import React, { useState, useEffect } from "react";
 import propTypes from "prop-types";
-import { useState, useEffect } from "react";
+import axios from "axios";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../constants";
 
-const ROLES_READ_ENDPOINT = `${BACKEND_URL}/roles`;
 const PEOPLE_READ_ENDPOINT = `${BACKEND_URL}/people`;
 const ACC_ENDPOINT = `${BACKEND_URL}/account`;
 const CHANGE_PW_ENDPOINT = `${ACC_ENDPOINT}/password`;
@@ -15,14 +12,13 @@ const CHANGE_PW_ENDPOINT = `${ACC_ENDPOINT}/password`;
 function Account() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isFromVisible, setIsFormVisible] = useState(false);
+  const [isFormVisible, setIsFormVisible] = useState(false);
   const [name, setName] = useState("");
   const [affiliation, setAffiliation] = useState("");
   const [roles, setRoles] = useState([]);
   const { userEmail } = useAuth();
 
   useEffect(() => {
-    // Prepopulate the fields with person's data
     axios
       .get(`${PEOPLE_READ_ENDPOINT}/${userEmail}`)
       .then((response) => {
@@ -48,7 +44,7 @@ function Account() {
         {roles.map((role, i) => (
           <span key={role}>
             {role}
-            {i + 1 < roles.length ? "," : ""}
+            {i + 1 < roles.length ? ", " : ""}
           </span>
         ))}
       </h1>
@@ -60,7 +56,7 @@ function Account() {
         Manage Account
       </button>
 
-      {isFromVisible && (
+      {isFormVisible && (
         <div className="space-y-4 mt-2">
           <UpdatePersonForm
             setError={setError}
@@ -68,8 +64,6 @@ function Account() {
             setName={setName}
             name={name}
             setAffiliation={setAffiliation}
-            setRoles={setRoles}
-            roles={roles}
             affiliation={affiliation}
           />
           <ChangePasswordForm />
@@ -80,67 +74,32 @@ function Account() {
   );
 }
 
-function fetchRoles(setError) {
-  const [roleOptions, setRoleOptions] = useState({});
-
-  useEffect(() => {
-    axios
-      .get(ROLES_READ_ENDPOINT)
-      .then((response) => {
-        setRoleOptions(response.data);
-      })
-      .catch((error) => {
-        setError(`Error fetching roles: ${error.response.data.message}`);
-      });
-  }, [setError]);
-
-  return roleOptions;
-}
-
 function UpdatePersonForm({
   setError,
   setSuccess,
   setName,
   name,
   setAffiliation,
-  setRoles,
-  roles,
   affiliation,
 }) {
-  const roleOptions = fetchRoles(setError);
   const { userEmail } = useAuth();
 
-  // event handler/functions to change the state of the person's fields
-  const changeName = (event) => {
-    setName(event.target.value);
-  };
-  const changeAffiliation = (event) => {
-    setAffiliation(event.target.value);
-  };
-  const changeRoles = (event) => {
-    const { value, checked } = event.target;
-    setRoles((prevRoles) => {
-      if (checked) {
-        return [...prevRoles, value];
-      } else {
-        return prevRoles.filter((role) => role !== value);
-      }
-    });
-  };
+  const changeName = (event) => setName(event.target.value);
+  const changeAffiliation = (event) => setAffiliation(event.target.value);
 
-  // event handler/function to add a person to the database
   const updatePerson = (event) => {
     event.preventDefault();
     const newPerson = {
-      name: name,
-      affiliation: affiliation,
+      name,
+      affiliation,
       email: userEmail,
-      roles: roles,
+      // roles intentionally excluded
     };
+
     axios
       .put(`${PEOPLE_READ_ENDPOINT}/${userEmail}`, newPerson, {
         headers: {
-          Authorization: `Bearer ${userEmail ? userEmail : ""}`,
+          Authorization: `Bearer ${userEmail || ""}`,
           "Content-Type": "application/json",
         },
       })
@@ -151,7 +110,7 @@ function UpdatePersonForm({
       .catch((error) => {
         console.log(error);
         setError(
-          `There was a problem updating the person. ${error.response.data.message}`,
+          `There was a problem updating the person. ${error.response.data.message}`
         );
       });
   };
@@ -174,21 +133,6 @@ function UpdatePersonForm({
         value={affiliation}
         onChange={changeAffiliation}
       />
-      <label htmlFor="roles">Roles</label>
-      <div id="roles">
-        {Object.entries(roleOptions).map(([roleCode, roleName]) => (
-          <div key={roleCode}>
-            <input
-              type="checkbox"
-              id={roleCode}
-              value={roleCode}
-              checked={roles.includes(roleCode)}
-              onChange={changeRoles}
-            />
-            <label htmlFor={roleCode}>{roleName}</label>
-          </div>
-        ))}
-      </div>
       <div className="flex gap-4">
         <button
           type="submit"
@@ -211,21 +155,11 @@ UpdatePersonForm.propTypes = {
   setName: propTypes.func.isRequired,
   name: propTypes.string,
   setAffiliation: propTypes.func.isRequired,
-  setRoles: propTypes.func.isRequired,
-  roles: propTypes.array,
   affiliation: propTypes.string,
 };
 
-ChangePasswordForm.propTypes = {
-  setError: propTypes.func.isRequired,
-  setSuccess: propTypes.func.isRequired,
-};
-
-export default Account;
-
 function ChangePasswordForm() {
   const { userEmail } = useAuth();
-
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
@@ -233,14 +167,12 @@ function ChangePasswordForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      oldPassword: oldPassword,
-      newPassword: newPassword,
-    };
+    const payload = { oldPassword, newPassword };
+
     try {
-      const res = await axios.post(`${CHANGE_PW_ENDPOINT}`, payload, {
+      const res = await axios.post(CHANGE_PW_ENDPOINT, payload, {
         headers: {
-          Authorization: `Bearer ${userEmail ? userEmail : ""}`,
+          Authorization: `Bearer ${userEmail || ""}`,
           "Content-Type": "application/json",
         },
       });
@@ -275,7 +207,6 @@ function ChangePasswordForm() {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
-
         <button
           type="submit"
           className="self-start"
@@ -300,10 +231,11 @@ function DeleteAccountButton() {
   const onClick = async () => {
     const isConfirmed = confirm("Delete your account?");
     if (!isConfirmed) return;
+
     try {
       const res = await axios.delete(`${ACC_ENDPOINT}/${userEmail}`, {
         headers: {
-          Authorization: `Bearer ${userEmail ? userEmail : ""}`,
+          Authorization: `Bearer ${userEmail || ""}`,
           "Content-Type": "application/json",
         },
       });
@@ -330,3 +262,5 @@ function DeleteAccountButton() {
     </div>
   );
 }
+
+export default Account;

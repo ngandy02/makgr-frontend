@@ -4,8 +4,9 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 import { BACKEND_URL } from "../../constants";
+import { useAuth } from "../../Contexts/AuthContext";
 
-const MANU_READ_ENDPOINT = `${BACKEND_URL}/query`;
+const MANU_ACTIVE_ENDPOINT = `${BACKEND_URL}/query/active`;
 const FSM_ENDPOINT = `${BACKEND_URL}/query/handle_action`;
 const STATES_ENDPOINT = `${BACKEND_URL}/query/states`;
 const ACTIONS_ENDPOINT = `${BACKEND_URL}/query/actions`;
@@ -97,13 +98,12 @@ function AddRefereeForm({ fetchReferees, setError, selectedRef, setSelectedRef, 
     </div>
   );
 }
-
 AddRefereeForm.propTypes = {
   fetchReferees: propTypes.func.isRequired,
   setError: propTypes.func.isRequired,
   selectedRef: propTypes.string.isRequired,
   setSelectedRef: propTypes.func.isRequired,
-  referees: propTypes.array.isrequired,
+  referees: propTypes.array.isRequired,
 };
 
 function DeleteRefereeForm({ fetchReferees, setError, selectedRef, setSelectedRef, referees }) {
@@ -134,55 +134,38 @@ function DeleteRefereeForm({ fetchReferees, setError, selectedRef, setSelectedRe
     </div>
   );
 }
-
-DeleteRefereeForm.propTypes = {
-  fetchReferees: propTypes.func.isRequired,
-  setError: propTypes.func.isRequired,
-  selectedRef: propTypes.string.isRequired,
-  setSelectedRef: propTypes.func.isRequired,
-  referees: propTypes.array.isrequired,
-};
+DeleteRefereeForm.propTypes = AddRefereeForm.propTypes;
 
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
-  const { _id, title, author, author_email, referees, state,} =
-    manuscript;
+  const { _id, title, author, author_email, referees, state } = manuscript;
+
   const stateOptions = fetchStates(setError);
   const stateName = stateOptions[state];
   const actionOptions = fetchActions(setError);
+
   const [selectedAction, setSelectedAction] = useState("");
   const [validActions, setValidActions] = useState([]);
   const [selectedRef, setSelectedRef] = useState("");
-
-  const [manu, setManu] = useState([]);
 
   const handleAction = () => {
     const thisManu = {
       _id: _id,
       action: selectedAction,
-      referees: selectedRef
+      referees: selectedRef,
     };
-
+  
     axios
       .put(FSM_ENDPOINT, thisManu)
-      .then((response) => {
-        const newState = response.data.return;
-        setManu((prevManuscripts) =>
-          prevManuscripts.map((m) =>
-            m._id === manu._id ? { ...m, state: newState } : m,
-          ),
-        );
+      .then(() => {
         fetchManuscripts();
-        setSuccess(
-          `${title} performed "${actionOptions[selectedAction]}" successfully!`,
-        );
+        setSuccess(`${title} performed "${actionOptions[selectedAction]}" successfully!`);
         setSelectedAction("");
       })
       .catch((error) =>
-        setError(
-          `There was a problem performing action on the manuscript. ${error}`,
-        ),
+        setError(`There was a problem performing action on the manuscript. ${error}`)
       );
   };
+  
 
   const fetchValidActions = () => {
     axios
@@ -191,14 +174,10 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
         setValidActions(response.data);
       })
       .catch((error) => {
-        setError(
-          `Error fetching valid actions: ${error.response.data.message}`,
-        );
+        setError(`Error fetching valid actions: ${error.response.data.message}`);
       });
   };
 
-
-  useEffect(fetchManuscripts, []);
   useEffect(fetchValidActions, [state]);
 
   return (
@@ -213,21 +192,15 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
               {title}
             </Link>
           </h2>
-          <p className="text-gray-700">
-            <span className="font-bold">Author:</span> {author}
-          </p>
-          <p className="text-gray-700">
-            <span className="font-bold">Email:</span> {author_email}
-          </p>
+          <p className="text-gray-700"><span className="font-bold">Author:</span> {author}</p>
+          <p className="text-gray-700"><span className="font-bold">Email:</span> {author_email}</p>
           <p className="text-gray-700 font-bold">Referees:</p>
           <ul className="list-disc pl-6 text-gray-700">
             {referees.map((referee, index) => (
               <li key={index}>{referee}</li>
             ))}
           </ul>
-          <p className="text-gray-700">
-            <span className="font-bold">State:</span> {stateName}
-          </p>
+          <p className="text-gray-700"><span className="font-bold">State:</span> {stateName}</p>
         </div>
 
         <div className="flex flex-col items-end space-y-4">
@@ -238,9 +211,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
               value={selectedAction}
               onChange={(e) => setSelectedAction(e.target.value)}
             >
-              <option value="" disabled>
-                -- Select an Action --
-              </option>
+              <option value="" disabled>-- Select an Action --</option>
               {validActions?.map((action, index) => (
                 <option key={index} value={action}>
                   {actionOptions[action]}
@@ -249,25 +220,25 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
             </select>
           </div>
 
-          {selectedAction == "ARF" && (
+          {selectedAction === "ARF" && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
               <AddRefereeForm
                 fetchReferees={fetchReferees}
                 setError={setError}
-                selectedRef = {selectedRef}
-                setSelectedRef = {setSelectedRef}
-                referees = {referees}
+                selectedRef={selectedRef}
+                setSelectedRef={setSelectedRef}
+                referees={referees}
               />
             </div>
           )}
-          {selectedAction == "DRF" && (
+          {selectedAction === "DRF" && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
               <DeleteRefereeForm
                 fetchReferees={fetchReferees}
                 setError={setError}
-                selectedRef = {selectedRef}
-                setSelectedRef = {setSelectedRef}
-                referees = {referees}
+                selectedRef={selectedRef}
+                setSelectedRef={setSelectedRef}
+                referees={referees}
               />
             </div>
           )}
@@ -303,49 +274,45 @@ Manuscript.propTypes = {
   setSuccess: propTypes.func.isRequired,
 };
 
-function manuscriptObjectToArray(Data) {
-  const keys = Object.keys(Data);
-  const manuscripts = keys.map((key) => Data[key]);
-  return manuscripts;
-}
-
 function Dashboard() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [manuscripts, setManuscripts] = useState([]);
+  const { userEmail } = useAuth(); // ✅ using global auth context
 
   const fetchManuscripts = () => {
+    if (!userEmail) {
+      setError("User email not found.");
+      return;
+    }
+
     axios
-      .get(MANU_READ_ENDPOINT)
+      .get(`${MANU_ACTIVE_ENDPOINT}/${userEmail}`)
       .then(({ data }) => {
-        setManuscripts(manuscriptObjectToArray(data));
+        setManuscripts(data);
       })
       .catch((error) =>
-        setError(
-          `There was a problem retrieving the list of manuscripts. ${error}`,
-        ),
+        setError(`There was a problem retrieving active manuscripts. ${error}`)
       );
   };
 
-  useEffect(fetchManuscripts, []);
+  useEffect(fetchManuscripts, [userEmail]);
 
   return (
     <div className="wrapper">
-      <h2 className="mb-2 text-lg font-bold">To Do</h2>
-      <h2 className="mb-2 text-lg font-bold">My Submissions</h2>
       <div className="text-green-700">{success}</div>
       {error && <ErrorMessage message={error} />}
       {manuscripts.map(
         (manuscript) =>
           manuscript.state !== "WDN" && (
             <Manuscript
-              key={manuscript.id}
+              key={manuscript._id}
               manuscript={manuscript}
               fetchManuscripts={fetchManuscripts}
               setError={setError}
               setSuccess={setSuccess}
             />
-          ),
+          )
       )}
     </div>
   );

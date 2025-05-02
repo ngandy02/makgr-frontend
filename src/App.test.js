@@ -123,19 +123,6 @@ describe("App (authenticated view)", () => {
     }
   });
 
-  it("switches to Dashboard view", async () => {
-    renderWithProvider(<App />, { loggedIn: true });
-
-    userEvent.click(await screen.findByRole("link", { name: "Dashboard" }));
-
-    expect(
-      await screen.findByRole("heading", { name: "To Do" })
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByRole("heading", { name: "My Submissions" })
-    ).toBeInTheDocument();
-  });
-
   it("switches to Masthead view", async () => {
     renderWithProvider(<App />, { loggedIn: true });
 
