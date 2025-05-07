@@ -70,7 +70,13 @@ function fetchReferees(setError) {
   return referees;
 }
 
-function AddRefereeForm({ fetchReferees, setError, selectedRef, setSelectedRef, referees }) {
+function AddRefereeForm({
+  fetchReferees,
+  setError,
+  selectedRef,
+  setSelectedRef,
+  referees,
+}) {
   const refereeOptions = fetchReferees(setError);
 
   const changeReferee = (event) => {
@@ -80,21 +86,23 @@ function AddRefereeForm({ fetchReferees, setError, selectedRef, setSelectedRef, 
   return (
     <div>
       <label className="block font-semibold mb-2">Select Referee</label>
-      {refereeOptions.map((person) => (
-        !referees.includes(person.email) && 
-        <div key={person.email} className="mb-1">
-          <input
-            type="radio"
-            id={person.email}
-            value={person.email}
-            checked={selectedRef === person.email}
-            onChange={changeReferee}
-          />
-          <label htmlFor={person.email} className="ml-2">
-            {person.name} ({person.email})
-          </label>
-        </div>
-      ))}
+      {refereeOptions.map(
+        (person) =>
+          !referees.includes(person.email) && (
+            <div key={person.email} className="mb-1">
+              <input
+                type="radio"
+                id={person.email}
+                value={person.email}
+                checked={selectedRef === person.email}
+                onChange={changeReferee}
+              />
+              <label htmlFor={person.email} className="ml-2">
+                {person.name} ({person.email})
+              </label>
+            </div>
+          )
+      )}
     </div>
   );
 }
@@ -106,7 +114,13 @@ AddRefereeForm.propTypes = {
   referees: propTypes.array.isRequired,
 };
 
-function DeleteRefereeForm({ fetchReferees, setError, selectedRef, setSelectedRef, referees }) {
+function DeleteRefereeForm({
+  fetchReferees,
+  setError,
+  selectedRef,
+  setSelectedRef,
+  referees,
+}) {
   const refereeOptions = fetchReferees(setError);
 
   const changeReferee = (event) => {
@@ -116,21 +130,23 @@ function DeleteRefereeForm({ fetchReferees, setError, selectedRef, setSelectedRe
   return (
     <div>
       <label className="block font-semibold mb-2">Select Referee</label>
-      {refereeOptions.map((person) => (
-        referees.includes(person.email) && 
-        <div key={person.email} className="mb-1">
-          <input
-            type="radio"
-            id={person.email}
-            value={person.email}
-            checked={selectedRef === person.email}
-            onChange={changeReferee}
-          />
-          <label htmlFor={person.email} className="ml-2">
-            {person.name} ({person.email})
-          </label>
-        </div>
-      ))}
+      {refereeOptions.map(
+        (person) =>
+          referees.includes(person.email) && (
+            <div key={person.email} className="mb-1">
+              <input
+                type="radio"
+                id={person.email}
+                value={person.email}
+                checked={selectedRef === person.email}
+                onChange={changeReferee}
+              />
+              <label htmlFor={person.email} className="ml-2">
+                {person.name} ({person.email})
+              </label>
+            </div>
+          )
+      )}
     </div>
   );
 }
@@ -139,6 +155,7 @@ DeleteRefereeForm.propTypes = AddRefereeForm.propTypes;
 function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const { _id, title, author, author_email, referees, state } = manuscript;
 
+  const { userEmail } = useAuth();
   const stateOptions = fetchStates(setError);
   const stateName = stateOptions[state];
   const actionOptions = fetchActions(setError);
@@ -146,6 +163,23 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const [selectedAction, setSelectedAction] = useState("");
   const [validActions, setValidActions] = useState([]);
   const [selectedRef, setSelectedRef] = useState("");
+  const [canChoose, setCanChoose] = useState(false);
+
+  useEffect(() => {
+    if (_id && userEmail) {
+      axios
+        .get(`${BACKEND_URL}/query/can_choose_action`, {
+          params: { manu_id: _id, user_email: userEmail },
+        })
+        .then((res) => {
+          setCanChoose(res.data === true);
+        })
+        .catch((err) => {
+          console.error("Permission check failed:", err);
+          setCanChoose(false);
+        });
+    }
+  }, [_id, userEmail]);
 
   const handleAction = () => {
     const thisManu = {
@@ -153,19 +187,22 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       action: selectedAction,
       referees: selectedRef,
     };
-  
+
     axios
       .put(FSM_ENDPOINT, thisManu)
       .then(() => {
         fetchManuscripts();
-        setSuccess(`${title} performed "${actionOptions[selectedAction]}" successfully!`);
+        setSuccess(
+          `${title} performed "${actionOptions[selectedAction]}" successfully!`
+        );
         setSelectedAction("");
       })
       .catch((error) =>
-        setError(`There was a problem performing action on the manuscript. ${error}`)
+        setError(
+          `There was a problem performing action on the manuscript. ${error}`
+        )
       );
   };
-  
 
   const fetchValidActions = () => {
     axios
@@ -174,7 +211,9 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
         setValidActions(response.data);
       })
       .catch((error) => {
-        setError(`Error fetching valid actions: ${error.response.data.message}`);
+        setError(
+          `Error fetching valid actions: ${error.response.data.message}`
+        );
       });
   };
 
@@ -192,69 +231,79 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
               {title}
             </Link>
           </h2>
-          <p className="text-gray-700"><span className="font-bold">Author:</span> {author}</p>
-          <p className="text-gray-700"><span className="font-bold">Email:</span> {author_email}</p>
+          <p className="text-gray-700">
+            <span className="font-bold">Author:</span> {author}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-bold">Email:</span> {author_email}
+          </p>
           <p className="text-gray-700 font-bold">Referees:</p>
           <ul className="list-disc pl-6 text-gray-700">
             {referees.map((referee, index) => (
               <li key={index}>{referee}</li>
             ))}
           </ul>
-          <p className="text-gray-700"><span className="font-bold">State:</span> {stateName}</p>
+          <p className="text-gray-700">
+            <span className="font-bold">State:</span> {stateName}
+          </p>
         </div>
 
-        <div className="flex flex-col items-end space-y-4">
-          <div>
-            <label className="block font-semibold">Choose Action:</label>
-            <select
-              className="mt-1 p-2 border border-gray-300 rounded"
-              value={selectedAction}
-              onChange={(e) => setSelectedAction(e.target.value)}
-            >
-              <option value="" disabled>-- Select an Action --</option>
-              {validActions?.map((action, index) => (
-                <option key={index} value={action}>
-                  {actionOptions[action]}
+        {canChoose && (
+          <div className="flex flex-col items-end space-y-4">
+            <div>
+              <label className="block font-semibold">Choose Action:</label>
+              <select
+                className="mt-1 p-2 border border-gray-300 rounded"
+                value={selectedAction}
+                onChange={(e) => setSelectedAction(e.target.value)}
+              >
+                <option value="" disabled>
+                  -- Select an Action --
                 </option>
-              ))}
-            </select>
-          </div>
-
-          {selectedAction === "ARF" && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <AddRefereeForm
-                fetchReferees={fetchReferees}
-                setError={setError}
-                selectedRef={selectedRef}
-                setSelectedRef={setSelectedRef}
-                referees={referees}
-              />
+                {validActions?.map((action, index) => (
+                  <option key={index} value={action}>
+                    {actionOptions[action]}
+                  </option>
+                ))}
+              </select>
             </div>
-          )}
-          {selectedAction === "DRF" && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <DeleteRefereeForm
-                fetchReferees={fetchReferees}
-                setError={setError}
-                selectedRef={selectedRef}
-                setSelectedRef={setSelectedRef}
-                referees={referees}
-              />
-            </div>
-          )}
 
-          <div>
-            <button
-              onClick={handleAction}
-              style={{
-                transition: "0.3s ease",
-                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              Submit
-            </button>
+            {selectedAction === "ARF" && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <AddRefereeForm
+                  fetchReferees={fetchReferees}
+                  setError={setError}
+                  selectedRef={selectedRef}
+                  setSelectedRef={setSelectedRef}
+                  referees={referees}
+                />
+              </div>
+            )}
+            {selectedAction === "DRF" && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <DeleteRefereeForm
+                  fetchReferees={fetchReferees}
+                  setError={setError}
+                  selectedRef={selectedRef}
+                  setSelectedRef={setSelectedRef}
+                  referees={referees}
+                />
+              </div>
+            )}
+
+            <div>
+              <button
+                onClick={handleAction}
+                style={{
+                  transition: "0.3s ease",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                Submit
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -278,7 +327,7 @@ function Dashboard() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [manuscripts, setManuscripts] = useState([]);
-  const { userEmail } = useAuth(); // ✅ using global auth context
+  const { userEmail } = useAuth();
 
   const fetchManuscripts = () => {
     if (!userEmail) {
@@ -306,7 +355,7 @@ function Dashboard() {
         (manuscript) =>
           manuscript.state !== "WDN" && (
             <Manuscript
-              key={manuscript._id}
+              key={`${manuscript._id}-${manuscript.state}`}
               manuscript={manuscript}
               fetchManuscripts={fetchManuscripts}
               setError={setError}
