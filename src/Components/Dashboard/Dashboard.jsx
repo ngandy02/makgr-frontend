@@ -275,11 +275,15 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
                 <option value="" disabled>
                   -- Select an Action --
                 </option>
-                {validActions?.map((action, index) => (
-                  <option key={index} value={action}>
-                    {actionOptions[action]}
-                  </option>
-                ))}
+                {Array.isArray(validActions) && validActions.length > 0 ? (
+                  validActions.map((action, index) => (
+                    <option key={index} value={action}>
+                      {actionOptions[action] || action}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No valid actions available</option>
+                )}
               </select>
             </div>
 
@@ -323,6 +327,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
     </div>
   );
 }
+
 Manuscript.propTypes = {
   manuscript: propTypes.shape({
     _id: propTypes.string.isRequired,
