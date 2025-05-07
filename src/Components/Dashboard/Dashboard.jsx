@@ -205,14 +205,29 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   };
 
   const fetchValidActions = () => {
+    if (!userEmail || !_id) return;
+
     axios
-      .get(`${ACTIONS_ENDPOINT}/${state}`)
+      .get(`${ACTIONS_ENDPOINT}`, {
+        params: {
+          user_email: userEmail,
+          manu_id: _id,
+        },
+      })
       .then((response) => {
-        setValidActions(response.data);
+        const actions = response.data;
+        if (Array.isArray(actions)) {
+          setValidActions(actions);
+        } else {
+          console.warn("Expected an array but got:", actions);
+          setValidActions([]);
+        }
       })
       .catch((error) => {
         setError(
-          `Error fetching valid actions: ${error.response.data.message}`
+          `Error fetching valid actions: ${
+            error.response?.data?.message || error.message
+          }`
         );
       });
   };
