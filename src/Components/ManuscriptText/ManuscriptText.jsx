@@ -29,7 +29,11 @@ function ManuscriptText() {
         <p className="text-md text-gray-600 italic">by {manuscript.author}</p>
       </div>
       <div>
+        <h2 className="text-2l font-bold text-gray-800">Abstract</h2>
+        <p className="text-gray-800">{manuscript.abstract}</p>
+        <h2 className="text-2l font-bold text-gray-800">Text</h2>
         <p className="text-gray-800">{manuscript.text}</p>
+        
       </div>
     </div>
   );
