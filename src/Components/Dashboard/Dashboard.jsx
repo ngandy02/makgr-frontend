@@ -77,6 +77,7 @@ function AddRefereeForm({
   selectedRef,
   setSelectedRef,
   referees,
+  authorEmail,
 }) {
   const refereeOptions = fetchReferees(setError);
 
@@ -89,7 +90,8 @@ function AddRefereeForm({
       <label className="block font-semibold mb-2">Select Referee</label>
       {refereeOptions.map(
         (person) =>
-          !referees.includes(person.email) && (
+          !referees.includes(person.email) &&
+          person.email !== authorEmail && (
             <div key={person.email} className="mb-1">
               <input
                 type="radio"
@@ -107,12 +109,14 @@ function AddRefereeForm({
     </div>
   );
 }
+
 AddRefereeForm.propTypes = {
   fetchReferees: propTypes.func.isRequired,
   setError: propTypes.func.isRequired,
   selectedRef: propTypes.string.isRequired,
   setSelectedRef: propTypes.func.isRequired,
   referees: propTypes.array.isRequired,
+  authorEmail: propTypes.string.isRequired,
 };
 
 function DeleteRefereeForm({
@@ -296,6 +300,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
                   selectedRef={selectedRef}
                   setSelectedRef={setSelectedRef}
                   referees={referees}
+                  authorEmail={author_email}
                 />
               </div>
             )}
