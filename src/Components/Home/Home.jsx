@@ -13,7 +13,7 @@ ErrorMessage.propTypes = {
 };
 
 function Manuscript({ manuscript}) {
-  const {title, author, text} = manuscript;
+  const {title, author, abstract, text} = manuscript;
 
   return (
     <div className="bg-white shadow-md rounded-2xl p-6 mb-6 border border-gray-100 hover:shadow-xl transition-shadow">
@@ -22,6 +22,9 @@ function Manuscript({ manuscript}) {
         <p className="text-md text-gray-600 italic">by {author}</p>
       </div>
       <div>
+        <h2 className="text-2l font-bold text-gray-900">Abstract</h2>
+        <p className="text-gray-800">{abstract}</p>
+        <h2 className="text-2l font-bold text-gray-900">Text</h2>
         <p className="text-gray-800">{text}</p>
       </div>
     </div>
@@ -32,6 +35,7 @@ Manuscript.propTypes = {
   manuscript: propTypes.shape({
     title: propTypes.string.isRequired,
     author: propTypes.string.isRequired,
+    abstract: propTypes.string.isRequired,
     text: propTypes.string.isRequired,
   }).isRequired,
 };
