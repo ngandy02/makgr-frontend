@@ -10,6 +10,7 @@ const MANU_ACTIVE_ENDPOINT = `${BACKEND_URL}/query/active`;
 const FSM_ENDPOINT = `${BACKEND_URL}/query/handle_action`;
 const STATES_ENDPOINT = `${BACKEND_URL}/query/states`;
 const ACTIONS_ENDPOINT = `${BACKEND_URL}/query/actions`;
+const VALID_ACTIONS_ENDPOINT = `${BACKEND_URL}/query/valid_actions`;
 const PEOPLE_BY_ROLE_ENDPOINT = `${BACKEND_URL}/people/role`;
 
 function ErrorMessage({ message }) {
@@ -208,7 +209,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
     if (!userEmail || !_id) return;
 
     axios
-      .get(`${ACTIONS_ENDPOINT}`, {
+      .get(`${VALID_ACTIONS_ENDPOINT}`, {
         params: {
           user_email: userEmail,
           manu_id: _id,
