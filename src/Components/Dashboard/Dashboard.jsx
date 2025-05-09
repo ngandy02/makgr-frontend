@@ -386,44 +386,6 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
                 />
               </div>
             )}
-
-            {canMove && (
-              <div className="flex flex-col items-end space-y-4">
-                <div>
-                  <label className="block font-semibold">Choose State:</label>
-                  <select
-                    className="mt-1 p-2 border border-gray-300 rounded"
-                    value={selectedState}
-                    onChange={(e) => setSelectedState(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      -- Select a State --
-                    </option>
-                    {Array.isArray(validStates) && validStates.length > 0 ? (
-                      validStates.map((state, index) => (
-                        <option key={index} value={state}>
-                          {stateOptions[state] || state}
-                        </option>
-                      ))):
-                      (
-                        <option disabled> No States Available </option>
-                      )
-                    }
-                  </select>
-                </div>
-                <div>
-                  <button
-                  onClick={handleState}
-                  style={{
-                    transition: "0.3s ease",
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  }}
-                  >
-                  Move
-                  </button>
-                </div>
-              </div>
-            )}
             <div>
               <button
                 onClick={handleAction}
@@ -437,6 +399,43 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
             </div>
           </div>
         )}
+
+        {canMove && (
+          <div className="flex flex-col items-end space-y-4">
+            <div>
+              <label className="block font-semibold">Choose State:</label>
+              <select
+                className="mt-1 p-2 border border-gray-300 rounded"
+                value={selectedState}
+                onChange={(e) => setSelectedState(e.target.value)}
+              >
+                <option value="" disabled>
+                  -- Select a State --
+                </option>
+                {Array.isArray(validStates) && validStates.length > 0 ? (
+                  validStates.map((state, index) => (
+                    <option key={index} value={state}>
+                      {stateOptions[state] || state}
+                    </option>
+                    ))):
+                  (
+                  <option disabled> No States Available </option>
+                  )
+                }
+              </select>
+            </div>
+            <div>
+              <button
+                onClick={handleState}
+                style={{
+                  transition: "0.3s ease",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+              Move
+              </button>
+            </div>
+          </div>)}
 
         
       </div>
