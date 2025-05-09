@@ -8,9 +8,11 @@ import { useAuth } from "../../Contexts/AuthContext";
 
 const MANU_ACTIVE_ENDPOINT = `${BACKEND_URL}/query/active`;
 const FSM_ENDPOINT = `${BACKEND_URL}/query/handle_action`;
+const CHANGE_STATE_ENDPOINT = `${BACKEND_URL}/query/handle_state`;
 const STATES_ENDPOINT = `${BACKEND_URL}/query/states`;
 const ACTIONS_ENDPOINT = `${BACKEND_URL}/query/actions`;
 const VALID_ACTIONS_ENDPOINT = `${BACKEND_URL}/query/valid_actions`;
+const VALID_STATES_ENDPOINT = `${BACKEND_URL}/query/valid_states`;
 const PEOPLE_BY_ROLE_ENDPOINT = `${BACKEND_URL}/people/role`;
 
 function ErrorMessage({ message }) {
@@ -164,11 +166,15 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
   const stateOptions = fetchStates(setError);
   const stateName = stateOptions[state];
   const actionOptions = fetchActions(setError);
+  // const state Options = 
 
   const [selectedAction, setSelectedAction] = useState("");
   const [validActions, setValidActions] = useState([]);
+  const [validStates, setValidStates] = useState([]);
   const [selectedRef, setSelectedRef] = useState("");
   const [canChoose, setCanChoose] = useState(false);
+  const [canMove, setCanMove] = useState(false);
+  const [selectedState, setSelectedState] = useState("");
 
   useEffect(() => {
     if (_id && userEmail) {
@@ -183,6 +189,17 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
           console.error("Permission check failed:", err);
           setCanChoose(false);
         });
+      axios
+        .get(`${BACKEND_URL}/query/can_move_action`, {
+          params: {manu_id: _id, user_email: userEmail},
+        })
+        .then((res) => {
+          setCanMove(res.data === true);
+        })
+        .catch((err) => {
+          console.error("Permission not given to move state!", err);
+          setCanMove(false);
+        });     
     }
   }, [_id, userEmail]);
 
@@ -191,7 +208,7 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       _id: _id,
       action: selectedAction,
       referees: selectedRef,
-    };
+    }
 
     axios
       .put(FSM_ENDPOINT, thisManu)
@@ -205,6 +222,28 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       .catch((error) =>
         setError(
           `There was a problem performing action on the manuscript. ${error}`
+        )
+      );
+  };
+
+  const handleState = () => {
+    const thisManu = {
+      _id: _id,
+      state: selectedState,
+    }
+
+    axios 
+      .put(CHANGE_STATE_ENDPOINT, thisManu)
+      .then(() => {
+        fetchManuscripts();
+        setSuccess(
+          `${title} swtiched to "${selectedState}" successfully!`
+        );
+        setSelectedState("");
+      })
+      .catch((error) =>
+        setError(
+          `There was a problem swtiching states of the manuscript: ${_id}. ${error}`
         )
       );
   };
@@ -237,7 +276,39 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
       });
   };
 
-  useEffect(fetchValidActions, [state]);
+  const fetchValidStates = () => {
+    if (!userEmail || !_id) 
+      return;
+
+    axios
+      .get(`${VALID_STATES_ENDPOINT}`, {
+        params: {
+          user_email: userEmail,
+          manu_id: _id,
+        }
+      })
+      .then((response) => {
+        const states = response.data;
+        if (Array.isArray(states)) {
+          setValidStates(states);
+        } else{
+          console.warn("Expected an array but got:", states);
+          setValidStates([]);
+        }
+      })
+      .catch((error) => {
+        setError(
+          `Error fetching valid states: ${
+            error.response?.data?.message || error.message
+          }`
+        );
+      });
+  };
+
+  useEffect(() => {
+    fetchValidActions();
+    fetchValidStates();
+  }, [state]);
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-5 mb-4 border border-gray-200 relative">
@@ -316,6 +387,43 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
               </div>
             )}
 
+            {canMove && (
+              <div className="flex flex-col items-end space-y-4">
+                <div>
+                  <label className="block font-semibold">Choose State:</label>
+                  <select
+                    className="mt-1 p-2 border border-gray-300 rounded"
+                    value={selectedState}
+                    onChange={(e) => setSelectedState(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      -- Select a State --
+                    </option>
+                    {Array.isArray(validStates) && validStates.length > 0 ? (
+                      validStates.map((state, index) => (
+                        <option key={index} value={state}>
+                          {stateOptions[state] || state}
+                        </option>
+                      ))):
+                      (
+                        <option disabled> No States Available </option>
+                      )
+                    }
+                  </select>
+                </div>
+                <div>
+                  <button
+                  onClick={handleState}
+                  style={{
+                    transition: "0.3s ease",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  }}
+                  >
+                  Move
+                  </button>
+                </div>
+              </div>
+            )}
             <div>
               <button
                 onClick={handleAction}
@@ -329,6 +437,8 @@ function Manuscript({ manuscript, fetchManuscripts, setError, setSuccess }) {
             </div>
           </div>
         )}
+
+        
       </div>
     </div>
   );
